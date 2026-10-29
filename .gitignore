@@ -1,0 +1,8 @@
+gate/ref_outputs/
+gate/results/
+*/bin/
+*/obj/
+__pycache__/
+*.pyc
+ref/runswmm
+f90/runtime/tests/work/

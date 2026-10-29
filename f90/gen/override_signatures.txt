@@ -1,0 +1,17 @@
+project_createMatrix(nrows, ncols): integer(int32), value :: nrows | integer(int32), value :: ncols | type(dp_row), pointer :: res_(:)
+project_freeMatrix(a_l): type(dp_row), pointer, intent(in) :: a_l(:)
+sstrncpy(dest, src_l, n_l): type(CPtr), value :: dest | type(CPtr), value :: src_l | integer(int64), value :: n_l | integer(int64) :: res_
+sstrcat(dest, src_l, size_l): type(CPtr), value :: dest | type(CPtr), value :: src_l | integer(int64), value :: size_l | integer(int64) :: res_
+getTempFileName(fname): type(CPtr), value :: fname | type(CPtr) :: res_
+getAbsolutePath(fname, absPath, size_l): type(CPtr), value :: fname | type(CPtr), value :: absPath | integer(int64), value :: size_l
+odesolve_open(n_l): integer(int32), value :: n_l | integer(int32) :: res_
+odesolve_close(): 
+odesolve_integrate(ystart, n_l, x1, x2, eps, h1, derivs): real(dp), pointer, intent(in) :: ystart(:) | integer(int32), value :: n_l | real(dp), value :: x1 | real(dp), value :: x2 | real(dp), value :: eps | real(dp), value :: h1 | procedure(ode_derivs) :: derivs | integer(int32) :: res_
+rkqs(x_l, n_l, htry, eps, hdid, hnext, derivs): real(dp), intent(inout), target :: x_l | integer(int32), value :: n_l | real(dp), value :: htry | real(dp), value :: eps | real(dp), intent(inout), target :: hdid | real(dp), intent(inout), target :: hnext | procedure(ode_derivs) :: derivs | integer(int32) :: res_
+rkck(x_l, n_l, h_l, derivs): real(dp), value :: x_l | integer(int32), value :: n_l | real(dp), value :: h_l | procedure(ode_derivs) :: derivs
+AllocHdr(): type(alloc_hdr_t), pointer :: res_
+AllocInit(): type(alloc_handle_t), pointer :: res_
+Alloc(size_l): integer(int64), value :: size_l | type(CPtr) :: res_
+AllocSetPool(newpool): type(alloc_handle_t), pointer, intent(in) :: newpool | type(alloc_handle_t), pointer :: res_
+AllocReset(): 
+AllocFreePool(): 

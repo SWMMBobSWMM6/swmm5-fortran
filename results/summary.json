@@ -1,0 +1,349 @@
+{
+ "n_models": 480,
+ "totals": {
+  "C++ swmm5-cplus": {
+   "PASS": 480,
+   "rpt_lines": 152690,
+   "out_bytes": 1244999775
+  },
+  "Rust swmm5-rust": {
+   "PASS": 480,
+   "rpt_lines": 152690,
+   "out_bytes": 1244999775
+  },
+  "Fortran": {
+   "PASS": 480,
+   "rpt_lines": 152690,
+   "out_bytes": 1244999775
+  },
+  "C#": {
+   "PASS": 480,
+   "rpt_lines": 152690,
+   "out_bytes": 1244999775
+  },
+  "Python": {
+   "PASS": 465,
+   "rpt_lines": 132566,
+   "out_bytes": 966242270,
+   "NOTRUN": 15
+  }
+ },
+ "controls": {
+  "epa_rerun_n": 40,
+  "epa_rerun_same": 40,
+  "fma40_n": 40,
+  "fma40_same": 37,
+  "fma_all_n": 480,
+  "fma_all_same": 393,
+  "fmt_printf": 52402636,
+  "fmt_sscanf": 531658,
+  "fmt_strtod": 248060,
+  "fmt_mismatch": 0,
+  "fmt_pass": true,
+  "fma_instr": 101,
+  "fma_examples": "Many differences are what one rounding step per operation does to a long calculation: in the 40-model control set, a control rule acting at 03:28:08 instead of EPA's 03:28:14 (Clocktime_Pump_Rules.inp), a node's time of maximum moving six minutes (FM_Example2.inp), a continuity error moving from 0.066 to 0.068 percent (CN_Horton.inp). Times can jump: in 31_Subs.inp, node 3060 reports the same maximum depth, 3.22, reached nearly seven hours earlier (day 0 17:02 instead of day 1 00:00). Some are not small. Among decimal quantities in the first report line that differs, the largest relative changes: vsp_pump_si_units.inp, 0.905 to 1.021 (+13%); 5_H&H_Elements (1).inp, -0.170 to -0.179 (-5%)."
+ },
+ "python": {
+  "fast_n": 451,
+  "fast_pass": 451,
+  "slow_n": 29,
+  "slow_run": 14,
+  "slow_done": 14
+ },
+ "python_slow_rows": [
+  {
+   "id": "54c7f7b0dcdb",
+   "status": "PASS",
+   "sec": 264.259
+  },
+  {
+   "id": "a4bb56859280",
+   "status": "PASS",
+   "sec": 298.098
+  },
+  {
+   "id": "a1b0b3ac1550",
+   "status": "PASS",
+   "sec": 140.759
+  },
+  {
+   "id": "2ea2738fd708",
+   "status": "PASS",
+   "sec": 103.541
+  },
+  {
+   "id": "a53d9f61c462",
+   "status": "PASS",
+   "sec": 122.217
+  },
+  {
+   "id": "ee1d82e2fc5f",
+   "status": "PASS",
+   "sec": 141.321
+  },
+  {
+   "id": "e619e57eddb1",
+   "status": "PASS",
+   "sec": 279.548
+  },
+  {
+   "id": "9c42b9b225d2",
+   "status": "PASS",
+   "sec": 127.913
+  },
+  {
+   "id": "7927c6b2c194",
+   "status": "PASS",
+   "sec": 139.785
+  },
+  {
+   "id": "323879d389f5",
+   "status": "PASS",
+   "sec": 126.297
+  },
+  {
+   "id": "9bb6dcaaedc9",
+   "status": "PASS",
+   "sec": 158.619
+  },
+  {
+   "id": "5f51615fbe49",
+   "status": "PASS",
+   "sec": 136.069
+  },
+  {
+   "id": "aa5f9aaa2de7",
+   "status": "PASS",
+   "sec": 259.826
+  },
+  {
+   "id": "d4456aaa4c93",
+   "status": "PASS",
+   "sec": 213.231
+  }
+ ],
+ "bench": {
+  "median": {
+   "EPA again": 1.0049697736187497,
+   "C++": 0.9427086036730522,
+   "Fortran": 1.2600753187484757,
+   "C#": 5.194367623657432,
+   "Python": 81.62827633573721,
+   "Rust": 1.1062617076386814
+  },
+  "range": {
+   "EPA again": [
+    0.9839724370637,
+    1.0563949740566094
+   ],
+   "C++": [
+    0.9206523759368953,
+    1.0613113113123362
+   ],
+   "Fortran": [
+    1.1318242468076827,
+    1.4006594173033526
+   ],
+   "C#": [
+    2.9047461231477447,
+    27.672922922946324
+   ],
+   "Python": [
+    57.02227227232737,
+    99.04144018091793
+   ],
+   "Rust": [
+    0.997849183356233,
+    1.2652382499665709
+   ]
+  },
+  "noise": [
+   0.9839724370637,
+   1.0563949740566094
+  ],
+  "noise_pairs": [
+   0.8802521842171717,
+   1.808191163018255
+  ],
+  "startup": {
+   "Python": 0.028613999999999997,
+   "EPA": 0.001642000000003918,
+   "Fortran": 0.0021480000000000006,
+   "C++": 0.0029840000000000005,
+   "EPA again": 0.001865,
+   "C#": 0.06843300000000418,
+   "Rust": 0.002128999999996495
+  },
+  "reps": 3,
+  "n_models": 12,
+  "epa_min": 0.007991999999993005,
+  "epa_max": 0.7241699999999986,
+  "when": "2026-10-29 01:50:05"
+ },
+ "census": {
+  "nan_cells": 292,
+  "pos_nan_cells": 0,
+  "error_decks": 49,
+  "snow": 4,
+  "ran": 431,
+  "not_exercised": [
+   "Streets and inlets",
+   "Climate file",
+   "USE HOTSTART",
+   "USE INFLOWS (interface)",
+   "USE RUNOFF"
+  ],
+  "thin": [
+   "Steady flow routing",
+   "Outlets",
+   "Dividers",
+   "Treatment",
+   "Snowmelt",
+   "Temperature data",
+   "SAVE HOTSTART",
+   "SAVE / USE RDII"
+  ],
+  "streets": 0,
+  "snow_temp": 2,
+  "error_decks_with_out": 10,
+  "routing": {
+   "DYNWAVE": 456,
+   "KINWAVE": 17,
+   "STEADY": 5,
+   "STEADYFLOW": 2
+  },
+  "infiltration": {
+   "HORTON": 389,
+   "GREEN_AMPT": 61,
+   "MODIFIED_GREEN_AMPT": 8,
+   "CURVE_NUMBER": 19,
+   "MODIFIED_HORTON": 3
+  },
+  "shapes": {
+   "CIRCULAR": 288,
+   "TRAPEZOIDAL": 73,
+   "RECT_OPEN": 57,
+   "TRIANGULAR": 45,
+   "FORCE_MAIN": 44,
+   "RECT_CLOSED": 37,
+   "IRREGULAR": 21,
+   "PARABOLIC": 13,
+   "DUMMY": 11,
+   "EGG": 10,
+   "HORSESHOE": 8,
+   "CUSTOM": 7,
+   "BASKETHANDLE": 7,
+   "ARCH": 4,
+   "GOTHIC": 3,
+   "CATENARY": 3,
+   "SEMIELLIPTICAL": 3,
+   "POWER": 3,
+   "VERT_ELLIPSE": 2,
+   "RECT_TRIANGULAR": 2,
+   "MODBASKETHANDLE": 2,
+   "HORIZ_ELLIPSE": 2,
+   "SEMICIRCULAR": 2,
+   "RECT_ROUND": 2,
+   "FILLED_CIRCULAR": 1,
+   "STREET": 1
+  },
+  "units": {
+   "CFS": 370,
+   "CMS": 33,
+   "LPS": 24,
+   "null": 34,
+   "GPM": 12,
+   "MGD": 7
+  },
+  "excluded": {
+   "n": 38,
+   "timeouts": 13,
+   "limit": 30,
+   "min": 5.799220286,
+   "max": 29.598765104,
+   "under12": 4
+  },
+  "gated_over12": [
+   [
+    13.1,
+    "EPA/attenuation_KW_High_CE.inp"
+   ],
+   [
+    34.8,
+    "Hydrology/SCANLON.inp"
+   ],
+   [
+    38.6,
+    "EPA/72_H&H_Elements(2).inp"
+   ]
+  ]
+ },
+ "lines": {
+  "c": 50788,
+  "translator": 5691,
+  "f90_gen": 46364,
+  "f90_rt": 4048,
+  "cs_gen": 41429,
+  "cs_rt": 1130,
+  "py_gen": 31568,
+  "py_rt": 1253
+ },
+ "front": {
+  "modes": {
+   "ref": 280,
+   "char": 414,
+   "obj": 576,
+   "func": 18,
+   "array": 732,
+   "file": 41,
+   "void": 22
+  },
+  "files": 54,
+  "functions": 968,
+  "globals": 626,
+  "records": 103,
+  "enums": 714,
+  "declared_arrays": 711,
+  "decls": 2083
+ },
+ "defects": [
+  {
+   "n": "1",
+   "where": "inlet.c:146",
+   "code": "static char *PlacementTypeWords[] = {\"AUTOMATIC\", \"ON_GRADE\", \"ON_SAG\"};",
+   "what": "No NULL sentinel, so findmatch() reads past the end. EPA's build finds a zero word there; the ports add the NULL. Without it the first C# gate run crashed on Hydraulics/inlet_capture_test.inp (gate/csharp_run1.txt), and the Python back end, written later without the fix, raised IndexError on the same model (python.json in the stored results)."
+  },
+  {
+   "n": "2",
+   "where": "gage.c:251",
+   "code": "gageInterval = (int)(floor(Tseries[k].dxMin*SECperDAY + 0.5));",
+   "what": "Overflows int when a series has one point. x86 gives INT_MIN and no WARNING 09. Rust's `as` and Java's `(int)` saturate to INT_MAX and the warning appears; WebAssembly saturates or traps, depending on the toolchain. The ports use the x86 rule."
+  },
+  {
+   "n": "3",
+   "where": "swmm5.c:1593",
+   "code": "realpath(fname, absPath);",
+   "what": "Writes a full path into a 260-byte InpDir. glibc's _FORTIFY_SOURCE aborts every run opened by a relative name, so the reference is built with fortify off. A path longer than 259 bytes would overflow InpDir; the ports have no fixed buffer there and cannot reproduce an overflow. The longest gate model path here is 115 bytes."
+  },
+  {
+   "n": "4",
+   "where": "output.c:523",
+   "code": "fwrite(&IDStartPos, sizeof(INT4), 1, Fout.file);",
+   "what": "IDStartPos is an 8-byte off_t written with sizeof(INT4): fwrite copies its first four bytes, which on little-endian x86 are the low half, so the value is right (all three positions are taken before any results are written, so they stay small). A big-endian machine would write the high half, zero. The ports write the low four bytes."
+  },
+  {
+   "n": "5",
+   "where": "project.c:421",
+   "code": "memset(a[0], 0, size);",
+   "what": "size is nrows*ncols (project.c:401), a count of doubles, but memset counts bytes, so seven eighths of the matrix keeps malloc's contents. Only USE INFLOWS reaches it, and no gate model does. There is nothing defined to copy, so the ports zero the whole matrix."
+  }
+ ],
+ "built": "2026-10-29 09:20",
+ "corpus_note": "The gate set is 480 of the 518 distinct models (distinct by content) in six folders of the corpus, which holds 4,540 .inp files. The other 38 were left out by an early timing survey with a 12-second limit, whose records were not kept. The cut is rough. Re-timed for this essay on a busy machine, 13 of the 38 ran past a 30-second limit and the rest took 5.8 to 29.6 seconds, 4 of them within 12; and 3 gate models took longer than 12 seconds in the reference run (attenuation_KW_High_CE.inp, 13 s, SCANLON.inp, 35 s, 72_H&H_Elements(2).inp, 39 s).",
+ "rust": {
+  "commit": "de9fbf1edaa0a1c9ee644744a381f535330bac41",
+  "lines": 56001,
+  "files": 63
+ },
+ "essay_title": "Six Engines, One Answer"
+}

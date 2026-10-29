@@ -1,0 +1,43 @@
+# gprof flat profile, Fortran engine (f90/gen + runtime, shipped flags + -pg)
+# model: Hydrology/10_Subs_Continuous.inp (1729-SWMM5-Models-2030)
+# gfortran: GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+  8.33      0.05     0.05 11805092     0.00     0.00  __swmm5_engine_MOD_lookup
+  6.67      0.09     0.04  1049251     0.00     0.00  __swmm5_engine_MOD_dwflow_findconduitflow
+  5.00      0.12     0.03  5322890     0.00     0.00  __swmm5_engine_MOD_xsect_getaofy
+  5.00      0.15     0.03  2096669     0.00     0.00  __crt_io_MOD_c_fwrite_r4a
+  5.00      0.18     0.03  2096640     0.00     0.00  __swmm5_engine_MOD_getsubarearunoff
+  5.00      0.21     0.03   698880     0.00     0.00  __swmm5_engine_MOD_subcatch_getrunoff
+  3.33      0.23     0.02  2178951     0.00     0.00  __crt_io_MOD_io_write
+  3.33      0.25     0.02  1809126     0.00     0.00  __swmm5_engine_MOD_dwflow_getwidth
+  3.33      0.27     0.02   698880     0.00     0.00  __swmm5_engine_MOD_subcatch_getdepth
+  3.33      0.29     0.02   698880     0.00     0.00  __swmm5_engine_MOD_subcatch_getresults
+  3.33      0.31     0.02   628992     0.00     0.00  __swmm5_engine_MOD_link_getresults
+  3.33      0.33     0.02   477474     0.00     0.00  __swmm5_engine_MOD_ode_rkck
+  3.33      0.35     0.02   477212     0.00     0.00  __swmm5_engine_MOD_ode_rkqs
+  3.33      0.37     0.02   143872     0.00     0.00  __swmm5_engine_MOD_output_savesubcatchresults
+  1.67      0.38     0.01 13293875     0.00     0.00  __crt_io_MOD_d2i
+  1.67      0.39     0.01  1397760     0.00     0.00  __swmm5_engine_MOD_infil_setinfilfactor
+  1.67      0.40     0.01  1365813     0.00     0.00  __swmm5_engine_MOD_updatenodeflows
+  1.67      0.41     0.01  1217138     0.00     0.00  __swmm5_engine_MOD_locate
+  1.67      0.42     0.01  1217138     0.00     0.00  __swmm5_engine_MOD_xsect_getyofa
+  1.67      0.43     0.01  1145970     0.00     0.00  __swmm5_engine_MOD_xsect_getrofa
+  1.67      0.44     0.01  1049251     0.00     0.00  __swmm5_engine_MOD_findsurfarea
+  1.67      0.45     0.01   739840     0.00     0.00  __swmm5_engine_MOD_node_setoldhydstate
+  1.67      0.46     0.01   739840     0.00     0.00  __swmm5_engine_MOD_stats_updatenodestats
+  1.67      0.47     0.01   698880     0.00     0.00  __swmm5_engine_MOD_gage_getprecip
+  1.67      0.48     0.01   698880     0.00     0.00  __swmm5_engine_MOD_subcatch_setoldstate
+  1.67      0.49     0.01   661800     0.00     0.00  __swmm5_engine_MOD_surfqual_sweepbuildup
+  1.67      0.50     0.01   476889     0.00     0.00  __swmm5_engine_MOD_odesolve_integrate
+  1.67      0.51     0.01   423850     0.00     0.00  __swmm5_engine_MOD_xsect_getdsda
+  1.67      0.52     0.01   151757     0.00     0.00  __swmm5_engine_MOD_table_lookupex
+  1.67      0.53     0.01   141471     0.00     0.00  __swmm5_engine_MOD_orifice_getflow
+  1.67      0.54     0.01    73984     0.00     0.00  __swmm5_engine_MOD_addexternalinflows
+  1.67      0.55     0.01    73984     0.00     0.00  __swmm5_engine_MOD_findlinkflows
+  1.67      0.56     0.01    71168     0.00     0.00  __swmm5_engine_MOD_findroot_newton
+  1.67      0.57     0.01    69888     0.00     0.00  __swmm5_engine_MOD_output_savelinkresults
+  1.67      0.58     0.01    69888     0.00     0.00  __swmm5_engine_MOD_runoff_execute

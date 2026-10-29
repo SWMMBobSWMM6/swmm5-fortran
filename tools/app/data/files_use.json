@@ -1,0 +1,52 @@
+{
+ "SAVE HOTSTART": [
+  "37da63c73cdd",
+  "337657b3115a",
+  "801e3c166935"
+ ],
+ "SAVE RUNOFF": [
+  "102539f1c867",
+  "74fd0585b42c",
+  "6d6c9617b05a",
+  "cf364b7ce707",
+  "0c18798c8ce0",
+  "27627a2c2162",
+  "e7ab14da9ac3",
+  "11fecb473e2c",
+  "70490ee1cc68",
+  "817926f88b5a",
+  "eda9cad931a3",
+  "3c95985d127e"
+ ],
+ "SAVE RDII": [
+  "1cd1b5e4fa0f",
+  "55393df61d0a"
+ ],
+ "SAVE OUTFLOWS/CALIBRATION": [
+  "a0439eaace0d",
+  "184d26d392f9",
+  "34e950d830ff",
+  "e6b513108ed2",
+  "4a995616cb4e",
+  "4758a6692c18",
+  "7bae07dab871",
+  "caf95ed3ebbd",
+  "74011ca35a52",
+  "63cf5dcc8be4",
+  "57dd3f5f1c97",
+  "ce83054f1b6e",
+  "bc053df0baa4",
+  "3d032afcea72"
+ ],
+ "CLIMATE FILE": [
+  "c99f809e52a7",
+  "3684e0a51c9b",
+  "1622348b8242"
+ ],
+ "USE HOTSTART": [
+  "ba3de4a17559"
+ ],
+ "USE RDII": [
+  "8c2e17c489af"
+ ]
+}

@@ -1,0 +1,5 @@
+csharp: 480 models  PASS 476, RPTDIFF+OUTDIFF 3, CRASH+RPTDIFF 1
+  CRASH+RPTDIFF    Hydraulics/inlet_capture_test.inp  (1, 'len 65', 'len 1')
+  RPTDIFF+OUTDIFF  Hydrology/Horton_Continuous_Model.inp  (40, 'RG02       01/01/2008   06/30/2008      15 min     52416          0          0', '')
+  RPTDIFF+OUTDIFF  Hydrology/SeasonalRDIIn.inp  (33, '*          05/05/1948   12/27/2010      60 min     43023          6          0', '*          ***********   ***********      60 min         0      53492          0')
+  RPTDIFF+OUTDIFF  Hydrology/Use_SeasonalRDIIn.inp  (33, '*          05/05/1948   12/27/2010      60 min     43023          6          0', '*          ***********   ***********      60 min         0      53492          0')

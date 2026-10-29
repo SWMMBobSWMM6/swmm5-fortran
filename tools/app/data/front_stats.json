@@ -1,0 +1,18 @@
+{
+ "modes": {
+  "ref": 280,
+  "char": 414,
+  "obj": 576,
+  "func": 18,
+  "array": 732,
+  "file": 41,
+  "void": 22
+ },
+ "files": 54,
+ "functions": 968,
+ "globals": 626,
+ "records": 103,
+ "enums": 714,
+ "declared_arrays": 711,
+ "decls": 2083
+}

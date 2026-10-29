@@ -1,0 +1,702 @@
+<title>Six SWMM5 Engines</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="color-scheme" content="dark light">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+/* Layout: a test bench. Header lockup with the theme switch, a tab rail, then one view at a time:
+   summary first, evidence underneath. Dark first; light behind the toggle. */
+:root{
+  color-scheme: dark;
+  --bg:#0b1220; --card:#131c2e; --field:#1a2438; --line:#2a3752; --line-soft:#212c42; --row-hover:#1a2438;
+  --ink:#e6edf7; --ink-dim:#a3b1c6; --ink-faint:#8b9bb5; --ink-strong:#f8fafc; --head:#dbe7f7;
+  --headerbg:#0d1830; --onheader:#eaf2ff; --headersub:#b9cbe4; --tab-on:#60a5fa;
+  --accent:#60a5fa; --accent-ink:#0b1220;
+  --panel:#152238; --panel-line:#2b3d5c; --panel-ink:#c3d7f3;
+  --hi-bg:#2a1c0f; --hi-line:#7c4a1d; --hi-ink:#fdba74;
+  --warn-bg:#2a1416; --warn-line:#7f2b32; --warn-ink:#fca5a5;
+  --ok-bg:#0f2318; --ok-line:#245c39; --ok-ink:#86efac;
+  --pill-ok-bg:#0f2a1b; --pill-ok-ink:#86efac; --pill-warn-bg:#2e1416; --pill-warn-ink:#fca5a5;
+  --pill-na-bg:#1a2438; --pill-na-ink:#a3b1c6; --pill-ref-bg:#3a2a0d; --pill-ref-ink:#fcd34d;
+  --code-bg:#070d18; --code-ink:#dbe4f0; --shadow:rgba(0,0,0,.45);
+  /* figure tokens (Doc tab SVGs read these) */
+  --f-ink:#e6edf7; --f-dim:#a3b1c6; --f-line:#2e3c58; --f-face:#0f1a2c; --f-soft:#16223a;
+  --f-a:#60a5fa; --f-ok:#4ade80; --f-bad:#f87171; --f-warn:#fbbf24;
+  --f-epa:#fbbf24; --f-cpp:#60a5fa; --f-rust:#fb923c; --f-f90:#c084fc; --f-cs:#4ade80; --f-py:#22d3ee;
+  --font-display:"Archivo","Arial Narrow",Arial,sans-serif;
+  --font-ui:"IBM Plex Sans","Segoe UI",Helvetica,Arial,sans-serif;
+  --font-read:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --font-mono:"IBM Plex Mono",Menlo,Consolas,monospace;
+  --r:12px; --gap:16px;
+}
+:root[data-theme="light"]{
+  color-scheme: light;
+  --bg:#f5f7fa; --card:#ffffff; --field:#ffffff; --line:#dfe5ee; --line-soft:#eef2f7; --row-hover:#f6f8fb;
+  --ink:#1b2733; --ink-dim:#4f5d6e; --ink-faint:#5f6b7a; --ink-strong:#0b1220; --head:#1e3a5f;
+  --headerbg:#1e3a5f; --onheader:#ffffff; --headersub:#c7d7ea; --tab-on:#93c5fd;
+  --accent:#1f6fd1; --accent-ink:#ffffff;
+  --panel:#eff6ff; --panel-line:#dbeafe; --panel-ink:#1e3a5f;
+  --hi-bg:#fff7ed; --hi-line:#fed7aa; --hi-ink:#9a3412;
+  --warn-bg:#fef2f2; --warn-line:#fecaca; --warn-ink:#991b1b;
+  --ok-bg:#f0fdf4; --ok-line:#bbf7d0; --ok-ink:#166534;
+  --pill-ok-bg:#dcfce7; --pill-ok-ink:#166534; --pill-warn-bg:#fee2e2; --pill-warn-ink:#991b1b;
+  --pill-na-bg:#eef2f7; --pill-na-ink:#4f5d6e; --pill-ref-bg:#fef3c7; --pill-ref-ink:#92400e;
+  --code-bg:#0f172a; --code-ink:#e2e8f0; --shadow:rgba(15,23,42,.06);
+  --f-ink:#1b2733; --f-dim:#5a6878; --f-line:#cfd8e3; --f-face:#ffffff; --f-soft:#eef3f8;
+  --f-a:#1f6fd1; --f-ok:#1d8a4c; --f-bad:#c2352b; --f-warn:#b45309;
+  --f-epa:#b45309; --f-cpp:#1f6fd1; --f-rust:#c2410c; --f-f90:#6b4fbb; --f-cs:#1d8a4c; --f-py:#0e7490;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font:14px/1.55 var(--font-ui);margin:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--headerbg)}
+a{color:var(--accent)}
+code{font-family:var(--font-mono);font-size:.9em;background:var(--field);border:1px solid var(--line-soft);border-radius:4px;padding:0 4px}
+button,select,input{font:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{background:var(--headerbg);color:var(--onheader);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+header.top .wrap{display:flex;align-items:center;gap:var(--gap);padding-block:12px;flex-wrap:wrap}
+.lockup{display:flex;align-items:center;gap:12px;min-width:0}
+.lockup svg{flex:none}
+.lockup h1{font:700 26px/1.05 var(--font-display);font-stretch:85%;margin:0;color:var(--onheader)}
+.lockup .sub{font-size:12px;color:var(--headersub);letter-spacing:.3px}
+.cluster{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid rgba(255,255,255,.25);border-radius:8px;overflow:hidden}
+.seg button{background:transparent;border:0;color:var(--headersub);padding:6px 10px;font-size:12px}
+.seg button.on{background:var(--accent);color:var(--accent-ink)}
+nav.tabs{background:var(--headerbg);border-top:1px solid rgba(255,255,255,.08)}
+nav.tabs .wrap{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+nav.tabs button{background:none;border:0;color:var(--headersub);padding:10px 14px;font-size:13.5px;border-bottom:3px solid transparent;white-space:nowrap}
+nav.tabs button[aria-selected="true"]{color:var(--onheader);border-bottom-color:var(--tab-on);font-weight:600}
+main{padding-block:20px 40px}
+.stack{display:flex;flex-direction:column;gap:var(--gap);min-width:0}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--gap)}
+@media (max-width:860px){.grid2{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 20px;min-width:0;box-shadow:0 1px 2px var(--shadow)}
+.card h2{font:650 17px/1.3 var(--font-display);font-stretch:92%;margin:0 0 10px;color:var(--head);text-wrap:balance}
+.card h3{font:600 14px/1.3 var(--font-ui);margin:16px 0 6px;color:var(--head)}
+.lede{font-size:16px;color:var(--ink);max-width:72ch;margin:0}
+.kicker{font:600 11px/1 var(--font-ui);letter-spacing:.9px;text-transform:uppercase;color:var(--ink-faint);margin:0 0 6px}
+.note{color:var(--ink-dim);font-size:13px;max-width:80ch}
+.box{border-radius:10px;padding:12px 14px;border:1px solid;min-width:0}
+.box.panel{background:var(--panel);border-color:var(--panel-line);color:var(--panel-ink)}
+.box.ok{background:var(--ok-bg);border-color:var(--ok-line);color:var(--ok-ink)}
+.box.hi{background:var(--hi-bg);border-color:var(--hi-line);color:var(--hi-ink)}
+.box.warn{background:var(--warn-bg);border-color:var(--warn-line);color:var(--warn-ink)}
+.tablewrap{overflow-x:auto;min-width:0}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+th{font-weight:600;color:var(--ink-dim);font-size:12px;letter-spacing:.2px;white-space:nowrap}
+td.num,th.num{text-align:right}
+tbody tr:hover{background:var(--row-hover)}
+.pill{display:inline-block;font:500 11px/1 var(--font-mono);border-radius:999px;padding:4px 8px;white-space:nowrap}
+.pill.ok{background:var(--pill-ok-bg);color:var(--pill-ok-ink)}
+.pill.bad{background:var(--pill-warn-bg);color:var(--pill-warn-ink)}
+.pill.na{background:var(--pill-na-bg);color:var(--pill-na-ink)}
+.pill.ref{background:var(--pill-ref-bg);color:var(--pill-ref-ink)}
+.swatch{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:baseline}
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.controls label{font-size:12px;color:var(--ink-dim);display:flex;gap:6px;align-items:center}
+select,input[type=search]{background:var(--field);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 8px;min-width:0;max-width:100%}
+.big{font:700 34px/1 var(--font-display);font-stretch:85%;color:var(--ink-strong)}
+.stat{display:flex;flex-direction:column;gap:4px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:var(--gap)}
+.figwrap{overflow-x:auto}
+.mono{font-family:var(--font-mono);font-size:12px}
+.chart{width:100%;display:block}
+.prov{display:flex;gap:6px 18px;flex-wrap:wrap;font-size:12px;color:var(--ink-faint);border-top:1px solid var(--line);padding-top:10px;margin-top:4px}
+th.sortable{cursor:pointer}
+th.sortable::after{content:" \2195";color:var(--ink-faint)}
+.detail{margin-top:8px}
+details summary{cursor:pointer;padding:6px 0}
+/* Doc tab */
+.doc{font:17px/1.65 var(--font-read);color:var(--ink);max-width:74ch;margin:0 auto}
+.doc h1.doc-title{font:700 40px/1.05 var(--font-display);font-stretch:85%;margin:8px 0 6px;color:var(--ink-strong);text-wrap:balance}
+.doc .doc-sub{font:400 18px/1.45 var(--font-ui);color:var(--ink-dim);margin:0 0 18px}
+.doc h2{font:650 23px/1.25 var(--font-display);font-stretch:90%;color:var(--head);margin:34px 0 8px;text-wrap:balance}
+.doc p{margin:0 0 14px}
+.doc ul{margin:0 0 14px;padding-left:22px}
+.doc li{margin-bottom:6px}
+.doc pre.code{background:var(--code-bg);color:var(--code-ink);border-radius:8px;padding:12px 14px;overflow-x:auto;font:13px/1.5 var(--font-mono)}
+.doc pre.code code{background:none;border:0;padding:0;color:inherit}
+.doc figure{margin:18px -40px 22px;max-width:calc(100% + 80px)}
+@media (max-width:900px){.doc figure{margin:18px 0 22px;max-width:100%}}
+.doc figcaption{font:400 13.5px/1.45 var(--font-ui);color:var(--ink-dim);margin-top:8px;padding-inline:4px}
+.doc .doc-table{font:13px/1.45 var(--font-ui);margin:4px 0 18px}
+.doc .doc-table td:nth-child(3){font-family:var(--font-mono);font-size:12px}
+.doc-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:0 0 20px;font:14px/1.5 var(--font-ui)}
+.doc-toc ol{margin:6px 0 0;padding-left:20px;columns:2;column-gap:28px}
+@media (max-width:600px){.doc-toc ol{columns:1}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.hbtn{background:transparent;border:1px solid rgba(255,255,255,.25);color:var(--onheader);border-radius:8px;padding:6px 10px;font-size:12px}
+.hbtn:hover{border-color:var(--onheader)}
+.hbtn.round{width:32px;padding:6px 0;font-weight:700}
+.btn{background:var(--field);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:12.5px}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.intro{display:flex;gap:12px;align-items:baseline;background:var(--panel);border:1px solid var(--panel-line);color:var(--panel-ink);border-radius:10px;padding:10px 14px;flex-wrap:wrap}
+.intro strong{font:650 14px/1.3 var(--font-display);font-stretch:92%}
+.intro span{font-size:13px}
+.ov{position:fixed;inset:0;background:rgba(5,10,20,.62);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:14px;max-width:560px;width:100%;padding:22px 24px;box-shadow:0 20px 50px var(--shadow);max-height:90vh;overflow:auto}
+.modal h2{font:700 22px/1.2 var(--font-display);font-stretch:88%;margin:0 0 8px;color:var(--head)}
+.modal p,.modal li{font-size:14px;color:var(--ink-dim)}
+.modal .acts{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:14px}
+.tip{position:fixed;z-index:60;background:var(--card);color:var(--ink);border:1px solid var(--accent);border-radius:12px;padding:14px 16px;max-width:320px;box-shadow:0 14px 34px var(--shadow)}
+.tip h3{margin:0 0 6px;font:650 15px/1.3 var(--font-display);color:var(--head)}
+.tip p{margin:0 0 10px;font-size:13px;color:var(--ink-dim)}
+.tip .nav{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.tip .dots{font-size:12px;color:var(--ink-faint)}
+.ring{position:fixed;z-index:55;border:2px solid var(--accent);border-radius:8px;pointer-events:none;box-shadow:0 0 0 4000px rgba(5,10,20,.45)}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="lockup">
+      <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+        <rect x="2" y="2" width="36" height="36" rx="8" style="fill:none;stroke:var(--headersub);stroke-width:1.5"/>
+        <g style="fill:var(--onheader)">
+          <rect x="8" y="9" width="24" height="3" rx="1.5"/><rect x="8" y="15" width="24" height="3" rx="1.5"/>
+          <rect x="8" y="21" width="24" height="3" rx="1.5"/><rect x="8" y="27" width="24" height="3" rx="1.5"/>
+        </g>
+        <path d="M30 33 L35 28" style="stroke:var(--tab-on);stroke-width:2.5;stroke-linecap:round"/>
+      </svg>
+      <div>
+        <h1>Six SWMM5 Engines</h1>
+        <div class="sub" id="hdr-sub">EPA 5.2.4, C++, Rust, Fortran, C# and Python, judged byte for byte</div>
+      </div>
+    </div>
+    <div class="cluster">
+      <button class="hbtn" id="gif-btn" title="Record the guided tour as an animated GIF">Make a GIF</button>
+      <button class="hbtn round" id="help-btn" aria-label="How to use this app" title="How to use this app">?</button>
+      <div class="seg" id="theme-toggle" role="group" aria-label="Colour theme">
+        <button data-t="dark" class="on" id="t-dark">Dark</button><button data-t="light" id="t-light">Light</button><button data-t="auto" id="t-auto">Auto</button>
+      </div>
+    </div>
+  </div>
+  <nav class="tabs" aria-label="Views"><div class="wrap" role="tablist">
+    <button role="tab" data-view="scoreboard" aria-selected="true">Scoreboard</button>
+    <button role="tab" data-view="models" aria-selected="false">Models</button>
+    <button role="tab" data-view="graphs" aria-selected="false">Graphs</button>
+    <button role="tab" data-view="speed" aria-selected="false">Speed</button>
+    <button role="tab" data-view="verify" aria-selected="false">Verify</button>
+    <button role="tab" data-view="about" aria-selected="false">About</button>
+    <button role="tab" data-view="doc" aria-selected="false">Doc</button>
+  </div></nav>
+</header>
+
+<main class="wrap">
+  <!-- ============================================================ Scoreboard -->
+  <section class="view stack" id="v-scoreboard">
+    <div class="intro"><strong>Read the verdict</strong><span>One row per engine: what it is, how it was made, how many models it matches EPA 5.2.4 on, and what it costs to run.</span></div>
+    <div class="card stack">
+      <p class="kicker">The result</p>
+      <p class="lede" id="sb-lede"></p>
+      <div class="stats" id="sb-stats"></div>
+    </div>
+    <div class="card">
+      <h2>One row per engine</h2>
+      <div class="tablewrap"><table id="sb-table"></table></div>
+      <p class="note" id="sb-note"></p>
+    </div>
+    <div class="card">
+      <h2>Every model against every engine</h2>
+      <div class="figwrap" id="sb-matrix"></div>
+      <div class="prov" id="sb-prov"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================ Models -->
+  <section class="view stack" id="v-models" hidden>
+    <div class="intro"><strong>Find a model</strong><span>Filter by folder or name, sort by any column, and open a row to compare every engine&#39;s output fingerprint. Export the rows you see as CSV.</span></div>
+    <div class="card stack">
+      <h2>The gate models</h2>
+      <p class="note">Each row is one model from the corpus, with statistics read from EPA 5.2.4's own report and each engine's verdict. Open a row to compare the output fingerprints.</p>
+      <div class="controls">
+        <label>Folder <select id="m-folder"><option value="">All folders</option></select></label>
+        <label>Search <input type="search" id="m-q" placeholder="model name"></label>
+        <label>Show <select id="m-kind"><option value="">all models</option><option value="out">with a .out file</option><option value="err">input-error decks</option><option value="nan">reports with -nan</option></select></label>
+        <span class="note" id="m-count"></span>
+        <button class="btn" id="m-csv" hidden>Export CSV</button>
+      </div>
+      <div class="tablewrap"><table id="m-table"></table></div>
+      <div id="m-detail" class="detail"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================ Graphs -->
+  <section class="view stack" id="v-graphs" hidden>
+    <div class="intro"><strong>Compare the curves</strong><span>Pick a model and a series. The strips under the chart are each engine minus EPA, period by period, from each engine&#39;s own .out file.</span></div>
+    <div class="card stack">
+      <h2>Results, and each engine's difference from EPA</h2>
+      <p class="note">The top chart is the reference series from EPA's own .out. Under it, one strip per engine shows that engine's value minus EPA's, read from the engine's own .out at every reporting period. A flat strip at zero is the claim; the table gives the counts behind it.</p>
+      <div class="controls">
+        <label>Model <select id="g-model"></select></label>
+        <label>Series <select id="g-series"></select></label>
+      </div>
+      <div id="g-chart"></div>
+      <div class="tablewrap"><table id="g-table"></table></div>
+    </div>
+  </section>
+
+  <!-- ============================================================ Speed -->
+  <section class="view stack" id="v-speed" hidden>
+    <div class="intro"><strong>Weigh the cost</strong><span>CPU time against EPA on the same models, with EPA against itself as the noise floor.</span></div>
+    <div class="card stack">
+      <h2>CPU time against EPA, with the noise floor</h2>
+      <p class="note" id="sp-method"></p>
+      <div class="figwrap" id="sp-fig"></div>
+      <div class="tablewrap"><table id="sp-table"></table></div>
+      <div><button class="btn" id="sp-csv" hidden>Export the timings as CSV</button></div>
+      <p class="note">The gate's own run times are not used here: the gate runs two jobs at once on a two-core machine, so its timings measure the queue as much as the engine.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================ Verify -->
+  <section class="view stack" id="v-verify" hidden>
+    <div class="intro"><strong>Check the evidence</strong><span>The parity contract, the controls that prove the gate can fail, what the models exercise, and the EPA defects found.</span></div>
+    <div class="card stack">
+      <h2>The parity contract</h2>
+      <div class="box panel" id="vf-contract"></div>
+    </div>
+    <div class="card stack">
+      <h2>Controls</h2>
+      <div class="figwrap" id="vf-controls"></div>
+      <p class="note" id="vf-controls-note"></p>
+      <details><summary class="note" id="vf-fma-sum">Models that noticed the change</summary><div class="tablewrap"><table id="vf-fma"></table></div></details>
+      <h3>The Fortran formatter against glibc</h3>
+      <p class="note" id="vf-fmt"></p>
+    </div>
+    <div class="card stack">
+      <h2>What the gate models exercise</h2>
+      <div class="figwrap" id="vf-coverage"></div>
+      <details><summary class="note">Cross-section shapes, routing, infiltration and flow units in the gate models</summary>
+      <div class="grid2">
+        <div class="tablewrap"><table id="vf-shapes"></table></div>
+        <div class="tablewrap"><table id="vf-opts"></table></div>
+      </div></details>
+    </div>
+    <div class="card stack">
+      <h2>Defect register: EPA 5.2.4</h2>
+      <div class="tablewrap"><table id="vf-defects"></table></div>
+    </div>
+    <div class="card stack">
+      <h2>What this does not show</h2>
+      <ul id="vf-limits"></ul>
+    </div>
+  </section>
+
+  <!-- ============================================================ About -->
+  <section class="view stack" id="v-about" hidden>
+    <div class="intro"><strong>Learn who made it</strong><span>What this app is, where the sources live, and how AI was used.</span></div>
+    <div class="card stack">
+      <h2>About this app</h2>
+      <p class="lede">EPA SWMM 5.2.4 was carried into Fortran, C# and Python by a translator that reads EPA's C source, and every engine was then judged against EPA itself: the binary .out file byte for byte, and the .rpt report line for line, apart from three lines that print the wall clock. This app shows those results next to Bob Dickinson's C++ engine, swmm5-cplus, run through the same gate. It shows stored results from the runs; it does not run engines in the browser.</p>
+      <h3>How to read it</h3>
+      <ul class="note">
+        <li><strong>Scoreboard</strong>: one line per engine, with its gate count and cost.</li>
+        <li><strong>Models</strong>: every gate model with its EPA report statistics; open a row for the fingerprints.</li>
+        <li><strong>Graphs</strong>: reference series and each engine's difference, period by period.</li>
+        <li><strong>Speed</strong>: an interleaved benchmark with its noise floor.</li>
+        <li><strong>Verify</strong>: the parity contract, the controls, the census and the defect register.</li>
+        <li><strong>Doc</strong>: the essay that explains how it was done. The same essay is in the repositories as a Word file, <code>docs/six-engines.docx</code>.</li>
+      </ul>
+      <h3>AI use</h3>
+      <p class="note"><!--__AIUSE__--></p>
+      <h3>Sources</h3>
+      <ul class="note">
+        <li>EPA SWMM 5.2.4: <a href="https://github.com/USEPA/Stormwater-Management-Model/tree/v5.2.4" target="_blank" rel="noopener">USEPA/Stormwater-Management-Model, tag v5.2.4</a></li>
+        <li>Corpus: <a href="https://github.com/SWMMBobSWMM6/1729-SWMM5-Models-2030" target="_blank" rel="noopener">SWMMBobSWMM6/1729-SWMM5-Models-2030</a> (six folders: EPA, Hydraulics, Hydrology, LID, OWA_EXTRAN, OWA_ROUTING)</li>
+        <li>C++ engine: <a href="https://github.com/SWMMBobSWMM6/swmm5-cplus" target="_blank" rel="noopener">SWMMBobSWMM6/swmm5-cplus</a></li>
+        <li>Rust engine: <a href="https://github.com/SWMMBobSWMM6/swmm5-rust" target="_blank" rel="noopener">SWMMBobSWMM6/swmm5-rust</a></li>
+        <li>The three ports: <a href="https://github.com/SWMMBobSWMM6/swmm5-fortran" target="_blank" rel="noopener">SWMMBobSWMM6/swmm5-fortran</a>, <a href="https://github.com/SWMMBobSWMM6/swmm5-csharp" target="_blank" rel="noopener">swmm5-csharp</a>, <a href="https://github.com/SWMMBobSWMM6/swmm5-python" target="_blank" rel="noopener">swmm5-python</a></li>
+      </ul>
+      <div class="prov" id="ab-prov"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================ Doc -->
+  <section class="view" id="v-doc" hidden>
+    <div class="intro"><strong>Read how it was done</strong><span>The essay behind the app, with its figures. The same text is in the repositories as a Word file.</span></div>
+    <article class="doc" style="margin-top:16px"><!--__DOC__--></article>
+  </section>
+</main>
+
+<div class="ov" id="welcome" hidden role="dialog" aria-modal="true" aria-labelledby="w-title">
+  <div class="modal">
+    <h2 id="w-title">How to use this app</h2>
+    <p>EPA SWMM 5.2.4 was carried into Fortran, C# and Python by a translator, and each engine was judged against EPA itself on the same models: the <code>.out</code> file byte for byte, the <code>.rpt</code> line for line. This app shows those stored results; it does not run engines in your browser.</p>
+    <ul>
+      <li><strong>Scoreboard</strong> has the verdict, <strong>Models</strong> the per-model detail, <strong>Graphs</strong> the curves and each engine's difference from EPA.</li>
+      <li><strong>Speed</strong> and <strong>Verify</strong> carry the benchmark, the controls and the limits; <strong>Doc</strong> is the essay.</li>
+      <li>The theme switch is at the top right; <strong>?</strong> reopens this guide, and <strong>Make a GIF</strong> records the tour.</li>
+    </ul>
+    <div class="acts"><button class="btn" id="w-close">Close</button><button class="btn primary" id="w-tour">Take the tour</button></div>
+  </div>
+</div>
+<div class="ov" id="gifbox" hidden role="dialog" aria-modal="true" aria-labelledby="g-title">
+  <div class="modal">
+    <h2 id="g-title">Tour GIF</h2>
+    <p id="gif-msg"></p>
+    <img id="gif-img" alt="Animated tour of the app" style="max-width:100%;border:1px solid var(--line);border-radius:8px" hidden>
+    <div class="acts"><button class="btn" id="gif-close">Close</button><button class="btn primary" id="gif-save" hidden>Save the GIF</button></div>
+  </div>
+</div>
+<script>
+const APP = /*__DATA__*/null;
+
+/* ------------------------------------------------------------------ theme */
+const CHART_THEME={
+  light:{face:'#ffffff',frame:'#dfe5ee',grid:'#eef2f7',tick:'#5f6b7a',axis:'#4f5d6e',ink:'#1b2733',zero:'#4f5d6e',
+    ref:'#b45309',ok:'#1d8a4c',bad:'#c2352b',
+    eng:{'EPA 5.2.4 (C)':'#b45309','C++ swmm5-cplus':'#1f6fd1','Rust swmm5-rust':'#c2410c','Fortran':'#6b4fbb','C#':'#1d8a4c','Python':'#0e7490'}},
+  dark:{face:'#0f1a2c',frame:'#2a3752',grid:'#1e293b',tick:'#a3b1c6',axis:'#c3cee0',ink:'#e6edf7',zero:'#a3b1c6',
+    ref:'#fbbf24',ok:'#4ade80',bad:'#f87171',
+    eng:{'EPA 5.2.4 (C)':'#fbbf24','C++ swmm5-cplus':'#60a5fa','Rust swmm5-rust':'#fb923c','Fortran':'#c084fc','C#':'#4ade80','Python':'#22d3ee'}}
+};
+let THEME='dark', THEME_PREF='dark';
+function prefersDark(){ try{ return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; }catch(e){ return true; } }
+function TH(){ return CHART_THEME[THEME==='dark'?'dark':'light']; }
+function applyTheme(pref){
+  THEME_PREF=(pref==='light'||pref==='auto')?pref:'dark';
+  THEME=THEME_PREF==='auto'?(prefersDark()?'dark':'light'):THEME_PREF;
+  document.documentElement.setAttribute('data-theme',THEME);
+  document.querySelectorAll('#theme-toggle button').forEach(b=>b.classList.toggle('on',b.dataset.t===THEME_PREF));
+  try{ localStorage.setItem('sixengines_theme',THEME_PREF); }catch(e){}
+}
+document.querySelectorAll('#theme-toggle button').forEach(b=>b.addEventListener('click',()=>{ applyTheme(b.dataset.t); redraw(); }));
+try{ const mq=window.matchMedia('(prefers-color-scheme: dark)'); const f=()=>{ if(THEME_PREF==='auto'){ applyTheme('auto'); redraw(); } };
+  mq.addEventListener?mq.addEventListener('change',f):mq.addListener(f); }catch(e){}
+(function(){ let p='dark'; try{ const v=localStorage.getItem('sixengines_theme'); if(v==='light'||v==='auto'||v==='dark') p=v; }catch(e){} applyTheme(p); })();
+
+/* ------------------------------------------------------------------ helpers */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=n=>Number(n).toLocaleString('en-US');
+const ENG=APP.engines;
+const EKEY={'EPA 5.2.4 (C)':'epa','C++ swmm5-cplus':'cpp','Rust swmm5-rust':'rust','Fortran':'f90','C#':'cs','Python':'py'};
+function pill(st){
+  if(st==='PASS') return '<span class="pill ok">identical</span>';
+  if(st==='REF') return '<span class="pill ref">reference</span>';
+  if(st==='NOTRUN') return '<span class="pill na">not run</span>';
+  return '<span class="pill bad">'+esc(st)+'</span>';
+}
+function shortName(e){ return {'EPA 5.2.4 (C)':'EPA','C++ swmm5-cplus':'C++','Rust swmm5-rust':'Rust'}[e]||e; }
+
+/* ------------------------------------------------------------------ tabs */
+const VIEWS=['scoreboard','models','graphs','speed','verify','about','doc'];
+function show(v){
+  if(!VIEWS.includes(v)) v='scoreboard';
+  VIEWS.forEach(x=>{ $('#v-'+x).hidden=(x!==v); });
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.view===v?'true':'false'));
+  if(v==='graphs') drawGraph();
+}
+document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{ location.hash=b.dataset.view; show(b.dataset.view); }));
+window.addEventListener('hashchange',()=>{ const h=location.hash.slice(1); if(VIEWS.includes(h)) show(h); });
+document.addEventListener('click',e=>{ const a=e.target.closest('a[data-doclink]'); if(a){ e.preventDefault(); const t=document.getElementById('doc-'+a.dataset.doclink); if(t) t.scrollIntoView({behavior:'smooth',block:'start'}); }});
+
+/* ------------------------------------------------------------------ scoreboard */
+function engineTotal(e){ return APP.totals[e]||{}; }
+function scoreboard(){
+  const N=APP.models.length, T=APP.totals, B=APP.bench, P=APP.python;
+  const pass=e=>(T[e]||{}).PASS||0;
+  const diffs=Object.values(T).reduce((a,t)=>a+Object.entries(t).filter(([k])=>!['PASS','NOTRUN','rpt_lines','out_bytes'].includes(k)).reduce((x,[,v])=>x+v,0),0);
+  $('#sb-lede').innerHTML='Three new engines, written in <strong>Fortran</strong>, <strong>C#</strong> and <strong>Python</strong> by a translator that reads EPA\'s C, produce the same binary results file and the same report as EPA SWMM 5.2.4 on '+(diffs?'all but '+diffs+' of the gate models they ran':'every gate model they ran')+': '+
+    fmt(pass('Fortran'))+' of '+fmt(N)+' for Fortran, '+fmt(pass('C#'))+' of '+fmt(N)+' for C#, and '+fmt(pass('Python'))+' for Python, which ran the '+fmt(P.fast_n)+' fast models and a timed sample of the slow ones. The C++ engine, swmm5-cplus, matches on '+fmt(pass('C++ swmm5-cplus'))+' of '+fmt(N)+(pass('Rust swmm5-rust')?', and the safe-Rust engine, swmm5-rust, on '+fmt(pass('Rust swmm5-rust'))+' of '+fmt(N)+'.':'. The Rust engine was not reachable from this session.');
+  const st=[['Gate models',fmt(N),'from six corpus folders'],
+    ['.out bytes compared',fmt((T['Fortran']||{}).out_bytes||0),'per fully gated engine'],
+    ['.rpt lines compared',fmt((T['Fortran']||{}).rpt_lines||0),'per fully gated engine, timestamps excluded'],
+    ['Differences found',fmt(diffs),'in the final run of every engine that ran']];
+  $('#sb-stats').innerHTML=st.map(s=>'<div class="stat"><span class="kicker">'+esc(s[0])+'</span><span class="big">'+esc(s[1])+'</span><span class="note">'+esc(s[2])+'</span></div>').join('');
+  const how={'EPA 5.2.4 (C)':['C','EPA source, built from the v5.2.4 tag','c'],
+    'C++ swmm5-cplus':['C++17','EPA restructured as a class, in its own repository',null],
+    'Rust swmm5-rust':['Rust (safe)',APP.rust&&APP.rust.commit?'safe-Rust translation, its own repository ('+APP.rust.commit.slice(0,7)+')':'separate project; repository not reachable here',null],
+    'Fortran':['Fortran 2008','generated by emit_f90.py + hand runtime','f90'],
+    'C#':['C# 12 / .NET 8','generated by emit_cs.py + hand runtime','cs'],
+    'Python':['Python 3, pure','generated by emit_py.py + hand runtime','py']};
+  const L=APP.lines;
+  const loc={'EPA 5.2.4 (C)':L.c,'Rust swmm5-rust':(APP.rust||{}).lines,'Fortran':L.f90_gen,'C#':L.cs_gen,'Python':L.py_gen};
+  let h='<thead><tr><th>Engine</th><th>Language</th><th>How it was made</th><th class="num">Lines</th><th>Gate</th><th class="num">CPU vs EPA</th></tr></thead><tbody>';
+  ENG.forEach(e=>{
+    const t=T[e]||{}; let g;
+    if(e.startsWith('EPA')) g='<span class="pill ref">reference</span>';
+    else if(t.PASS) g='<span class="pill ok">'+fmt(t.PASS)+' identical</span>'+(t.NOTRUN?' <span class="pill na">'+fmt(t.NOTRUN)+' not run</span>':'')+(Object.keys(t).filter(k=>!['PASS','NOTRUN','rpt_lines','out_bytes'].includes(k)).map(k=>' <span class="pill bad">'+t[k]+' '+esc(k)+'</span>').join(''));
+    else g='<span class="pill na">not run</span>';
+    const bk=e.split(' ')[0];
+    const r=B&&B.median[bk]!=null?(B.median[bk].toFixed(2)+'x'):(e.startsWith('EPA')?'1.00x':'-');
+    h+='<tr><td><span class="swatch" style="background:var(--f-'+EKEY[e]+')"></span>'+esc(e)+'</td><td>'+esc(how[e][0])+'</td><td>'+esc(how[e][1])+'</td><td class="num">'+(loc[e]?fmt(loc[e]):'-')+'</td><td>'+g+'</td><td class="num">'+r+'</td></tr>';
+  });
+  $('#sb-table').innerHTML=h+'</tbody>';
+  $('#sb-note').textContent='Lines count the engine itself (EPA: the C solver; Rust: its engine crate; ports: the generated file). CPU vs EPA is the median over the benchmark models, from the Speed tab (Rust from its own interleaved run against EPA).';
+  $('#sb-matrix').innerHTML=APP.figs.matrix;
+  const prov=['Reference: EPA 5.2.4, v5.2.4 tag, gcc 13.3 -O2, glibc 2.39, x86-64 Linux','Corpus: '+fmt(N)+' models','Built: '+APP.built,'AI use: see About'];
+  $('#sb-prov').innerHTML=prov.map(esc).map(s=>'<span>'+s+'</span>').join('');
+  $('#ab-prov').innerHTML=$('#sb-prov').innerHTML;
+}
+
+/* ------------------------------------------------------------------ models */
+let MSORT={k:'f',dir:1};
+function modelsInit(){
+  const folders=[...new Set(APP.models.map(m=>m.f))].sort();
+  $('#m-folder').innerHTML+=folders.map(f=>'<option>'+esc(f)+'</option>').join('');
+  ['#m-folder','#m-q','#m-kind'].forEach(s=>$(s).addEventListener('input',modelsDraw));
+  modelsDraw();
+}
+let MROWS=[];
+function currentModelRows(){ return MROWS; }
+function modelsDraw(){
+  const f=$('#m-folder').value, q=$('#m-q').value.trim().toLowerCase(), kind=$('#m-kind').value;
+  let rows=APP.models.filter(m=>(!f||m.f===f)&&(!q||m.n.toLowerCase().includes(q))&&
+    (!kind||(kind==='out'&&m.ob>0)||(kind==='err'&&m.r.e>0)||(kind==='nan'&&(m.r.nan||0)>0)));
+  const key={f:m=>m.f+'/'+m.n.toLowerCase(),s:m=>m.s,nodes:m=>m.c?m.c[1]:-1,links:m=>m.c?m.c[2]:-1,ce:m=>m.r.ce==null?-1e9:m.r.ce}[MSORT.k];
+  rows.sort((a,b)=>{ const x=key(a),y=key(b); return (x<y?-1:x>y?1:0)*MSORT.dir; });
+  MROWS=rows;
+  $('#m-count').textContent=fmt(rows.length)+' of '+fmt(APP.models.length)+' models';
+  const eng=ENG.filter(e=>!e.startsWith('EPA'));
+  let h='<thead><tr><th class="sortable" data-k="f">Model</th><th class="num sortable" data-k="s">EPA s</th><th class="num sortable" data-k="nodes">Nodes</th><th class="num sortable" data-k="links">Links</th><th>Routing</th><th class="num sortable" data-k="ce">Routing CE %</th>'+eng.map(e=>'<th>'+esc(shortName(e))+'</th>').join('')+'</tr></thead><tbody>';
+  rows.slice(0,600).forEach(m=>{
+    h+='<tr data-id="'+m.id+'" style="cursor:pointer"><td><span class="note">'+esc(m.f)+'/</span>'+esc(m.n)+(m.r.e?' <span class="pill bad">input error</span>':'')+'</td><td class="num">'+m.s.toFixed(2)+'</td><td class="num">'+(m.c?fmt(m.c[1]):'-')+'</td><td class="num">'+(m.c?fmt(m.c[2]):'-')+'</td><td>'+esc(m.r.rt||'-')+'</td><td class="num">'+(m.r.ce==null?'-':m.r.ce.toFixed(3))+'</td>'+eng.map(e=>'<td>'+pill(m.e[e].s)+'</td>').join('')+'</tr>';
+  });
+  $('#m-table').innerHTML=h+'</tbody>';
+  $('#m-table').querySelectorAll('th.sortable').forEach(th=>th.addEventListener('click',()=>{ MSORT=MSORT.k===th.dataset.k?{k:MSORT.k,dir:-MSORT.dir}:{k:th.dataset.k,dir:1}; modelsDraw(); }));
+  $('#m-table').querySelectorAll('tbody tr').forEach(tr=>tr.addEventListener('click',()=>modelDetail(tr.dataset.id)));
+}
+function modelDetail(id){
+  const m=APP.models.find(x=>x.id===id); if(!m) return;
+  let h='<div class="box panel"><strong>'+esc(m.f+'/'+m.n)+'</strong> &middot; '+m.kb+' KB input &middot; '+(m.c?fmt(m.c[0])+' subcatchments, '+fmt(m.c[1])+' nodes, '+fmt(m.c[2])+' links, '+fmt(m.c[3])+' pollutants, '+fmt(m.c[4])+' reporting periods':'no .out written')+
+    ' &middot; flow units '+esc(m.r.u||'-')+' &middot; infiltration '+esc(m.r.inf||'-')+' &middot; runoff CE '+(m.r.cr==null?'-':m.r.cr.toFixed(3)+'%')+' &middot; routing CE '+(m.r.ce==null?'-':m.r.ce.toFixed(3)+'%')+' &middot; '+m.r.w+' warnings, '+m.r.e+' errors &middot; '+fmt(m.rl)+' report lines, '+fmt(m.ob)+' .out bytes</div>';
+  h+='<div class="tablewrap"><table><thead><tr><th>Engine</th><th>Verdict</th><th class="mono">.out md5 (first 10)</th><th class="mono">.rpt md5 (first 10, timestamps removed)</th></tr></thead><tbody>';
+  ENG.forEach(e=>{ const x=m.e[e]; h+='<tr><td>'+esc(e)+'</td><td>'+pill(x.s)+'</td><td class="mono">'+esc(x.ho||'-')+'</td><td class="mono">'+esc(x.hr||'-')+'</td></tr>'; });
+  $('#m-detail').innerHTML=h+'</tbody></table></div>';
+  $('#m-detail').scrollIntoView({block:'nearest'});
+}
+
+/* ------------------------------------------------------------------ graphs */
+function graphsInit(){
+  const G=APP.graphs;
+  $('#g-model').innerHTML=G.map((g,i)=>'<option value="'+i+'">'+esc(g.folder+'/'+g.name)+'</option>').join('');
+  $('#g-model').addEventListener('input',()=>{ seriesOpts(); drawGraph(); });
+  $('#g-series').addEventListener('input',drawGraph);
+  seriesOpts();
+}
+function seriesOpts(){ const g=APP.graphs[+$('#g-model').value||0]; $('#g-series').innerHTML=g.series.map((s,i)=>'<option value="'+i+'">'+esc(s.label)+'</option>').join(''); }
+const UNITS=['CFS','GPM','MGD','CMS','LPS','MLD'];
+function seriesUnit(s){ const fu=UNITS[s.units]||''; if(s.kind==='node') return (s.units<=2?'ft':'m'); if(s.kind==='sys'&&s.var===4) return fu; return fu; }
+function drawGraph(){
+  if($('#v-graphs').hidden) return;
+  const g=APP.graphs[+$('#g-model').value||0]; if(!g) return;
+  const s=g.series[+$('#g-series').value||0]; const T=TH();
+  const W=1000,H=300,ml=70,mr=16,mt=16,mb=36;
+  const xs=s.idx, ys=s.y, n=s.n;
+  let lo=Math.min(0,...ys), hi=Math.max(...ys); if(hi===lo) hi=lo+1;
+  const X=i=>ml+(W-ml-mr)*i/Math.max(1,n-1), Y=v=>mt+(H-mt-mb)*(1-(v-lo)/(hi-lo));
+  let svg='<svg class="chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+esc(s.label)+'"><rect x="0" y="0" width="'+W+'" height="'+H+'" rx="8" fill="'+T.face+'" stroke="'+T.frame+'"/>';
+  for(let k=0;k<=4;k++){ const v=lo+(hi-lo)*k/4, y=Y(v); svg+='<line x1="'+ml+'" x2="'+(W-mr)+'" y1="'+y+'" y2="'+y+'" stroke="'+T.grid+'"/><text x="'+(ml-8)+'" y="'+(y+4)+'" fill="'+T.tick+'" font-size="12" text-anchor="end" font-family="IBM Plex Mono, monospace">'+(+v.toPrecision(3))+'</text>'; }
+  const hours=n*g.step/3600;
+  for(let k=0;k<=5;k++){ const i=(n-1)*k/5, x=X(i); svg+='<text x="'+x+'" y="'+(H-12)+'" fill="'+T.tick+'" font-size="12" text-anchor="middle" font-family="IBM Plex Mono, monospace">'+(i*g.step/3600).toFixed(hours>48?0:1)+' h</text>'; }
+  let d=''; xs.forEach((i,k)=>{ d+=(k?'L':'M')+X(i).toFixed(1)+' '+Y(ys[k]).toFixed(1); });
+  svg+='<path d="'+d+'" fill="none" stroke="'+T.ref+'" stroke-width="2"/>';
+  svg+='<text x="'+ml+'" y="'+(mt+14)+'" fill="'+T.axis+'" font-size="13" font-family="IBM Plex Sans, sans-serif">EPA 5.2.4: '+esc(s.label)+' ('+esc(seriesUnit(s))+')</text></svg>';
+  // difference strips
+  const eng=ENG.filter(e=>!e.startsWith('EPA'));
+  const SH=46; let s2='<svg class="chart" viewBox="0 0 '+W+' '+(eng.length*SH+10)+'" role="img" aria-label="Engine minus EPA">';
+  eng.forEach((e,j)=>{
+    const y=5+j*SH, st=s.eng[e], h=SH-8;
+    s2+='<rect x="'+ml+'" y="'+y+'" width="'+(W-ml-mr)+'" height="'+h+'" rx="4" fill="'+T.face+'" stroke="'+T.frame+'"/>';
+    s2+='<text x="'+(ml-8)+'" y="'+(y+h/2+4)+'" fill="'+T.axis+'" font-size="12" text-anchor="end" font-family="IBM Plex Sans, sans-serif">'+esc(shortName(e))+'</text>';
+    if(st&&st.n!=null){
+      const zc=st.max===0?T.eng[e]:T.bad;
+      s2+='<text x="'+(ml+8)+'" y="'+(y+14)+'" fill="'+T.tick+'" font-size="11" font-family="IBM Plex Mono, monospace">engine minus EPA, every period: max |d| = '+st.max+' over '+fmt(st.n)+' periods</text>';
+      s2+='<line x1="'+ml+'" x2="'+(W-mr)+'" y1="'+(y+h-10)+'" y2="'+(y+h-10)+'" stroke="'+zc+'" stroke-width="2"/>';
+      s2+='<text x="'+(W-mr-6)+'" y="'+(y+h-14)+'" fill="'+T.tick+'" font-size="10" text-anchor="end" font-family="IBM Plex Mono, monospace">0</text>';
+    } else {
+      s2+='<text x="'+(ml+10)+'" y="'+(y+h/2+4)+'" fill="'+T.tick+'" font-size="11.5" font-family="IBM Plex Sans, sans-serif">not run in this session</text>';
+    }
+  });
+  s2+='</svg>';
+  $('#g-chart').innerHTML=svg+s2;
+  let h='<thead><tr><th>Engine</th><th class="num">Periods compared</th><th class="num">Periods that differ</th><th class="num">Max |engine - EPA|</th></tr></thead><tbody>';
+  eng.forEach(e=>{ const st=s.eng[e]; h+='<tr><td>'+esc(e)+'</td>'+(st&&st.n!=null?'<td class="num">'+fmt(st.n)+'</td><td class="num">'+fmt(st.ndiff)+'</td><td class="num">'+st.max+'</td>':'<td colspan="3" class="note">not run in this session</td>')+'</tr>'; });
+  $('#g-table').innerHTML=h+'</tbody>';
+}
+
+/* ------------------------------------------------------------------ speed */
+function speed(){
+  const B=APP.bench;
+  if(!B){ $('#sp-method').textContent='The benchmark has not been run yet.'; return; }
+  $('#sp-method').textContent='Method: '+B.n_models+' models chosen to span EPA run times from '+B.epa_min.toFixed(2)+' to '+B.epa_max.toFixed(2)+' s; '+B.reps+' repetitions; in each, every engine ran every model in a fresh random order, and EPA ran twice so the spread of EPA against itself sets the noise floor ('+B.noise[0].toFixed(2)+' to '+B.noise[1].toFixed(2)+'x across models). CPU time is user plus system time of the engine process, measured '+B.when+'.'+(B.rust_noise?' The Rust row comes from a separate run made later on a different machine ('+B.rust_reps+' repetitions of EPA, EPA again and Rust, measured '+B.rust_when+'); its ratios are against EPA in that run, where EPA against itself spread '+B.rust_noise[0].toFixed(2)+' to '+B.rust_noise[1].toFixed(2)+'x.':'');
+  $('#sp-fig').innerHTML=APP.figs.speed;
+  let h='<thead><tr><th>Engine</th><th class="num">Median CPU vs EPA</th><th class="num">Fastest model</th><th class="num">Slowest model</th><th class="num">Start-up, s (--version)</th></tr></thead><tbody>';
+  B.engines.forEach(e=>{ const v=B.per_model[e]; h+='<tr><td>'+esc(e)+'</td><td class="num">'+B.median[e].toFixed(2)+'x</td><td class="num">'+Math.min(...v).toFixed(2)+'x</td><td class="num">'+Math.max(...v).toFixed(2)+'x</td><td class="num">'+(B.startup[e]!=null?B.startup[e].toFixed(3):'-')+'</td></tr>'; });
+  $('#sp-table').innerHTML=h+'</tbody>';
+}
+
+/* ------------------------------------------------------------------ verify */
+function verify(){
+  const C=APP.controls, cen=APP.census;
+  $('#vf-contract').innerHTML='Each engine runs every model in the model\'s own folder, as EPA\'s command line does. It passes only if its <code>.out</code> is byte-identical to EPA 5.2.4\'s and its <code>.rpt</code> is identical line for line after removing the three wall-clock lines (<code>Analysis begun on</code>, <code>Analysis ended on</code>, <code>Total elapsed time</code>). The reference is EPA 5.2.4 from the USEPA v5.2.4 tag, built with gcc 13.3 at -O2 with _FORTIFY_SOURCE off, run on x86-64 Linux with glibc 2.39. When an input error stops EPA before it writes results, the engine must not write a results file either ('+(cen.error_decks-cen.error_decks_with_out)+' models; this rule was made explicit after the runs, and every engine\'s stored outputs pass it). The Fortran build adds -fwrapv and -ffp-contract=off; none of the shipped binaries contains a fused multiply-add instruction.';
+  $('#vf-controls').innerHTML=APP.figs.controls;
+  $('#vf-controls-note').textContent='Null control: EPA run a second time on the '+C.epa_rerun_n+'-model control set gave '+C.epa_rerun_same+' of '+C.epa_rerun_n+' identical files. Positive control: the Fortran engine rebuilt with -ffp-contract=fast -mfma in place of -ffp-contract=off (gate/build_fma_control.sh; '+C.fma_instr+' fused instructions in that build, none in the shipped one) differed from EPA on '+(C.fma_all_n-C.fma_all_same)+' of '+C.fma_all_n+' models. Those are the models sensitive enough to notice one rounding step.';
+  let h='<thead><tr><th>Model that noticed the change</th><th>Verdict</th><th>First report line that differs (EPA, then the FMA build)</th></tr></thead><tbody>';
+  (C.fma_all_diff||[]).forEach(r=>{ const f=r.first||[]; h+='<tr><td>'+esc(r.path)+'</td><td><span class="pill bad">'+esc(r.status)+'</span></td><td class="mono">'+(f.length?esc(f[1])+'<br>'+esc(f[2]):'(.out only)')+'</td></tr>'; });
+  $('#vf-fma').innerHTML=h+'</tbody>';
+  $('#vf-fma-sum').textContent='The '+(C.fma_all_diff||[]).length+' models that noticed the change, with the first report line that differs';
+  $('#vf-fmt').textContent='crt_format.f90 (pure Fortran) was compared with glibc 2.39 byte for byte: '+fmt(C.fmt_printf)+' printf cases, '+fmt(C.fmt_sscanf)+' sscanf cases and '+fmt(C.fmt_strtod)+' strtod cases, '+fmt(C.fmt_mismatch)+' mismatches (f90/runtime/tests/run_tests.sh).';
+  $('#vf-coverage').innerHTML=APP.figs.coverage;
+  const sh=Object.entries(cen.shapes);
+  $('#vf-shapes').innerHTML='<thead><tr><th>Cross-section shape</th><th class="num">Models using it</th></tr></thead><tbody>'+sh.map(([k,v])=>'<tr><td>'+esc(k)+'</td><td class="num">'+v+'</td></tr>').join('')+'</tbody>';
+  const opts=[['Routing',cen.routing],['Infiltration',cen.infiltration],['Flow units',cen.units]];
+  $('#vf-opts').innerHTML='<thead><tr><th>Option</th><th>Value</th><th class="num">Models</th></tr></thead><tbody>'+opts.map(([k,o])=>Object.entries(o).map(([v,c],i)=>'<tr><td>'+(i?'':esc(k))+'</td><td>'+esc(v==='null'?'(not reported)':v)+'</td><td class="num">'+c+'</td></tr>').join('')).join('')+'</tbody>';
+  $('#vf-defects').innerHTML='<thead><tr><th>#</th><th>Where</th><th>The code as it is</th><th>What happens, and what the ports do</th></tr></thead><tbody>'+APP.defects.map(d=>'<tr><td>'+esc(d.n)+'</td><td class="mono">'+esc(d.where)+'</td><td class="mono">'+esc(d.code)+'</td><td>'+esc(d.what)+'</td></tr>').join('')+'</tbody>';
+  const P=APP.python;
+  const lim=['Identical to EPA means EPA\'s answers, right or wrong. No observed flow enters anywhere.',
+    'One platform: x86-64 Linux, glibc 2.39, gcc 13.3. Elsewhere the math library differs, and a port matches EPA built there only if its math library matches too.',
+    APP.corpus_note,
+    cen.error_decks+' of the '+fmt(APP.models.length)+' stop on an input error. For '+(cen.error_decks-cen.error_decks_with_out)+' of them EPA writes no results file and the report is the whole comparison; the other '+cen.error_decks_with_out+' write a short one, which is compared.',
+    'Only '+(C.fma_all_n-C.fma_all_same)+' of the '+C.fma_all_n+' models noticed the one-rounding-step change made in the positive control; the bit-level evidence rests mostly on them.',
+    'Counting only models that ran without an input error, none exercises: '+cen.not_exercised.join(', ')+'. Street and inlet hydraulics appear in one deck, which stops on input errors; snowmelt runs in '+cen.snow+'.',
+    'Python ran '+fmt(P.fast_n)+' fast models and '+fmt(P.slow_run)+' of the '+fmt(P.slow_n)+' slow ones.',
+    (APP.rust&&APP.rust.commit?'swmm5-cplus and swmm5-rust were built from their own repositories and gated here; how they were made is documented there.':'The Rust engine was not run here.')+' The stepping API (swmm_step and friends) is translated but was not gated; only the command line was.',
+    'No person has read the generated code line by line. The evidence is the gate and the controls.'];
+  $('#vf-limits').innerHTML=lim.map(s=>'<li class="note">'+esc(s)+'</li>').join('');
+}
+
+
+/* ------------------------------------------------------------------ welcome, tour */
+const TOUR=[
+  {view:'scoreboard',title:'Read the verdict',body:'One row per engine. Fortran, C# and C++ match EPA 5.2.4 on every gate model; Python on every model it ran.'},
+  {view:'models',title:'Find a model',body:'Filter, sort, and open a row to see each engine\'s output fingerprint next to EPA\'s.'},
+  {view:'graphs',title:'Compare the curves',body:'The reference series on top; under it, each engine minus EPA at every reporting period.'},
+  {view:'speed',title:'Weigh the cost',body:'CPU time against EPA, with EPA against itself as the noise floor.'},
+  {view:'verify',title:'Check the evidence',body:'The parity contract, the null and positive controls, coverage and the EPA defect register.'},
+  {view:'doc',title:'Read how it was done',body:'The essay, with figures; the same text ships as a Word file in the repositories.'},
+  {view:null,title:'Come back any time',body:'The ? button reopens this guide. Make a GIF records this tour as an animated GIF.',target:'#help-btn'}
+];
+let tourIdx=-1, tipEl=null, ringEl=null;
+function welcome(open){ $('#welcome').hidden=!open; }
+$('#help-btn').addEventListener('click',()=>welcome(true));
+$('#w-close').addEventListener('click',()=>{ welcome(false); try{ localStorage.setItem('sixengines_seen','1'); }catch(e){} });
+$('#w-tour').addEventListener('click',()=>{ welcome(false); try{ localStorage.setItem('sixengines_seen','1'); }catch(e){} tour(0); });
+function tourEnd(){ tourIdx=-1; if(tipEl) tipEl.remove(); if(ringEl) ringEl.remove(); tipEl=ringEl=null; }
+function tour(i){
+  tourEnd(); if(i<0||i>=TOUR.length) return; tourIdx=i;
+  const st=TOUR[i];
+  if(st.view){ location.hash=st.view; show(st.view); window.scrollTo(0,0); }
+  const tgt=st.target?$(st.target):document.querySelector('nav.tabs button[data-view="'+st.view+'"]');
+  const r=tgt.getBoundingClientRect();
+  ringEl=document.createElement('div'); ringEl.className='ring';
+  Object.assign(ringEl.style,{left:(r.left-4)+'px',top:(r.top-4)+'px',width:(r.width+8)+'px',height:(r.height+8)+'px'});
+  tipEl=document.createElement('div'); tipEl.className='tip'; tipEl.setAttribute('role','dialog');
+  tipEl.innerHTML='<h3>'+esc(st.title)+'</h3><p>'+esc(st.body)+'</p><div class="nav"><span class="dots">'+(i+1)+' of '+TOUR.length+'</span><span>'+
+    (i>0?'<button class="btn" id="t-back">Back</button> ':'')+'<button class="btn primary" id="t-next">'+(i===TOUR.length-1?'Done':'Next')+'</button></span></div>';
+  document.body.append(ringEl,tipEl);
+  const left=Math.max(12,Math.min(window.innerWidth-332,r.left)); tipEl.style.left=left+'px'; tipEl.style.top=(r.bottom+12)+'px';
+  $('#t-next').addEventListener('click',()=>{ if(i===TOUR.length-1) tourEnd(); else tour(i+1); });
+  if(i>0) $('#t-back').addEventListener('click',()=>tour(i-1));
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ tourEnd(); welcome(false); $('#gifbox').hidden=true; }});
+window.addEventListener('resize',()=>{ if(tourIdx>=0) tour(tourIdx); });
+
+/* ------------------------------------------------------------------ downloads (CSV, GIF) */
+let DL=null;
+(async()=>{ try{ DL=window.claude&&window.claude.use?await window.claude.use('downloads'):null; }catch(e){ DL=null; }
+  $('#m-csv').hidden=!DL; $('#sp-csv').hidden=!DL||!APP.bench; })();
+async function offer(filename,data){
+  if(!DL) return false;
+  try{ await DL.save({filename,data}); return true; }catch(e){ return false; }
+}
+function csvCell(v){ v=v==null?'':String(v); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; }
+$('#m-csv').addEventListener('click',()=>{
+  const rows=currentModelRows(); const eng=ENG.filter(e=>!e.startsWith('EPA'));
+  const head=['id','folder','model','input_kb','epa_seconds','subcatchments','nodes','links','pollutants','periods','flow_units','routing','routing_ce_pct','runoff_ce_pct','errors','warnings','rpt_lines','out_bytes','epa_out_md5_10'].concat(eng.map(e=>e+' verdict'),eng.map(e=>e+' out_md5_10'));
+  const lines=[head.map(csvCell).join(',')];
+  rows.forEach(m=>{ const c=m.c||[]; lines.push([m.id,m.f,m.n,m.kb,m.s,c[0],c[1],c[2],c[3],c[4],m.r.u,m.r.rt,m.r.ce,m.r.cr,m.r.e,m.r.w,m.rl,m.ob,m.e[ENG[0]].ho].concat(eng.map(e=>m.e[e].s),eng.map(e=>m.e[e].ho||'')).map(csvCell).join(',')); });
+  offer('six-engines-models.csv',lines.join('\n')+'\n');
+});
+$('#sp-csv').addEventListener('click',()=>{
+  const B=APP.bench; const lines=['model,engine,cpu_seconds_per_rep'];
+  Object.entries(B.raw).forEach(([k,v])=>{ const [m,e]=k.split('|'); lines.push([m,e,v.map(x=>x.toFixed(4)).join(' ')].map(csvCell).join(',')); });
+  offer('six-engines-timings.csv',lines.join('\n')+'\n');
+});
+
+/* ------------------------------------------------------------------ GIF: the tour, captured frame by frame */
+function gifEncode(frames,w,h,delayCs){
+  // fixed palette: 6x6x6 colour cube + 40 greys; LZW as in the GIF89a spec
+  const pal=[]; for(let r=0;r<6;r++)for(let g=0;g<6;g++)for(let b=0;b<6;b++)pal.push([r*51,g*51,b*51]);
+  for(let i=0;i<40;i++){ const v=Math.round(i*255/39); pal.push([v,v,v]); }
+  const out=[]; const B=b=>out.push(b&255), W=v=>{B(v);B(v>>8);}; const S=t=>{for(const ch of t)B(ch.charCodeAt(0));};
+  S('GIF89a'); W(w); W(h); B(0xF7); B(0); B(0); pal.forEach(c=>{B(c[0]);B(c[1]);B(c[2]);});
+  B(0x21);B(0xFF);B(11);S('NETSCAPE2.0');B(3);B(1);W(0);B(0);
+  for(const px of frames){
+    const idx=new Uint8Array(w*h);
+    for(let i=0,j=0;i<idx.length;i++,j+=4){
+      const r=px[j],g=px[j+1],b=px[j+2];
+      const ci=Math.round(r/51)*36+Math.round(g/51)*6+Math.round(b/51);
+      const cc=pal[ci]; const gv=Math.round((r+g+b)/3*39/255); const gc=pal[216+gv];
+      const dc=(cc[0]-r)**2+(cc[1]-g)**2+(cc[2]-b)**2, dg=(gc[0]-r)**2+(gc[1]-g)**2+(gc[2]-b)**2;
+      idx[i]=dg<dc?216+gv:ci;
+    }
+    B(0x21);B(0xF9);B(4);B(0);W(delayCs);B(0);B(0);
+    B(0x2C);W(0);W(0);W(w);W(h);B(0);
+    const min=8,clear=256,eoi=257; let size=9,next=258,dict=new Map(),cur=0,bits=0; const data=[];
+    const emit=c=>{ cur|=c<<bits; bits+=size; while(bits>=8){ data.push(cur&255); cur>>>=8; bits-=8; } };
+    emit(clear); let pre=idx[0];
+    for(let i=1;i<idx.length;i++){ const k=idx[i], key=pre*256+k, v=dict.get(key);
+      if(v!==undefined){ pre=v; continue; }
+      emit(pre);
+      if(next===4096){ emit(clear); next=258; size=9; dict.clear(); }
+      else { if(next>=(1<<size)) size++; dict.set(key,next++); }
+      pre=k; }
+    emit(pre); emit(eoi); if(bits>0) data.push(cur&255);
+    B(min); for(let i=0;i<data.length;i+=255){ const n=Math.min(255,data.length-i); B(n); for(let k=0;k<n;k++) B(data[i+k]); } B(0);
+  }
+  B(0x3B); return new Uint8Array(out);
+}
+function loadScript(src){ return new Promise((res,rej)=>{ const sc=document.createElement('script'); sc.src=src; sc.onload=res; sc.onerror=rej; document.head.appendChild(sc); }); }
+function resolveVars(root){
+  // html2canvas paints SVG through an image, where CSS custom properties do not resolve: inline them for the capture
+  const cs=getComputedStyle(document.documentElement); const saved=[];
+  root.querySelectorAll('svg [style*="var(--"]').forEach(el=>{ const st=el.getAttribute('style'); saved.push([el,st]);
+    el.setAttribute('style',st.replace(/var\((--[\w-]+)\)/g,(m,k)=>cs.getPropertyValue(k).trim()||m)); });
+  return ()=>saved.forEach(([el,st])=>el.setAttribute('style',st));
+}
+let GIFBUSY=false, GIFBLOB=null;
+$('#gif-btn').addEventListener('click',async()=>{
+  if(GIFBUSY) return; GIFBUSY=true; const btn=$('#gif-btn'); btn.textContent='Recording...';
+  try{
+    if(typeof html2canvas==='undefined') await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
+    const W=Math.min(960,window.innerWidth), frames=[]; let H=0;
+    const bg=getComputedStyle(document.body).backgroundColor;
+    for(let i=0;i<TOUR.length;i++){
+      tour(i); await new Promise(r=>setTimeout(r,450));
+      const restore=resolveVars(document.body);
+      const c=await html2canvas(document.body,{backgroundColor:bg,logging:false,x:window.scrollX,y:window.scrollY,width:window.innerWidth,height:window.innerHeight,windowWidth:window.innerWidth,windowHeight:window.innerHeight,scale:1});
+      restore();
+      const sc=W/c.width; H=H||Math.round(c.height*sc);
+      const f=document.createElement('canvas'); f.width=W; f.height=H; const x=f.getContext('2d');
+      x.fillStyle=bg; x.fillRect(0,0,W,H); x.drawImage(c,0,0,c.width*sc,c.height*sc);
+      x.fillStyle='rgba(8,14,28,0.86)'; x.fillRect(0,H-40,W,40); x.fillStyle='#f8fafc'; x.font='600 16px IBM Plex Sans, sans-serif';
+      x.fillText((i+1)+'/'+TOUR.length+'  '+TOUR[i].title+': '+TOUR[i].body.slice(0,90),14,H-15);
+      frames.push(x.getImageData(0,0,W,H).data);
+    }
+    tourEnd();
+    const bytes=gifEncode(frames,W,H,220);
+    GIFBLOB=new Blob([bytes],{type:'image/gif'});
+    $('#gif-img').src=URL.createObjectURL(GIFBLOB); $('#gif-img').hidden=false;
+    $('#gif-msg').textContent='A '+TOUR.length+'-frame captioned tour of the app as it looks now ('+Math.round(bytes.length/1024)+' KB).'+(DL?'':' Saving files is not available in this view.');
+    $('#gif-save').hidden=!DL; $('#gifbox').hidden=false;
+  }catch(e){
+    tourEnd(); $('#gif-msg').textContent='The GIF could not be made here: '+(e&&e.message||e); $('#gif-img').hidden=true; $('#gif-save').hidden=true; $('#gifbox').hidden=false;
+  }
+  btn.textContent='Make a GIF'; GIFBUSY=false;
+});
+$('#gif-close').addEventListener('click',()=>{ $('#gifbox').hidden=true; });
+$('#gif-save').addEventListener('click',()=>{ if(GIFBLOB) offer('six-engines-tour.gif',GIFBLOB); });
+
+function redraw(){ drawGraph(); }
+scoreboard(); modelsInit(); graphsInit(); speed(); verify();
+show((location.hash||'#scoreboard').slice(1));
+(function(){ let seen=false; try{ seen=localStorage.getItem('sixengines_seen')==='1'; }catch(e){} if(!seen) welcome(true); })();
+</script>
