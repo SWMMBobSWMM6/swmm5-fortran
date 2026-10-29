@@ -1,0 +1,66 @@
+exp 2274711
+log 1087502
+log10 456379
+pow 7288343
+sin 2754755
+cos 2750117
+tan 400469
+asin 420026
+acos 460016
+atan 400016
+fma 400256
+exp 300000
+log 200000
+log10 300000
+pow 700000
+sin 300000
+cos 300000
+tan 300000
+asin 300000
+acos 300000
+atan 300000
+== TypeScript
+exp    0 of 2274711 differ, 0 NaN sign   (0.746 us/call)
+log    0 of 1087502 differ, 0 NaN sign   (0.801 us/call)
+log10  0 of 456379 differ, 0 NaN sign   (1.161 us/call)
+pow    0 of 7288343 differ, 0 NaN sign   (0.892 us/call)
+sin    0 of 2754755 differ, 0 NaN sign   (0.594 us/call)
+cos    0 of 2750117 differ, 0 NaN sign   (0.544 us/call)
+tan    0 of 400469 differ, 0 NaN sign   (1.111 us/call)
+asin   0 of 420026 differ, 0 NaN sign   (0.674 us/call)
+acos   0 of 460016 differ, 0 NaN sign   (1.056 us/call)
+atan   0 of 400016 differ, 0 NaN sign   (0.525 us/call)
+fma    0 of 400256 differ, 0 NaN sign   (0.142 us/call)
+exp    0 of 300000 differ, 0 NaN sign   (0.737 us/call)
+log    0 of 200000 differ, 0 NaN sign   (0.980 us/call)
+log10  0 of 300000 differ, 0 NaN sign   (1.210 us/call)
+pow    0 of 700000 differ, 0 NaN sign   (1.940 us/call)
+sin    0 of 300000 differ, 0 NaN sign   (0.880 us/call)
+cos    0 of 300000 differ, 0 NaN sign   (1.113 us/call)
+tan    0 of 300000 differ, 0 NaN sign   (1.483 us/call)
+asin   0 of 300000 differ, 0 NaN sign   (0.667 us/call)
+acos   0 of 300000 differ, 0 NaN sign   (0.390 us/call)
+atan   0 of 300000 differ, 0 NaN sign   (0.233 us/call)
+pow vs pow_exact: 0 of 20000000 differ, 0 NaN sign
+== Java
+exp    0 of 2274711 differ, 0 NaN sign   (0.230 us/call)
+log    0 of 1087502 differ, 0 NaN sign   (0.227 us/call)
+log10  0 of 456379 differ, 0 NaN sign   (0.360 us/call)
+pow    0 of 7288343 differ, 0 NaN sign   (0.328 us/call)
+sin    0 of 2754755 differ, 0 NaN sign   (0.305 us/call)
+cos    0 of 2750117 differ, 0 NaN sign   (0.162 us/call)
+tan    0 of 400469 differ, 0 NaN sign   (1.747 us/call)
+asin   0 of 420026 differ, 0 NaN sign   (0.423 us/call)
+acos   0 of 460016 differ, 0 NaN sign   (1.492 us/call)
+atan   0 of 400016 differ, 0 NaN sign   (0.389 us/call)
+fma    0 of 400256 differ, 0 NaN sign   (0.377 us/call)
+exp    0 of 300000 differ, 0 NaN sign   (0.619 us/call)
+log    0 of 200000 differ, 0 NaN sign   (0.164 us/call)
+log10  0 of 300000 differ, 0 NaN sign   (0.501 us/call)
+pow    0 of 700000 differ, 0 NaN sign   (2.169 us/call)
+sin    0 of 300000 differ, 0 NaN sign   (1.075 us/call)
+cos    0 of 300000 differ, 0 NaN sign   (1.068 us/call)
+tan    0 of 300000 differ, 0 NaN sign   (1.400 us/call)
+asin   0 of 300000 differ, 0 NaN sign   (0.425 us/call)
+acos   0 of 300000 differ, 0 NaN sign   (0.604 us/call)
+atan   0 of 300000 differ, 0 NaN sign   (0.440 us/call)

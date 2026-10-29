@@ -1,0 +1,2 @@
+Hydrology/sewer_rdii_problem.inp: 613 unit-hydrograph groups, WET_STEP 60 s, longest UH base 9900 hours
+pastRain + pastMonth arrays: 3384207351 bytes (3.38 GB)

@@ -1,0 +1,30 @@
+glibc 2.39 (release/2.39/master at ce65d944e38a), sysdeps/ieee754/dbl-64/e_pow.c, lines 252-267 (LGPL-2.1-or-later):
+/* Returns 0 if not int, 1 if odd int, 2 if even int.  The argument is
+   the bit representation of a non-zero finite floating-point value.  */
+static inline int
+checkint (uint64_t iy)
+{
+  int e = iy >> 52 & 0x7ff;
+  if (e < 0x3ff)
+    return 0;
+  if (e > 0x3ff + 52)
+    return 2;
+  if (iy & ((1ULL << (0x3ff + 52 - e)) - 1))
+    return 0;
+  if (iy & (1ULL << (0x3ff + 52 - e)))
+    return 1;
+  return 2;
+}
+
+GCC 13.3 optimized GIMPLE of the FMA build (tools/libm/build_glibm.sh), e_pow.c.254t.optimized, lines 460-466:
+    goto <bb 32>; [66.00%]
+
+  <bb 32> [local count: 23102609]:
+  _119 = _54 >> _115;
+  _10 = (_Bool) _119;
+  _47 = (unsigned int) _10;
+  _44 = _47 << 18;
+
+The translation (ts/src/glibm.ts, lines 894-895):
+        l__119 = BigInt.asUintN(64, (l__54 >> BigInt(l__115)));
+        l__10 = ((l__119 & 1n) !== 0n);

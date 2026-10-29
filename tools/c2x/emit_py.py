@@ -1186,7 +1186,7 @@ class PyEmitter(CSEmitter):
             out += self.record(name, c)
         out += glob + ['', '']
         out += funcs
-        out += ['', 'from .overrides import *  # hand-ported odesolve.c, mempool.c and five helpers', '']
+        out += ['', 'from .overrides import *  # hand-ported odesolve.c, mempool.c and six helpers', '']
         open(os.path.join(outdir, 'engine.py'), 'w').write('\n'.join(out) + '\n')
         return self.problems
 

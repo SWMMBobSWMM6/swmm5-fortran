@@ -1,0 +1,13 @@
+done 480
+pow      1,235,269,125 calls in 462 models   biggest: 155,180,176 77e00bc268b0, 100,603,837 22c87e68a427, 87,234,681 60dda48e3fd9
+cos        136,429,895 calls in 234 models   biggest: 53,233,044 22c87e68a427, 23,755,038 325fd17cef32, 9,159,100 5f51615fbe49
+sin        135,803,579 calls in 234 models   biggest: 52,875,866 22c87e68a427, 23,876,276 325fd17cef32, 9,185,142 5f51615fbe49
+exp         13,743,401 calls in 339 models   biggest: 2,961,188 fcdbc4886a73, 2,473,287 77e00bc268b0, 1,204,523 10245dda6972
+log          3,256,385 calls in 160 models   biggest: 1,475,712 fcdbc4886a73, 191,532 7db58b7346ae, 155,424 325fd17cef32
+acos           277,501 calls in   3 models   biggest: 186,674 c61e91bbee6f, 58,758 033134b3aec7, 32,069 0195187c014a
+log10          135,286 calls in 442 models   biggest: 95,917 ad795fb5c468, 23,006 6b8c29debb7e, 12,846 69aa966bd700
+asin            45,499 calls in   3 models   biggest: 45,489 0195187c014a, 9 033134b3aec7, 1 c61e91bbee6f
+tan                453 calls in 453 models   biggest: 1 ffbf329a5dbc, 1 ff461f3d1152, 1 fecad8723501
+atan                 0 calls in   0 models   biggest: 
+sqrt                 0 calls in   0 models   biggest: 
+

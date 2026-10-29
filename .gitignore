@@ -6,3 +6,8 @@ __pycache__/
 *.pyc
 ref/runswmm
 f90/runtime/tests/work/
+ts/node_modules/
+ts/dist/
+java/classes/
+java/swmm5.jar
+build/

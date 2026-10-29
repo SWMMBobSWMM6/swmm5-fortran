@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Collect the measured results the six-engine app shows into tools/app/data/app_data.json.
+"""Collect the measured results the engines app shows into tools/app/data/app_data.json.
 
 Every number comes from a file on disk: the EPA 5.2.4 reference outputs (gate/ref_outputs), each
 engine's gate results (gate/results/<run>.json and its output folders), the benchmark
@@ -22,6 +22,8 @@ RUNS = collections.OrderedDict([
     ('Fortran', ['fortran3']),
     ('C#', ['csharp3']),
     ('Python', ['py_final', 'py_final_slow']),
+    ('TypeScript', ['ts_final_q1', 'ts_final_q2', 'ts_final_q3', 'ts_final_q4']),
+    ('Java', ['java_final_a', 'java_final_b']),
 ])
 TS = re.compile(rb'Analysis begun|Analysis ended|Total elapsed time')
 

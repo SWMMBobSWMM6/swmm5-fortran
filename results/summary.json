@@ -26,6 +26,16 @@
    "rpt_lines": 132566,
    "out_bytes": 966242270,
    "NOTRUN": 15
+  },
+  "TypeScript": {
+   "PASS": 480,
+   "rpt_lines": 152690,
+   "out_bytes": 1244999775
+  },
+  "Java": {
+   "PASS": 480,
+   "rpt_lines": 152690,
+   "out_bytes": 1244999775
   }
  },
  "controls": {
@@ -129,7 +139,9 @@
    "Fortran": 1.2600753187484757,
    "C#": 5.194367623657432,
    "Python": 81.62827633573721,
-   "Rust": 1.1062617076386814
+   "Rust": 1.1062617076386814,
+   "TypeScript": 19.235503776361483,
+   "Java": 9.175083828811127
   },
   "range": {
    "EPA again": [
@@ -155,6 +167,14 @@
    "Rust": [
     0.997849183356233,
     1.2652382499665709
+   ],
+   "TypeScript": [
+    11.444051130776328,
+    73.65880027900468
+   ],
+   "Java": [
+    4.27716852396009,
+    93.97233201581363
    ]
   },
   "noise": [
@@ -172,13 +192,25 @@
    "C++": 0.0029840000000000005,
    "EPA again": 0.001865,
    "C#": 0.06843300000000418,
-   "Rust": 0.002128999999996495
+   "Rust": 0.002128999999996495,
+   "TypeScript": 0.10104400000000001,
+   "Java": 0.1175160000000135
   },
   "reps": 3,
   "n_models": 12,
   "epa_min": 0.007991999999993005,
   "epa_max": 0.7241699999999986,
-  "when": "2026-10-29 01:50:05"
+  "when": "2026-10-29 01:50:05",
+  "rust_noise": [
+   0.8436917785312916,
+   1.0780950924684836
+  ],
+  "rust_reps": 18,
+  "tsj_noise": [
+   0.8666040710402156,
+   1.3222159204294377
+  ],
+  "tsj_reps": 5
  },
  "census": {
   "nan_cells": 292,
@@ -280,7 +312,15 @@
  },
  "lines": {
   "c": 50788,
-  "translator": 5691,
+  "translator": 8439,
+  "ts_gen": 41192,
+  "ts_rt": 971,
+  "java_gen": 44855,
+  "java_rt": 1078,
+  "libm_ts": 5011,
+  "libm_java": 4943,
+  "libm_rt": 341,
+  "libm_tools": 1039,
   "f90_gen": 46364,
   "f90_rt": 4048,
   "cs_gen": 41429,
@@ -338,12 +378,682 @@
    "what": "size is nrows*ncols (project.c:401), a count of doubles, but memset counts bytes, so seven eighths of the matrix keeps malloc's contents. Only USE INFLOWS reaches it, and no gate model does. There is nothing defined to copy, so the ports zero the whole matrix."
   }
  ],
- "built": "2026-10-29 09:20",
+ "built": "2026-10-29 14:50",
  "corpus_note": "The gate set is 480 of the 518 distinct models (distinct by content) in six folders of the corpus, which holds 4,540 .inp files. The other 38 were left out by an early timing survey with a 12-second limit, whose records were not kept. The cut is rough. Re-timed for this essay on a busy machine, 13 of the 38 ran past a 30-second limit and the rest took 5.8 to 29.6 seconds, 4 of them within 12; and 3 gate models took longer than 12 seconds in the reference run (attenuation_KW_High_CE.inp, 13 s, SCANLON.inp, 35 s, 72_H&H_Elements(2).inp, 39 s).",
  "rust": {
   "commit": "de9fbf1edaa0a1c9ee644744a381f535330bac41",
   "lines": 56001,
   "files": 63
  },
- "essay_title": "Six Engines, One Answer"
+ "libm": {
+  "census": [
+   {
+    "fn": "pow",
+    "calls": 1235269125,
+    "models": 462
+   },
+   {
+    "fn": "cos",
+    "calls": 136429895,
+    "models": 234
+   },
+   {
+    "fn": "sin",
+    "calls": 135803579,
+    "models": 234
+   },
+   {
+    "fn": "exp",
+    "calls": 13743401,
+    "models": 339
+   },
+   {
+    "fn": "log",
+    "calls": 3256385,
+    "models": 160
+   },
+   {
+    "fn": "acos",
+    "calls": 277501,
+    "models": 3
+   },
+   {
+    "fn": "log10",
+    "calls": 135286,
+    "models": 442
+   },
+   {
+    "fn": "asin",
+    "calls": 45499,
+    "models": 3
+   },
+   {
+    "fn": "tan",
+    "calls": 453,
+    "models": 453
+   },
+   {
+    "fn": "atan",
+    "calls": 0,
+    "models": 0
+   },
+   {
+    "fn": "sqrt",
+    "calls": 0,
+    "models": 0
+   }
+  ],
+  "tests": {
+   "TypeScript": {
+    "exp": [
+     2574711,
+     0,
+     0
+    ],
+    "log": [
+     1287502,
+     0,
+     0
+    ],
+    "log10": [
+     756379,
+     0,
+     0
+    ],
+    "pow": [
+     7988343,
+     0,
+     0
+    ],
+    "sin": [
+     3054755,
+     0,
+     0
+    ],
+    "cos": [
+     3050117,
+     0,
+     0
+    ],
+    "tan": [
+     700469,
+     0,
+     0
+    ],
+    "asin": [
+     720026,
+     0,
+     0
+    ],
+    "acos": [
+     760016,
+     0,
+     0
+    ],
+    "atan": [
+     700016,
+     0,
+     0
+    ],
+    "fma": [
+     400256,
+     0,
+     0
+    ]
+   },
+   "Java": {
+    "exp": [
+     2574711,
+     0,
+     0
+    ],
+    "log": [
+     1287502,
+     0,
+     0
+    ],
+    "log10": [
+     756379,
+     0,
+     0
+    ],
+    "pow": [
+     7988343,
+     0,
+     0
+    ],
+    "sin": [
+     3054755,
+     0,
+     0
+    ],
+    "cos": [
+     3050117,
+     0,
+     0
+    ],
+    "tan": [
+     700469,
+     0,
+     0
+    ],
+    "asin": [
+     720026,
+     0,
+     0
+    ],
+    "acos": [
+     760016,
+     0,
+     0
+    ],
+    "atan": [
+     700016,
+     0,
+     0
+    ],
+    "fma": [
+     400256,
+     0,
+     0
+    ]
+   }
+  },
+  "generic_n": 480,
+  "generic_same": 437,
+  "generic_diff": [
+   {
+    "path": "EPA/221_H&H_SI_Units_Elements(2).inp",
+    "status": "RPTDIFF+OUTDIFF",
+    "first": [
+     466,
+     "05/25/2010: 08:44:31 Link U435_Psan_1_et_2_et_3 setting changed to   0.00 by Control U435_R1",
+     "05/25/2010: 08:45:36 Link U435_Psan_1_et_2_et_3 setting changed to   0.00 by Control U435_R1"
+    ]
+   },
+   {
+    "path": "EPA/380_nodes.inp",
+    "status": "RPTDIFF+OUTDIFF",
+    "first": [
+     415,
+     "Dry Weather Inflow .......        21.183         6.903",
+     "Dry Weather Inflow .......        21.185         6.903"
+    ]
+   },
+   {
+    "path": "EPA/429_H&H_Elements.inp",
+    "status": "RPTDIFF+OUTDIFF",
+    "first": [
+     1642,
+     "External Outflow .........       480.545       156.593",
+     "External Outflow .........       480.546       156.593"
+    ]
+   },
+   {
+    "path": "EPA/5_H&H_Elements (1).inp",
+    "status": "RPTDIFF+OUTDIFF",
+    "first": [
+     58,
+     "Continuity Error (%) .....        -0.170",
+     "Continuity Error (%) .....        -0.179"
+    ]
+   },
+   {
+    "path": "EPA/Allow_Ponding_High_CE.inp",
+    "status": "OUTDIFF",
+    "first": null
+   },
+   {
+    "path": "EPA/HRSDtest_cim_7.inp",
+    "status": "RPTDIFF+OUTDIFF",
+    "first": [
+     180,
+     "Dry Weather Inflow .......       179.003        58.331",
+     "Dry Weather Inflow .......       179.001        58.330"
+    ]
+   },
+   {
+    "path": "EPA/High_Low_Flow.inp",
+    "status": "OUTDIFF",
+    "first": null
+   },
+   {
+    "path": "EPA/InfoSewer_ICM.inp",
+    "status": "OUTDIFF",
+    "first": null
+   },
+   {
+    "path": "EPA/One_Sub_Pump_Model.inp",
+    "status": "OUTDIFF",
+    "first": null
+   },
+   {
+    "path": "EPA/PID extran_master_swmm34_example_SW5.inp",
+    "status": "OUTDIFF",
+    "first": null
+   },
+   {
+    "path": "EPA/Trapezoidal_Channel_SW5_SI_Units.inp",
+    "status": "OUTDIFF",
+    "first": null
+   },
+   {
+    "path": "EPA/airBreak_model.inp",
+    "status": "RPTDIFF+OUTDIFF",
+    "first": [
+     69,
+     "Node OFALL-10 (1.08%)",
+     "Node OFALL-10 (1.07%)"
+    ]
+   },
+   {
+    "path": "EPA/attenuation_KW_High_CE.inp",
+    "status": "OUTDIFF",
+    "first": null
+   },
+   {
+    "path": "EPA/double_fm.inp",
+    "status": "RPTDIFF",
+    "first": [
+     282,
+     "FM52A                CONDUIT      0.22     0  13:38      0.45    0.11    0.60",
+     "FM52A                CONDUIT      0.22     0  13:30      0.45    0.11    0.60"
+    ]
+   },
+   {
+    "path": "EPA/extran1_horseshoe.inp",
+    "status": "RPTDIFF",
+    "first": [
+     128,
+     "",
+     "Link 8100 (1)"
+    ]
+   },
+   {
+    "path": "EPA/manifold_pumps.inp",
+    "status": "RPTDIFF+OUTDIFF",
+    "first": [
+     44,
+     "Continuity Error (%) .....         1.833",
+     "Continuity Error (%) .....         1.840"
+    ]
+   },
+   {
+    "path": "EPA/small_wwf_dwf.inp",
+    "status": "RPTDIFF+OUTDIFF",
+    "first": [
+     381,
+     "DC-10                JUNCTION     0.05     0.15   465.35     2  06:58        0.15",
+     "DC-10                JUNCTION     0.05     0.15   465.35     2  06:59        0.15"
+    ]
+   },
+   {
+    "path": "Hydraulics/221_H&H_SI_Units_Elements.inp",
+    "status": "RPTDIFF+OUTDIFF",
+    "first": [
+     466,
+     "05/25/2010: 08:44:31 Link U435_Psan_1_et_2_et_3 setting changed to   0.00 by Control U435_R1",
+     "05/25/2010: 08:45:36 Link U435_Psan_1_et_2_et_3 setting changed to   0.00 by Control U435_R1"
+    ]
+   },
+   {
+    "path": "Hydraulics/HRSDtest_cim_7.inp",
+    "status": "RPTDIFF+OUTDIFF",
+    "first": [
+     180,
+     "Dry Weather Inflow .......       179.003        58.331",
+     "Dry Weather Inflow .......       179.001        58.330"
+    ]
+   },
+   {
+    "path": "Hydraulics/InfoSewer_ICM.inp",
+    "status": "OUTDIFF",
+    "first": null
+   },
+   {
+    "path": "Hydraulics/One_Pump_FM.inp",
+    "status": "OUTDIFF",
+    "first": null
+   },
+   {
+    "path": "Hydraulics/PID extran_master_swmm34_example_SW5.inp",
+    "status": "OUTDIFF",
+    "first": null
+   },
+   {
+    "path": "Hydraulics/diversion_weir_network.inp",
+    "status": "RPTDIFF+OUTDIFF",
+    "first": [
+     52,
+     "Continuity Error (%) .....        -0.012",
+     "Continuity Error (%) .....        -0.011"
+    ]
+   },
+   {
+    "path": "Hydraulics/extran1_horseshoe.inp",
+    "status": "RPTDIFF",
+    "first": [
+     128,
+     "",
+     "Link 8100 (1)"
+    ]
+   },
+   {
+    "path": "Hydraulics/joseph_pang_example.inp",
+    "status": "RPTDIFF",
+    "first": [
+     170,
+     "mid4                 JUNCTION     0.63     0.77   101.77     0  01:42        0.77",
+     "mid4                 JUNCTION     0.63     0.77   101.77     0  01:56        0.77"
+    ]
+   },
+   {
+    "path": "Hydraulics/linear_vsp_pump.inp",
+    "status": "RPTDIFF+OUTDIFF",
+    "first": [
+     250,
+     "External Outflow .........       179.953        58.640",
+     "External Outflow .........       179.949        58.639"
+    ]
+   },
+   {
+    "path": "Hydraulics/vsp_pump_si_units.inp",
+    "status": "RPTDIFF+OUTDIFF",
+    "first": [
+     98,
+     "External Outflow .........         0.091         0.905",
+     "External Outflow .........         0.098         0.982"
+    ]
+   },
+   {
+    "path": "Hydrology/137_H&H_Elements(1).inp",
+    "status": "OUTDIFF",
+    "first": null
+   },
+   {
+    "path": "Hydrology/17_Sub_90_Link_USA_Units.inp",
+    "status": "RPTDIFF+OUTDIFF",
+    "first": [
+     60,
+     "External Outflow .........        52.087        16.973",
+     "External Outflow .........        52.112        16.981"
+    ]
+   },
+   {
+    "path": "Hydrology/27_Nodes_5_Subs.inp",
+    "status": "RPTDIFF+OUTDIFF",
+    "first": [
+     58,
+     "Continuity Error (%) .....        -0.093",
+     "Continuity Error (%) .....        -0.094"
+    ]
+   },
+   {
+    "path": "Hydrology/28_Sub_266_Link_USA_Units.inp",
+    "status": "OUTDIFF",
+    "first": null
+   },
+   {
+    "path": "Hydrology/292_Storage_Nodes_200_Subs.inp",
+    "status": "RPTDIFF+OUTDIFF",
+    "first": [
+     887,
+     "N3272                JUNCTION    480.53   480.53     0  12:30        34.3        34.334258516.693 ga",
+     "N3272                JUNCTION    480.53   480.53     0  12:30        34.3        34.334258516.607 ga"
+    ]
+   },
+   {
+    "path": "Hydrology/9_Subs.inp",
+    "status": "RPTDIFF+OUTDIFF",
+    "first": [
+     64,
+     "Wet Weather Inflow .......        22.677         7.389",
+     "Wet Weather Inflow .......        22.676         7.389"
+    ]
+   },
+   {
+    "path": "Hydrology/CN_Horton.inp",
+    "status": "RPTDIFF+OUTDIFF",
+    "first": [
+     61,
+     "Continuity Error (%) .....         0.066",
+     "Continuity Error (%) .....         0.069"
+    ]
+   },
+   {
+    "path": "Hydrology/Ejemplo EPA.inp",
+    "status": "RPTDIFF+OUTDIFF",
+    "first": [
+     62,
+     "External Outflow .........         1.459         0.475",
+     "External Outflow .........         1.459         0.476"
+    ]
+   },
+   {
+    "path": "Hydrology/SCANLON.inp",
+    "status": "RPTDIFF+OUTDIFF",
+    "first": [
+     1019,
+     "External Outflow .........       318.026       103.633",
+     "External Outflow .........       318.510       103.791"
+    ]
+   },
+   {
+    "path": "Hydrology/Simple_4_Sub_H&H (2).inp",
+    "status": "OUTDIFF",
+    "first": null
+   },
+   {
+    "path": "Hydrology/greenroofs.inp",
+    "status": "RPTDIFF+OUTDIFF",
+    "first": [
+     62,
+     "External Outflow .........       116.309      1163.102",
+     "External Outflow .........       116.308      1163.094"
+    ]
+   },
+   {
+    "path": "Hydrology/user5_sub_patterns.inp",
+    "status": "OUTDIFF",
+    "first": null
+   },
+   {
+    "path": "OWA_EXTRAN/EXAM2_with_numerical_problem_SW5.inp",
+    "status": "OUTDIFF",
+    "first": null
+   },
+   {
+    "path": "OWA_ROUTING/routing_kinwave.inp",
+    "status": "RPTDIFF+OUTDIFF",
+    "first": [
+     36,
+     "External Outflow .........         1.454         0.474",
+     "External Outflow .........         1.455         0.474"
+    ]
+   },
+   {
+    "path": "OWA_ROUTING/routing_surcharge_slot.inp",
+    "status": "RPTDIFF+OUTDIFF",
+    "first": [
+     50,
+     "External Outflow .........        18.772         6.117",
+     "External Outflow .........        18.626         6.070"
+    ]
+   },
+   {
+    "path": "OWA_ROUTING/routing_trapezoidal.inp",
+    "status": "RPTDIFF",
+    "first": [
+     104,
+     "9                    JUNCTION     1.28     2.01    12.01     0  01:14        2.01",
+     "9                    JUNCTION     1.28     2.01    12.01     0  01:15        2.01"
+    ]
+   }
+  ],
+  "powdiff": [
+   20000000,
+   0
+  ],
+  "native": {
+   "V8": {
+    "exp": [
+     180690,
+     2274711
+    ],
+    "log": [
+     50613,
+     1087502
+    ],
+    "log10": [
+     14414,
+     456379
+    ],
+    "pow": [
+     662314,
+     7288343
+    ],
+    "sin": [
+     104869,
+     2754755
+    ],
+    "cos": [
+     106903,
+     2750117
+    ],
+    "tan": [
+     10746,
+     400469
+    ],
+    "asin": [
+     12558,
+     420026
+    ],
+    "acos": [
+     18072,
+     460016
+    ],
+    "atan": [
+     5663,
+     400016
+    ]
+   },
+   "Java": {
+    "exp": [
+     4027,
+     2274711
+    ],
+    "log": [
+     687,
+     1087502
+    ],
+    "log10": [
+     59486,
+     456379
+    ],
+    "pow": [
+     6146,
+     7288343
+    ],
+    "sin": [
+     6062,
+     2754755
+    ],
+    "cos": [
+     4208,
+     2750117
+    ],
+    "tan": [
+     1597,
+     400469
+    ],
+    "asin": [
+     12558,
+     420026
+    ],
+    "acos": [
+     18072,
+     460016
+    ],
+    "atan": [
+     5663,
+     400016
+    ]
+   },
+   "Java StrictMath": {
+    "exp": [
+     180691,
+     2274711
+    ],
+    "log": [
+     50613,
+     1087502
+    ],
+    "log10": [
+     14414,
+     456379
+    ],
+    "pow": [
+     636165,
+     7288343
+    ],
+    "sin": [
+     104869,
+     2754755
+    ],
+    "cos": [
+     106903,
+     2750117
+    ],
+    "tan": [
+     10746,
+     400469
+    ],
+    "asin": [
+     12558,
+     420026
+    ],
+    "acos": [
+     18072,
+     460016
+    ],
+    "atan": [
+     5663,
+     400016
+    ]
+   }
+  },
+  "native_ctl": {
+   "TypeScript": {
+    "n": 40,
+    "same": 34,
+    "diff": [
+     "EPA/Clocktime_Pump_Rules.inp",
+     "EPA/attenuation_DW_High_CE.inp",
+     "EPA/extran1_custom.inp",
+     "Hydraulics/FM_Example2.inp",
+     "Hydraulics/extran1_gothic.inp",
+     "Hydrology/CN_Horton.inp"
+    ]
+   },
+   "Java": {
+    "n": 40,
+    "same": 39,
+    "diff": [
+     "Hydrology/CN_Horton.inp"
+    ]
+   }
+  },
+  "powtime": [
+   "636",
+   "917",
+   "120"
+  ],
+  "native_ctl_all": {
+   "Java": {
+    "n": 480,
+    "same": 442
+   }
+  }
+ },
+ "essay_title": "Eight Engines, One Answer"
 }

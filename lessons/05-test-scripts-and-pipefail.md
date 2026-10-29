@@ -6,3 +6,8 @@ script before any test runs. It passed for the subagent and failed on the rerun.
 reads its whole input. Two more from the same work: libgfortran treats a short read() from a pipe as end
 of file (feed test data through a regular file), and glibc's sscanf behaves differently for C17 and C23
 callers (`%i` and `0b`), so a reference generator must be compiled like the engine it stands in for.
+
+And one from the TypeScript and Java runs: a background command `rm -rf results/A results/B && gate A; gate B`
+skipped gate A without a word, because `rm` failed on a directory another run was still writing into, and
+`&&` stops at the first failure while `;` does not. Only gate B ran, and its log looked complete. Check that
+every run you meant to start left a summary line, not only that the command exited 0.

@@ -1,0 +1,1279 @@
+{
+"meta": {
+"reps": 3,
+"seed": 1729,
+"engines": [
+"TypeScript",
+"TypeScript V8 Math",
+"Java",
+"Java own Math"
+],
+"models": [
+"1fce48f0c4d6",
+"801c228f71f3",
+"2192ea27abab",
+"0ebf0b1c3ce1",
+"2e2e5e3d773f",
+"a7490e1eaa61",
+"95fb31125371",
+"9694617176ee",
+"671593bce0e5",
+"453e1697f65e",
+"55393df61d0a",
+"c0f017740d3e"
+],
+"host": "vm",
+"cpus": 2,
+"when": "2026-10-29 14:39:18"
+},
+"rows": [
+{
+"rep": 0,
+"model": "--version",
+"engine": "TypeScript",
+"wall": 0.08717121500012581,
+"cpu": 0.081812,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "--version",
+"engine": "TypeScript V8 Math",
+"wall": 0.06887006299984932,
+"cpu": 0.06689999999999999,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "--version",
+"engine": "Java",
+"wall": 0.07458836099976907,
+"cpu": 0.091583,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "--version",
+"engine": "Java own Math",
+"wall": 0.07792323700050474,
+"cpu": 0.07936900000000001,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "55393df61d0a",
+"engine": "Java own Math",
+"wall": 1.8220330040003319,
+"cpu": 3.318006,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "55393df61d0a",
+"engine": "TypeScript V8 Math",
+"wall": 5.0608316470006685,
+"cpu": 5.676028999999999,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "55393df61d0a",
+"engine": "Java",
+"wall": 2.4878906159992766,
+"cpu": 3.9670310000000013,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "55393df61d0a",
+"engine": "TypeScript",
+"wall": 9.289493211999797,
+"cpu": 9.892448,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "1fce48f0c4d6",
+"engine": "Java own Math",
+"wall": 0.35611534800045774,
+"cpu": 0.5186360000000014,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "1fce48f0c4d6",
+"engine": "Java",
+"wall": 0.44241488499937986,
+"cpu": 0.7158769999999992,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "1fce48f0c4d6",
+"engine": "TypeScript V8 Math",
+"wall": 0.3224234459994477,
+"cpu": 0.45099400000000067,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "1fce48f0c4d6",
+"engine": "TypeScript",
+"wall": 0.45939478000036615,
+"cpu": 0.6274379999999976,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "2192ea27abab",
+"engine": "Java own Math",
+"wall": 0.5595923380005843,
+"cpu": 0.936163000000002,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "2192ea27abab",
+"engine": "TypeScript",
+"wall": 1.2187092589992972,
+"cpu": 1.4879549999999986,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "2192ea27abab",
+"engine": "Java",
+"wall": 0.8060397299996112,
+"cpu": 1.1203210000000012,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "2192ea27abab",
+"engine": "TypeScript V8 Math",
+"wall": 0.9298288110003341,
+"cpu": 1.1812689999999981,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "2e2e5e3d773f",
+"engine": "Java own Math",
+"wall": 0.8700040109997644,
+"cpu": 1.5605650000000002,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "2e2e5e3d773f",
+"engine": "Java",
+"wall": 0.9708347580017289,
+"cpu": 1.7083100000000027,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "2e2e5e3d773f",
+"engine": "TypeScript V8 Math",
+"wall": 2.2067011360013566,
+"cpu": 2.6058559999999966,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "2e2e5e3d773f",
+"engine": "TypeScript",
+"wall": 2.7631047809991287,
+"cpu": 3.239977999999998,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "a7490e1eaa61",
+"engine": "TypeScript",
+"wall": 1.8784193089995824,
+"cpu": 2.1021850000000057,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "a7490e1eaa61",
+"engine": "Java",
+"wall": 0.7120620740006416,
+"cpu": 1.2740909999999994,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "a7490e1eaa61",
+"engine": "TypeScript V8 Math",
+"wall": 1.3305191839990584,
+"cpu": 1.530986999999996,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "a7490e1eaa61",
+"engine": "Java own Math",
+"wall": 0.7454988829995273,
+"cpu": 1.2766590000000007,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "95fb31125371",
+"engine": "Java own Math",
+"wall": 0.8573149539988663,
+"cpu": 1.4961789999999993,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "95fb31125371",
+"engine": "TypeScript V8 Math",
+"wall": 2.1938252589989133,
+"cpu": 2.7485770000000054,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "95fb31125371",
+"engine": "Java",
+"wall": 1.0758431199992629,
+"cpu": 1.9314329999999993,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "95fb31125371",
+"engine": "TypeScript",
+"wall": 3.1867874700001266,
+"cpu": 3.824893999999996,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "453e1697f65e",
+"engine": "TypeScript V8 Math",
+"wall": 5.645878179999272,
+"cpu": 6.539178000000004,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "453e1697f65e",
+"engine": "TypeScript",
+"wall": 7.536721631999171,
+"cpu": 8.499483,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "453e1697f65e",
+"engine": "Java own Math",
+"wall": 1.5583232219996717,
+"cpu": 2.8648879999999974,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "453e1697f65e",
+"engine": "Java",
+"wall": 1.7108083439998154,
+"cpu": 3.1357199999999987,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "801c228f71f3",
+"engine": "TypeScript",
+"wall": 0.5549748330013244,
+"cpu": 0.769519000000007,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "801c228f71f3",
+"engine": "Java own Math",
+"wall": 0.4134746469990205,
+"cpu": 0.679401999999993,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "801c228f71f3",
+"engine": "Java",
+"wall": 0.588248512998689,
+"cpu": 0.8551079999999982,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "801c228f71f3",
+"engine": "TypeScript V8 Math",
+"wall": 0.5063024490009411,
+"cpu": 0.7186560000000046,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "671593bce0e5",
+"engine": "Java",
+"wall": 1.3438683059994219,
+"cpu": 2.4642769999999925,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "671593bce0e5",
+"engine": "Java own Math",
+"wall": 1.2339174500011723,
+"cpu": 2.2392520000000036,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "671593bce0e5",
+"engine": "TypeScript V8 Math",
+"wall": 4.215890725999998,
+"cpu": 4.7573800000000075,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "671593bce0e5",
+"engine": "TypeScript",
+"wall": 5.109715639000569,
+"cpu": 5.751358000000001,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "9694617176ee",
+"engine": "Java own Math",
+"wall": 1.4647488009995868,
+"cpu": 2.665936999999993,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "9694617176ee",
+"engine": "TypeScript",
+"wall": 5.944688792000306,
+"cpu": 6.605941999999995,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "9694617176ee",
+"engine": "TypeScript V8 Math",
+"wall": 2.9508591539997724,
+"cpu": 3.4500500000000063,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "9694617176ee",
+"engine": "Java",
+"wall": 1.332169925000926,
+"cpu": 2.4266739999999984,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "0ebf0b1c3ce1",
+"engine": "Java own Math",
+"wall": 0.8914378550016409,
+"cpu": 1.307647000000003,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "0ebf0b1c3ce1",
+"engine": "TypeScript V8 Math",
+"wall": 1.242847740999423,
+"cpu": 1.5031859999999906,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "0ebf0b1c3ce1",
+"engine": "TypeScript",
+"wall": 1.7408386730003258,
+"cpu": 2.046449000000003,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "0ebf0b1c3ce1",
+"engine": "Java",
+"wall": 0.897481505999167,
+"cpu": 1.5356390000000069,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "c0f017740d3e",
+"engine": "TypeScript",
+"wall": 11.414656147999267,
+"cpu": 12.120312999999998,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "c0f017740d3e",
+"engine": "Java own Math",
+"wall": 1.9595938220008975,
+"cpu": 3.613834000000001,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "c0f017740d3e",
+"engine": "TypeScript V8 Math",
+"wall": 8.053115687000172,
+"cpu": 8.83503499999999,
+"rc": 0
+},
+{
+"rep": 0,
+"model": "c0f017740d3e",
+"engine": "Java",
+"wall": 2.0934026519989857,
+"cpu": 3.8506670000000023,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "--version",
+"engine": "Java",
+"wall": 0.07311237700014317,
+"cpu": 0.09211900000000739,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "--version",
+"engine": "TypeScript V8 Math",
+"wall": 0.06609456099977251,
+"cpu": 0.06767999999999397,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "--version",
+"engine": "Java own Math",
+"wall": 0.0717354560001695,
+"cpu": 0.07883300000000659,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "--version",
+"engine": "TypeScript",
+"wall": 0.07849193699985335,
+"cpu": 0.08059700000001158,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "453e1697f65e",
+"engine": "Java",
+"wall": 1.5652769259995694,
+"cpu": 2.867457999999978,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "453e1697f65e",
+"engine": "TypeScript V8 Math",
+"wall": 5.694067637001353,
+"cpu": 6.629345000000017,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "453e1697f65e",
+"engine": "TypeScript",
+"wall": 7.449214351998307,
+"cpu": 8.390001999999985,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "453e1697f65e",
+"engine": "Java own Math",
+"wall": 1.5679683070011379,
+"cpu": 2.78409200000001,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "2192ea27abab",
+"engine": "Java own Math",
+"wall": 0.6082787769992137,
+"cpu": 0.973211000000008,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "2192ea27abab",
+"engine": "Java",
+"wall": 0.587541291000889,
+"cpu": 0.9869219999999803,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "2192ea27abab",
+"engine": "TypeScript V8 Math",
+"wall": 0.8651752030000353,
+"cpu": 1.067934000000017,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "2192ea27abab",
+"engine": "TypeScript",
+"wall": 1.2225643109995872,
+"cpu": 1.4418649999999937,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "671593bce0e5",
+"engine": "Java",
+"wall": 1.3348991820002993,
+"cpu": 2.3810889999999922,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "671593bce0e5",
+"engine": "TypeScript V8 Math",
+"wall": 4.541784016000747,
+"cpu": 5.100962000000005,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "671593bce0e5",
+"engine": "TypeScript",
+"wall": 5.679556377999688,
+"cpu": 6.260096000000008,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "671593bce0e5",
+"engine": "Java own Math",
+"wall": 1.252342914998735,
+"cpu": 2.2872659999999847,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "9694617176ee",
+"engine": "Java own Math",
+"wall": 1.3877833629994711,
+"cpu": 2.5535679999999923,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "9694617176ee",
+"engine": "TypeScript V8 Math",
+"wall": 3.1941199540015077,
+"cpu": 3.8238920000000105,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "9694617176ee",
+"engine": "TypeScript",
+"wall": 5.844197746000646,
+"cpu": 6.510761999999998,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "9694617176ee",
+"engine": "Java",
+"wall": 1.3980829259999155,
+"cpu": 2.384868000000017,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "c0f017740d3e",
+"engine": "TypeScript",
+"wall": 11.092336746,
+"cpu": 12.02602199999999,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "c0f017740d3e",
+"engine": "TypeScript V8 Math",
+"wall": 7.939849886000957,
+"cpu": 8.733962000000009,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "c0f017740d3e",
+"engine": "Java",
+"wall": 2.0124982219986123,
+"cpu": 3.6439549999999903,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "c0f017740d3e",
+"engine": "Java own Math",
+"wall": 2.0558525340002234,
+"cpu": 3.6293510000000024,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "801c228f71f3",
+"engine": "Java",
+"wall": 0.5065001719995053,
+"cpu": 0.8400269999999974,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "801c228f71f3",
+"engine": "TypeScript V8 Math",
+"wall": 0.45941643100013607,
+"cpu": 0.6715190000000053,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "801c228f71f3",
+"engine": "Java own Math",
+"wall": 0.44897056099944166,
+"cpu": 0.6966909999999906,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "801c228f71f3",
+"engine": "TypeScript",
+"wall": 0.588129260999267,
+"cpu": 0.8412980000000037,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "0ebf0b1c3ce1",
+"engine": "Java own Math",
+"wall": 0.7294838939997135,
+"cpu": 1.2807790000000105,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "0ebf0b1c3ce1",
+"engine": "TypeScript",
+"wall": 1.6749209519985016,
+"cpu": 2.0041759999999806,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "0ebf0b1c3ce1",
+"engine": "Java",
+"wall": 0.9214645490010298,
+"cpu": 1.670096000000016,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "0ebf0b1c3ce1",
+"engine": "TypeScript V8 Math",
+"wall": 1.2235810140009562,
+"cpu": 1.5134369999999961,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "2e2e5e3d773f",
+"engine": "Java",
+"wall": 0.9472245990000374,
+"cpu": 1.6866510000000128,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "2e2e5e3d773f",
+"engine": "Java own Math",
+"wall": 1.0623794149996684,
+"cpu": 1.7752689999999793,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "2e2e5e3d773f",
+"engine": "TypeScript",
+"wall": 2.737802114999795,
+"cpu": 3.2618560000000176,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "2e2e5e3d773f",
+"engine": "TypeScript V8 Math",
+"wall": 2.153018194001561,
+"cpu": 2.459509999999997,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "55393df61d0a",
+"engine": "Java",
+"wall": 2.318034046998946,
+"cpu": 4.14264799999998,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "55393df61d0a",
+"engine": "TypeScript V8 Math",
+"wall": 5.409743223000987,
+"cpu": 6.0278789999999995,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "55393df61d0a",
+"engine": "TypeScript",
+"wall": 9.59024187399882,
+"cpu": 10.321345000000036,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "55393df61d0a",
+"engine": "Java own Math",
+"wall": 1.943966762000855,
+"cpu": 3.5445809999999947,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "a7490e1eaa61",
+"engine": "TypeScript V8 Math",
+"wall": 1.5369809719995828,
+"cpu": 1.7435129999999663,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "a7490e1eaa61",
+"engine": "Java",
+"wall": 0.7934098080004333,
+"cpu": 1.4173010000000223,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "a7490e1eaa61",
+"engine": "Java own Math",
+"wall": 0.7217784889999166,
+"cpu": 1.2706530000000003,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "a7490e1eaa61",
+"engine": "TypeScript",
+"wall": 1.9295226310005091,
+"cpu": 2.1368710000000144,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "95fb31125371",
+"engine": "Java",
+"wall": 0.8943573400010791,
+"cpu": 1.6044210000000039,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "95fb31125371",
+"engine": "TypeScript V8 Math",
+"wall": 2.0793122639988724,
+"cpu": 2.65797599999995,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "95fb31125371",
+"engine": "Java own Math",
+"wall": 0.8085047469994606,
+"cpu": 1.429363000000027,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "95fb31125371",
+"engine": "TypeScript",
+"wall": 3.261128179001389,
+"cpu": 3.9346570000000067,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "1fce48f0c4d6",
+"engine": "TypeScript",
+"wall": 0.4312148539993359,
+"cpu": 0.62668199999999,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "1fce48f0c4d6",
+"engine": "TypeScript V8 Math",
+"wall": 0.29080071299904375,
+"cpu": 0.41008100000001235,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "1fce48f0c4d6",
+"engine": "Java own Math",
+"wall": 0.3654105069999787,
+"cpu": 0.5560839999999843,
+"rc": 0
+},
+{
+"rep": 1,
+"model": "1fce48f0c4d6",
+"engine": "Java",
+"wall": 0.4191317539989541,
+"cpu": 0.6626409999999883,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "--version",
+"engine": "TypeScript",
+"wall": 0.07410037500085309,
+"cpu": 0.07698500000001118,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "--version",
+"engine": "Java",
+"wall": 0.09606029600035981,
+"cpu": 0.12184200000002576,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "--version",
+"engine": "Java own Math",
+"wall": 0.08269769999969867,
+"cpu": 0.09382199999998164,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "--version",
+"engine": "TypeScript V8 Math",
+"wall": 0.06853249800042249,
+"cpu": 0.06840300000000532,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "c0f017740d3e",
+"engine": "TypeScript",
+"wall": 12.44040754100024,
+"cpu": 13.352814999999996,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "c0f017740d3e",
+"engine": "TypeScript V8 Math",
+"wall": 8.818711981999513,
+"cpu": 9.778621999999991,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "c0f017740d3e",
+"engine": "Java",
+"wall": 2.163793744999566,
+"cpu": 4.054749999999986,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "c0f017740d3e",
+"engine": "Java own Math",
+"wall": 2.088248197000212,
+"cpu": 3.9040580000000062,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "a7490e1eaa61",
+"engine": "TypeScript",
+"wall": 1.8757885390004958,
+"cpu": 2.08162400000003,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "a7490e1eaa61",
+"engine": "Java",
+"wall": 0.7710704940000142,
+"cpu": 1.3332399999999716,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "a7490e1eaa61",
+"engine": "Java own Math",
+"wall": 0.6703907530009019,
+"cpu": 1.1686929999999816,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "a7490e1eaa61",
+"engine": "TypeScript V8 Math",
+"wall": 1.512639759999729,
+"cpu": 1.7451110000000298,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "2192ea27abab",
+"engine": "Java",
+"wall": 0.6677518420001434,
+"cpu": 1.1460929999999827,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "2192ea27abab",
+"engine": "TypeScript",
+"wall": 1.2642545609996887,
+"cpu": 1.5348490000000385,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "2192ea27abab",
+"engine": "Java own Math",
+"wall": 0.5888591499988252,
+"cpu": 0.9864689999999943,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "2192ea27abab",
+"engine": "TypeScript V8 Math",
+"wall": 0.9565748759996495,
+"cpu": 1.2127860000000048,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "0ebf0b1c3ce1",
+"engine": "TypeScript V8 Math",
+"wall": 1.156570955999996,
+"cpu": 1.468363999999987,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "0ebf0b1c3ce1",
+"engine": "Java",
+"wall": 0.9750444829987828,
+"cpu": 1.7116969999999938,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "0ebf0b1c3ce1",
+"engine": "TypeScript",
+"wall": 1.7254499080008827,
+"cpu": 2.0696319999999684,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "0ebf0b1c3ce1",
+"engine": "Java own Math",
+"wall": 0.7005996030002279,
+"cpu": 1.2506370000000366,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "453e1697f65e",
+"engine": "Java",
+"wall": 1.6605434909997712,
+"cpu": 3.0615509999999784,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "453e1697f65e",
+"engine": "TypeScript V8 Math",
+"wall": 5.739229991000684,
+"cpu": 6.687213000000041,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "453e1697f65e",
+"engine": "Java own Math",
+"wall": 1.7623961979988962,
+"cpu": 3.3126569999999678,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "453e1697f65e",
+"engine": "TypeScript",
+"wall": 7.870239185000173,
+"cpu": 8.854622000000017,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "55393df61d0a",
+"engine": "Java own Math",
+"wall": 2.1742722429989954,
+"cpu": 3.9226239999999954,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "55393df61d0a",
+"engine": "Java",
+"wall": 2.4621156270004576,
+"cpu": 4.463032999999969,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "55393df61d0a",
+"engine": "TypeScript",
+"wall": 9.588434597999367,
+"cpu": 10.344889000000045,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "55393df61d0a",
+"engine": "TypeScript V8 Math",
+"wall": 5.157947580999462,
+"cpu": 5.810690999999984,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "95fb31125371",
+"engine": "Java",
+"wall": 1.0088831140001275,
+"cpu": 1.8145269999999734,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "95fb31125371",
+"engine": "Java own Math",
+"wall": 1.0319762859999173,
+"cpu": 1.8477269999999937,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "95fb31125371",
+"engine": "TypeScript V8 Math",
+"wall": 2.1512524239988124,
+"cpu": 2.743693000000034,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "95fb31125371",
+"engine": "TypeScript",
+"wall": 3.2813715920001414,
+"cpu": 3.9668920000000156,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "2e2e5e3d773f",
+"engine": "Java own Math",
+"wall": 0.8437441349997243,
+"cpu": 1.5491739999999794,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "2e2e5e3d773f",
+"engine": "TypeScript",
+"wall": 2.878549512999598,
+"cpu": 3.365505999999975,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "2e2e5e3d773f",
+"engine": "Java",
+"wall": 0.9796952659999079,
+"cpu": 1.7980580000000224,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "2e2e5e3d773f",
+"engine": "TypeScript V8 Math",
+"wall": 2.531654743999752,
+"cpu": 2.9969460000000154,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "1fce48f0c4d6",
+"engine": "Java",
+"wall": 0.5521167050010263,
+"cpu": 0.851970999999974,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "1fce48f0c4d6",
+"engine": "TypeScript",
+"wall": 0.46641498200006026,
+"cpu": 0.622337000000007,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "1fce48f0c4d6",
+"engine": "TypeScript V8 Math",
+"wall": 0.34287758199934615,
+"cpu": 0.5073579999999822,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "1fce48f0c4d6",
+"engine": "Java own Math",
+"wall": 0.4310878149990458,
+"cpu": 0.6331000000000291,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "9694617176ee",
+"engine": "Java own Math",
+"wall": 1.4091568000003463,
+"cpu": 2.5913689999999985,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "9694617176ee",
+"engine": "TypeScript V8 Math",
+"wall": 3.306850615001167,
+"cpu": 3.946847999999985,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "9694617176ee",
+"engine": "Java",
+"wall": 1.5786466099998506,
+"cpu": 2.8938210000000186,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "9694617176ee",
+"engine": "TypeScript",
+"wall": 6.08238590199835,
+"cpu": 6.71164099999997,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "801c228f71f3",
+"engine": "Java",
+"wall": 0.5077341599990177,
+"cpu": 0.7863890000000122,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "801c228f71f3",
+"engine": "TypeScript V8 Math",
+"wall": 0.5649766070000624,
+"cpu": 0.818427000000014,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "801c228f71f3",
+"engine": "Java own Math",
+"wall": 0.4063518570001179,
+"cpu": 0.6733729999999696,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "801c228f71f3",
+"engine": "TypeScript",
+"wall": 0.6760355539990996,
+"cpu": 0.90374300000002,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "671593bce0e5",
+"engine": "TypeScript",
+"wall": 5.845708274999197,
+"cpu": 6.549379000000014,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "671593bce0e5",
+"engine": "Java",
+"wall": 1.745670866999717,
+"cpu": 3.2371109999999685,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "671593bce0e5",
+"engine": "Java own Math",
+"wall": 1.4991477580006176,
+"cpu": 2.724763000000017,
+"rc": 0
+},
+{
+"rep": 2,
+"model": "671593bce0e5",
+"engine": "TypeScript V8 Math",
+"wall": 4.2416760090000025,
+"cpu": 4.907423999999979,
+"rc": 0
+}
+]
+}

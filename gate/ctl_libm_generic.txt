@@ -1,0 +1,44 @@
+ctl_libm_generic: 480 models  PASS 437, RPTDIFF+OUTDIFF 23, OUTDIFF 15, RPTDIFF 5
+  RPTDIFF+OUTDIFF  EPA/221_H&H_SI_Units_Elements(2).inp  (466, '05/25/2010: 08:44:31 Link U435_Psan_1_et_2_et_3 setting changed to   0.00 by Control U435_R1', '05/25/2010: 08:45:36 Link U435_Psan_1_et_2_et_3 setting changed to   0.00 by Control U435_R1')
+  RPTDIFF+OUTDIFF  EPA/380_nodes.inp  (415, 'Dry Weather Inflow .......        21.183         6.903', 'Dry Weather Inflow .......        21.185         6.903')
+  RPTDIFF+OUTDIFF  EPA/429_H&H_Elements.inp  (1642, 'External Outflow .........       480.545       156.593', 'External Outflow .........       480.546       156.593')
+  RPTDIFF+OUTDIFF  EPA/5_H&H_Elements (1).inp  (58, 'Continuity Error (%) .....        -0.170', 'Continuity Error (%) .....        -0.179')
+  OUTDIFF          EPA/Allow_Ponding_High_CE.inp  
+  RPTDIFF+OUTDIFF  EPA/HRSDtest_cim_7.inp  (180, 'Dry Weather Inflow .......       179.003        58.331', 'Dry Weather Inflow .......       179.001        58.330')
+  OUTDIFF          EPA/High_Low_Flow.inp  
+  OUTDIFF          EPA/InfoSewer_ICM.inp  
+  OUTDIFF          EPA/One_Sub_Pump_Model.inp  
+  OUTDIFF          EPA/PID extran_master_swmm34_example_SW5.inp  
+  OUTDIFF          EPA/Trapezoidal_Channel_SW5_SI_Units.inp  
+  RPTDIFF+OUTDIFF  EPA/airBreak_model.inp  (69, 'Node OFALL-10 (1.08%)', 'Node OFALL-10 (1.07%)')
+  OUTDIFF          EPA/attenuation_KW_High_CE.inp  
+  RPTDIFF          EPA/double_fm.inp  (282, 'FM52A                CONDUIT      0.22     0  13:38      0.45    0.11    0.60', 'FM52A                CONDUIT      0.22     0  13:30      0.45    0.11    0.60')
+  RPTDIFF          EPA/extran1_horseshoe.inp  (128, '', 'Link 8100 (1)')
+  RPTDIFF+OUTDIFF  EPA/manifold_pumps.inp  (44, 'Continuity Error (%) .....         1.833', 'Continuity Error (%) .....         1.840')
+  RPTDIFF+OUTDIFF  EPA/small_wwf_dwf.inp  (381, 'DC-10                JUNCTION     0.05     0.15   465.35     2  06:58        0.15', 'DC-10                JUNCTION     0.05     0.15   465.35     2  06:59        0.15')
+  RPTDIFF+OUTDIFF  Hydraulics/221_H&H_SI_Units_Elements.inp  (466, '05/25/2010: 08:44:31 Link U435_Psan_1_et_2_et_3 setting changed to   0.00 by Control U435_R1', '05/25/2010: 08:45:36 Link U435_Psan_1_et_2_et_3 setting changed to   0.00 by Control U435_R1')
+  RPTDIFF+OUTDIFF  Hydraulics/HRSDtest_cim_7.inp  (180, 'Dry Weather Inflow .......       179.003        58.331', 'Dry Weather Inflow .......       179.001        58.330')
+  OUTDIFF          Hydraulics/InfoSewer_ICM.inp  
+  OUTDIFF          Hydraulics/One_Pump_FM.inp  
+  OUTDIFF          Hydraulics/PID extran_master_swmm34_example_SW5.inp  
+  RPTDIFF+OUTDIFF  Hydraulics/diversion_weir_network.inp  (52, 'Continuity Error (%) .....        -0.012', 'Continuity Error (%) .....        -0.011')
+  RPTDIFF          Hydraulics/extran1_horseshoe.inp  (128, '', 'Link 8100 (1)')
+  RPTDIFF          Hydraulics/joseph_pang_example.inp  (170, 'mid4                 JUNCTION     0.63     0.77   101.77     0  01:42        0.77', 'mid4                 JUNCTION     0.63     0.77   101.77     0  01:56        0.77')
+  RPTDIFF+OUTDIFF  Hydraulics/linear_vsp_pump.inp  (250, 'External Outflow .........       179.953        58.640', 'External Outflow .........       179.949        58.639')
+  RPTDIFF+OUTDIFF  Hydraulics/vsp_pump_si_units.inp  (98, 'External Outflow .........         0.091         0.905', 'External Outflow .........         0.098         0.982')
+  OUTDIFF          Hydrology/137_H&H_Elements(1).inp  
+  RPTDIFF+OUTDIFF  Hydrology/17_Sub_90_Link_USA_Units.inp  (60, 'External Outflow .........        52.087        16.973', 'External Outflow .........        52.112        16.981')
+  RPTDIFF+OUTDIFF  Hydrology/27_Nodes_5_Subs.inp  (58, 'Continuity Error (%) .....        -0.093', 'Continuity Error (%) .....        -0.094')
+  OUTDIFF          Hydrology/28_Sub_266_Link_USA_Units.inp  
+  RPTDIFF+OUTDIFF  Hydrology/292_Storage_Nodes_200_Subs.inp  (887, 'N3272                JUNCTION    480.53   480.53     0  12:30        34.3        34.334258516.693 ga', 'N3272                JUNCTION    480.53   480.53     0  12:30        34.3        34.334258516.607 ga')
+  RPTDIFF+OUTDIFF  Hydrology/9_Subs.inp  (64, 'Wet Weather Inflow .......        22.677         7.389', 'Wet Weather Inflow .......        22.676         7.389')
+  RPTDIFF+OUTDIFF  Hydrology/CN_Horton.inp  (61, 'Continuity Error (%) .....         0.066', 'Continuity Error (%) .....         0.069')
+  RPTDIFF+OUTDIFF  Hydrology/Ejemplo EPA.inp  (62, 'External Outflow .........         1.459         0.475', 'External Outflow .........         1.459         0.476')
+  RPTDIFF+OUTDIFF  Hydrology/SCANLON.inp  (1019, 'External Outflow .........       318.026       103.633', 'External Outflow .........       318.510       103.791')
+  OUTDIFF          Hydrology/Simple_4_Sub_H&H (2).inp  
+  RPTDIFF+OUTDIFF  Hydrology/greenroofs.inp  (62, 'External Outflow .........       116.309      1163.102', 'External Outflow .........       116.308      1163.094')
+  OUTDIFF          Hydrology/user5_sub_patterns.inp  
+  OUTDIFF          OWA_EXTRAN/EXAM2_with_numerical_problem_SW5.inp  
+  RPTDIFF+OUTDIFF  OWA_ROUTING/routing_kinwave.inp  (36, 'External Outflow .........         1.454         0.474', 'External Outflow .........         1.455         0.474')
+  RPTDIFF+OUTDIFF  OWA_ROUTING/routing_surcharge_slot.inp  (50, 'External Outflow .........        18.772         6.117', 'External Outflow .........        18.626         6.070')
+  RPTDIFF          OWA_ROUTING/routing_trapezoidal.inp  (104, '9                    JUNCTION     1.28     2.01    12.01     0  01:14        2.01', '9                    JUNCTION     1.28     2.01    12.01     0  01:15        2.01')

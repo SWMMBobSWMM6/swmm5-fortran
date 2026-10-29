@@ -39,11 +39,13 @@ def essay(D):
     A = out.append
 
     ran = [e for e in D['engines'] if e.startswith('EPA') or any(k != 'NOTRUN' for k in T.get(e, {}))]
-    word = {3: 'Three', 4: 'Four', 5: 'Five', 6: 'Six'}.get(len(ran), str(len(ran)))
+    word = {3: 'Three', 4: 'Four', 5: 'Five', 6: 'Six', 7: 'Seven', 8: 'Eight'}.get(len(ran), str(len(ran)))
+    LM = D.get('libm') or {}
+    new_ran = [e for e in ('TypeScript', 'Java') if e in ran]
     rust_ran = any(e.startswith('Rust') for e in ran)
     RU = D.get('rust') or {}
     A(('h1', '%s Engines, One Answer' % word))
-    A(('sub', 'How EPA SWMM 5.2.4 was carried into Fortran, C# and Python without changing one bit of what it computes'))
+    A(('sub', 'How EPA SWMM 5.2.4 was carried into Fortran, C#, Python, TypeScript and Java without changing one bit of what it computes'))
 
     # ------------------------------------------------------------------ 1
     A(('h2', 'question', 'The question, and the only honest way to answer it'))
@@ -51,7 +53,8 @@ def essay(D):
             'answers in hand: a C++ restructuring called swmm5-cplus, and a Rust engine. The survey that followed sorted '
             'the candidates into languages that can run the engine one way or another and the smaller set that can '
             'hold a native port matching EPA byte for byte on Linux. Then he asked for three from that set: Fortran, '
-            'C# and Python.'))
+            'C# and Python. When those three matched, he asked for two more, TypeScript and Java, and they turned out '
+            'to need something the first three did not: a copy of the C library\'s mathematics.'))
     A(('p', 'There is an easy way to do that job. You write a new engine in each language and show that it "agrees '
             'with EPA to three decimals." What you have then is a new program. It has bugs of its own, and nobody can '
             'tell them from EPA\'s, because agreement to three decimals hides everything in the fourth.'))
@@ -64,16 +67,16 @@ def essay(D):
 
     # ------------------------------------------------------------------ 2
     A(('h2', 'what', 'What this is'))
-    A(('p', 'Six engines are lined up against %s models from Bob\'s 1729-SWMM5-Models-2030 corpus: EPA SWMM 5.2.4 compiled from '
-            'the USEPA v5.2.4 tag, which is the reference; swmm5-cplus; the Rust engine; and the three new ports. The app '
+    A(('p', '%s engines are lined up against %s models from Bob\'s 1729-SWMM5-Models-2030 corpus: EPA SWMM 5.2.4 compiled from '
+            'the USEPA v5.2.4 tag, which is the reference; swmm5-cplus; the Rust engine; and the five new ports. The app '
             'shows, model by model, whether each engine\'s `.out` and `.rpt` match the reference, what the models '
             'contain, what their results look like, and what each engine costs to run. This essay explains how the '
-            'ports were built, how they were judged, and how far the evidence reaches.' % n(D['n_models'])))
+            'ports were built, how they were judged, and how far the evidence reaches.' % (word, n(D['n_models']))))
     if rust_ran:
-        A(('p', 'Two of the six were not built here. swmm5-cplus is EPA restructured as a C++ class, and swmm5-rust is '
+        A(('p', 'Two of the eight were not built here. swmm5-cplus is EPA restructured as a C++ class, and swmm5-rust is '
                 'a translation into safe Rust (the engine crate forbids `unsafe` code), made in separate sessions and '
                 'kept in their own repositories. Both were built from those repositories (swmm5-rust at commit %s) and '
-                'put through the same gate as the three new ports, with the same reference and the same %s models.'
+                'put through the same gate as the five new ports, with the same reference and the same %s models.'
                 % (RU.get('commit', '?')[:7], n(D['n_models']))))
     else:
         A(('p', 'The Rust engine\'s repository was not reachable from this session, so its row is marked as not run '
@@ -89,9 +92,10 @@ def essay(D):
             'parser inside the Clang compiler, which means it sees the program exactly as a compiler does: every '
             'macro expanded, every type resolved, every conversion the C language performs without saying so. One '
             'front end builds the tables (%s functions, %s global variables, %d structs and unions, %s enum '
-            'constants) and works out what every pointer is for. Three back ends then write Fortran, C# and Python.'
+            'constants) and works out what every pointer is for. Five back ends then write Fortran, C#, Python, '
+            'TypeScript and Java.'
             % (n(D['front']['functions']), n(D['front']['globals']), D['front']['records'], n(D['front']['enums']))))
-    A(('fig', 'pipeline', 'Figure 1. The C source goes through one front end and three back ends; each engine is then '
+    A(('fig', 'pipeline', 'Figure 1. The C source goes through one front end and five back ends; each engine is then '
                           'judged on bytes. Mismatches were fixed in the translator or the hand-written runtime, '
                           'never in the generated code.'))
     A(('p', 'One rule did more good than any other: when a port disagreed with EPA, the fix went into the '
@@ -100,13 +104,21 @@ def essay(D):
             'time, including the ones no test had reached yet.'))
     A(('table', ['Piece', 'Lines', 'Made by'],
        [['EPA SWMM 5.2.4 solver (C)', n(L['c']), 'EPA; untouched'],
-        ['Translator: front end + three back ends (Python)', n(L['translator']), 'written for this job'],
+        ['Translator: front end + five back ends (Python)', n(L['translator']), 'written for this job'],
         ['Fortran engine (one module)', n(L['f90_gen']), 'generated'],
         ['Fortran runtime + printf/scanf/strtod', n(L['f90_rt']), 'hand-written'],
         ['C# engine', n(L['cs_gen']), 'generated'],
         ['C# runtime', n(L['cs_rt']), 'hand-written'],
         ['Python engine', n(L['py_gen']), 'generated'],
-        ['Python runtime', n(L['py_rt']), 'hand-written']]))
+        ['Python runtime', n(L['py_rt']), 'hand-written'],
+        ['TypeScript engine', n(L['ts_gen']), 'generated'],
+        ['TypeScript runtime', n(L['ts_rt']), 'hand-written'],
+        ['Java engine (one class per C file)', n(L['java_gen']), 'generated'],
+        ['Java runtime', n(L['java_rt']), 'hand-written'],
+        ['glibc math routines in TypeScript / in Java', '%s / %s' % (n(L['libm_ts']), n(L['libm_java'])),
+         'generated from GCC\'s GIMPLE; glibc\'s wrappers and TypeScript\'s pow fast path come from hand-written text in the translator'],
+        ['Math translator (with that hand-written text), census and table tools', n(L['libm_tools']), 'written for this job'],
+        ['Math runtimes (fma, bit casts, branred)', n(L['libm_rt']), 'hand-written']]))
     A(('p', 'The hand-written parts are small and dull on purpose: the C library functions SWMM calls (printf, '
             'sscanf, strtod, the FILE functions, strtok), plus two whole C files whose pointer tricks are easier to port '
             'by hand than to teach a translator, `odesolve.c` and `mempool.c`, and six helper functions. Everything '
@@ -118,7 +130,7 @@ def essay(D):
             'index as `x[i]`. It may be one number passed by address so the callee can change it, as in '
             '`findroot_Newton(..., &d, ...)`. `TNode* node` may be a single object you reach through with `->`. A '
             '`char*` is a string. A `FILE*` is a file. A `void*` is "whatever the caller had in mind." And a pointer to '
-            'a function is a callback. In C these are one thing. In Fortran, C# and Python they are seven different '
+            'a function is a callback. In C these are one thing. In Fortran, C#, Python, TypeScript and Java they are seven different '
             'things, and the translator has to know which one it is looking at before it writes a single line.'))
     A(('p', 'Some of the seven are settled by the declaration alone: a `char*` is a string, a `FILE*` a file, '
             '`void*` and function pointers are what they say, and an array declared as an array is an array. The '
@@ -137,7 +149,7 @@ def essay(D):
     A(('h2', 'strings', 'A string is an address into bytes'))
     A(('p', 'SWMM reads its input one line at a time and chops each line into tokens with `strtok`, which writes '
             'zero bytes into the line and hands back pointers into the middle of it. A Fortran CHARACTER variable, '
-            'a C# string and a Python str cannot do any of that. They are values, not addresses.'))
+            'a C# string, a Python str, a JavaScript string and a Java String cannot do any of that. They are values, not addresses.'))
     A(('p', 'So each port carries C\'s idea of a string with it: a byte buffer plus an offset. The Fortran version '
             'is `type(CPtr)`, an int8 pointer array and an integer. `strtok` works on it exactly as glibc\'s does. It '
             'writes the zeros and returns offsets into the same buffer, so a later `strcpy` into that buffer sees '
@@ -163,15 +175,17 @@ def essay(D):
             'promise either way, so every port routes every double-to-integer conversion through a function that '
             'spells out the x86 rule.'))
     A(('p', '**The math library.** `exp`, `log`, `pow`, `sin` and the rest are not required to round correctly, and '
-            'different libraries disagree in the last bit. All three ports call the same glibc library EPA calls: C# '
-            'through the .NET runtime on Linux, Python through its math module, Fortran through gfortran\'s built-ins.'))
+            'different libraries disagree in the last bit. Fortran, C# and Python call the same glibc library EPA calls: C# '
+            'through the .NET runtime on Linux, Python through its math module, Fortran through gfortran\'s built-ins. '
+            'JavaScript and Java do not; V8 and the Java virtual machine bring math functions of their own. That story '
+            'needs a section to itself, further on.'))
     A(('p', '**Fused multiply-add.** A compiler that turns `a*b + c` into one fused instruction rounds once instead '
             'of twice. That is more accurate and it is a different answer. EPA\'s build does not fuse. The Fortran '
             'build says `-ffp-contract=off` so it never does, and the controls below show what happens when it does.'))
     A(('p', '**NaN.** Zero divided by zero on x86 produces a NaN with its sign bit set, and glibc prints it as '
             '`-nan`. EPA\'s reports carry such cells in plain sight, in tables such as the node depth summary. The '
-            'reference reports in this gate contain %s of them. Python\'s `float(\'nan\')` has the sign bit clear and '
-            'would print `nan`. The Python port carries the x86 NaN instead.' % n(cens['nan_cells'])))
+            'reference reports in this gate contain %s of them. Python\'s `float(\'nan\')` and JavaScript\'s `NaN` '
+            'have the sign bit clear and would print `nan`. The ports carry the x86 NaN instead.' % n(cens['nan_cells'])))
 
     # ------------------------------------------------------------------ 7
     A(('h2', 'printf', 'The report is arithmetic too'))
@@ -187,8 +201,111 @@ def essay(D):
             'formatter written in pure Fortran, and that one was checked against glibc 2.39 directly: %s printf '
             'cases, %s sscanf cases and %s strtod cases, with %s mismatches. Those cases cover random magnitudes, '
             'exact binary ties, decimal spellings like the ones in SWMM input files, subnormals, infinities and both '
-            'kinds of NaN. The C# and Python formatters were checked by the gate alone.'
+            'kinds of NaN. The Java port rounds with `new BigDecimal(x).setScale(p, RoundingMode.HALF_EVEN)`, which is '
+            'glibc\'s rule stated in Java. The TypeScript port uses JavaScript\'s `toFixed`, which is exact but breaks '
+            'ties away from zero, and repairs the ties: one can only occur when x times 2 to the power p+1 is an odd '
+            'integer, a test that costs one multiplication. The C#, Python, TypeScript and Java formatters were checked '
+            'by the gate alone.'
             % (n(C['fmt_printf']), n(C['fmt_sscanf']), n(C['fmt_strtod']), n(C['fmt_mismatch']))))
+
+    # ------------------------------------------------------------------ 7b
+    cen_by = {c['fn']: c for c in LM.get('census', [])}
+    def calls(fn):
+        c = cen_by.get(fn)
+        return c['calls'] if c else 0
+    def mods(fn):
+        c = cen_by.get(fn)
+        return c['models'] if c else 0
+    tests = LM.get('tests', {})
+    tot_args = {lang: sum(v[0] for v in t.values()) for lang, t in tests.items()}
+    tot_bad = {lang: sum(v[1] + v[2] for v in t.values()) for lang, t in tests.items()}
+    A(('h2', 'libm', 'Carrying the math library along'))
+    A(('p', 'Before copying a library it pays to know which parts of it are used. A small interposer, loaded in front '
+            'of glibc while EPA ran all %s models, counted every call. `pow` was called %s times, in %d models; `sin` '
+            'and `cos` %s and %s times; `exp` %s; `log` %s; `log10` %s; `acos` and `asin` %s and %s, in three models; '
+            '`tan` %s times, once per model; `atan` never. `sqrt` never reaches the library at all, because the compiler '
+            'turns it into a single instruction, which is correctly rounded everywhere.'
+            % (n(D['n_models']), n(calls('pow')), mods('pow'), n(calls('sin')), n(calls('cos')), n(calls('exp')),
+               n(calls('log')), n(calls('log10')), n(calls('acos')), n(calls('asin')), n(calls('tan')))))
+    A(('p', 'Then came a surprise. glibc does not have one `pow`. On x86-64 it has several, and it picks one when '
+            'the program starts, according to the processor: on one with fused multiply-add and AVX2, as this machine '
+            'has, it takes a version compiled to use fused multiply-add, which rounds once where the generic version '
+            'rounds twice. The same goes for `exp`, `log`, `sin`, `cos`, `tan`, `asin`, `acos` and `atan`. So EPA\'s own '
+            'answers depend on the processor. Told to use the generic versions, as glibc would on an older machine, the '
+            'same EPA binary on the same input files gave %d of %d models identical and changed %d.'
+            % (LM.get('generic_same', 0), LM.get('generic_n', 0), LM.get('generic_n', 0) - LM.get('generic_same', 0))))
+    A(('fig', 'libm', 'Figure 5. Left: libm calls EPA made across the gate models (log scale). Right: EPA itself, run '
+                      'on glibc\'s generic math routines instead of the FMA versions this processor selects. The only '
+                      'setting changed was glibc\'s processor-feature switch, so every change came from the math library.'))
+    NV = LM.get('native', {})
+    def pct(lib, fn):
+        v = NV.get(lib, {}).get(fn)
+        return '%.2f%%' % (100.0 * v[0] / v[1]) if v else '?'
+    A(('p', 'For Fortran, C# and Python this should change nothing: they call the same library EPA calls, so on a '
+            'given machine they should get the version EPA gets (only EPA was run on the generic routines). JavaScript '
+            'and Java bring their own. Held against glibc on the random and census arguments of the test described '
+            'below, V8\'s `Math.pow` returns a different double on %s of them and its '
+            '`Math.exp` on %s; Java\'s `Math.pow` on %s, and `StrictMath.pow`, Java\'s port of the old Sun library '
+            'fdlibm, on %s. One argument in %s sounds harmless until you remember that `pow` is called a billion '
+            'times. The TypeScript and Java engines therefore carry glibc\'s routines with them, and not the generic '
+            'ones: the fused versions EPA actually runs here.'
+            % (pct('V8', 'pow'), pct('V8', 'exp'), pct('Java', 'pow'), pct('Java StrictMath', 'pow'),
+               n(int(round(NV['Java']['pow'][1] / NV['Java']['pow'][0], -2))) if NV.get('Java', {}).get('pow') else '?')))
+    NC, NCA = LM.get('native_ctl') or {}, LM.get('native_ctl_all') or {}
+    if NC.get('TypeScript') and NC.get('Java'):
+        t, j = NC['TypeScript'], NC['Java']
+        txt = ('Was that necessary, or only careful? Each engine was built a second time with its own language\'s '
+               '`Math` in place of the translations, and gated on the 40 control models. The TypeScript copy differed '
+               'from EPA on %d of them; the Java copy on %d' % (t['n'] - t['same'], j['n'] - j['same']))
+        if NCA.get('Java'):
+            ja = NCA['Java']
+            txt += (', and on %d of all %d when it was run on the whole set, about as many as EPA itself changes '
+                    'on glibc\'s generic routines' % (ja['n'] - ja['same'], ja['n']))
+        txt += ('. Java\'s `Math` comes much closer than V8\'s, as its rate on `pow`, the function called most, promised (on '
+                '`log10` it is the worse of the two), but neither would '
+                'have passed the gate. (`gate/run_ts_native_control.sh`, `gate/run_java_native_control.sh`.)')
+        A(('p', txt))
+    A(('p', 'Translating them by hand from glibc\'s C would not do, for the same reason that matters everywhere '
+            'else in this essay. The source says `a*b + c`; whether that becomes one fused instruction or two rounded '
+            'ones is the compiler\'s decision, and the answer is in the compiled code, not the source. So the '
+            'translation starts from the compiler. glibc 2.39\'s sources were compiled with the flags glibc uses for '
+            'its FMA versions, plus two that turn vectorization off so that every operation stays scalar (whether that '
+            'changed any result is exactly what the comparison below would catch), and GCC was asked to print its '
+            'optimized intermediate form, GIMPLE, in which every '
+            'fusion it chose is spelled out as `.FMA`, `.FMS` or `.FNMA`. A second translator turns that GIMPLE into '
+            'TypeScript and Java, block by block. The constant tables were copied out of the compiled objects byte '
+            'for byte. Java has an exactly rounded `Math.fma`; JavaScript has none, so the TypeScript runtime builds '
+            'one from Dekker\'s exact product and Boldo and Melquiond\'s rounding to odd, with a slow exact path for '
+            'the awkward cases. Nothing compiled from glibc was ever run: the reference is the system\'s own library.'))
+    if tests:
+        A(('p', 'Then the translations were held against the real library, argument by argument: random arguments over '
+                'the ranges SWMM uses, every argument the census sampled from the real models, and a set of edge cases '
+                '(huge angles, negative bases with integer powers, overflow, underflow, subnormals, domain errors). '
+                '%s. Every function, both languages: not one bit different, and not one NaN with the wrong sign.'
+                % '; '.join('%s: %s arguments, %s differences' % (lang, n(tot_args[lang]), n(tot_bad[lang])) for lang in sorted(tests))))
+    A(('p', 'The comparison earned its keep twice, and both times the fault was the translator\'s. `pow` came out '
+            'wrong for negative bases raised to even powers, though `exp` and `log` were already exact. glibc\'s source '
+            'asks whether the lowest integer bit of the exponent is set. GCC rewrote that test as a conversion to a '
+            'one-bit boolean, and in GIMPLE such a conversion keeps the low bit; the translator had read it as C\'s '
+            '"not zero" (`gate/results/checkint_evidence.txt`):'))
+    A(('code', 'if (iy & (1ULL << (0x3ff + 52 - e)))   /* glibc 2.39 e_pow.c:264, checkint */\n\n'
+               '_119 = _54 >> _115;                     /* GCC 13.3 GIMPLE of the FMA build */\n'
+               '_10 = (_Bool) _119;'))
+    A(('p', 'The second: to skip `if (...)` statements, the translator skipped every line that began with "if", '
+            'including assignments to GCC\'s temporaries, which are named `iftmp`. That one failed loudly, but only on '
+            '`pow`\'s special cases. The first would not have shown up in a spot check of positive bases.'))
+    tot_calls = sum(c['calls'] for c in LM.get('census', [])) or 1
+    A(('p', 'One more thing came out of the census. %d percent of the calls are `pow`, and JavaScript has no ' % round(100.0 * calls('pow') / tot_calls) +
+            '64-bit integers except BigInt, in which the translation does its 64-bit steps. So TypeScript\'s `pow` has a '
+            'hand-written fast path for the common case that does exactly what the translation does, with the 64-bit steps done on 32-bit halves and '
+            'four of the fused multiply-adds replaced by cheaper operations that give the same bits (an exact product, '
+            'and the exact rounding error of a product). Everything else falls through to the full translation. The two '
+            'were compared on %s further arguments: %s differences.'
+            % (n((LM.get('powdiff') or [0, 0])[0]), n((LM.get('powdiff') or [0, 0])[1]))
+            + (' The saving is smaller than I expected. On two million arguments the fast path takes %s nanoseconds a '
+               'call and the full translation %s; V8\'s own `Math.pow` takes %s (`gate/results/powtime.txt`). What '
+               'remains includes the sixteen fused multiply-adds the runtime must still build out of ordinary arithmetic.'
+               % tuple(LM['powtime']) if LM.get('powtime') else '')))
 
     # ------------------------------------------------------------------ 8
     A(('h2', 'fortran', 'What Fortran made hard'))
@@ -199,7 +316,7 @@ def essay(D):
             '-O0 crashed on exactly SWMM\'s kind of guard. So the translator keeps a plain `.and.` only when the right '
             'side provably cannot fault or change anything. Otherwise it evaluates the right side inside an IF on the '
             'left side.'))
-    A(('fig', 'shortcircuit', 'Figure 5. A real guard from climate.c and the Fortran the translator wrote for it. '
+    A(('fig', 'shortcircuit', 'Figure 6. A real guard from climate.c and the Fortran the translator wrote for it. '
                               'With k = -1 the Fortran never subscripts Pattern, which is what the C promises.'))
     A(('p', '**Names ignore case.** C\'s `node` and `Node` are two variables. To Fortran they are one. The '
             'translator renames every clash, and it also keeps clear of Fortran\'s intrinsic names, so a C local '
@@ -211,6 +328,34 @@ def essay(D):
     A(('p', '**Small surprises.** gfortran numbers the units it opens with negative integers. The first Fortran run '
             'simulated a whole model and wrote two empty files, because the runtime took a negative unit to mean '
             '"closed." The lesson is in the repository: never encode state in a value the compiler picks for you.'))
+
+    # ------------------------------------------------------------------ 8b
+    A(('h2', 'jsjava', 'What JavaScript and Java made hard'))
+    A(('p', 'TypeScript and Java look more like C than Fortran does, and each still found its own ways to be different.'))
+    A(('p', '**In JavaScript every number is a double.** An `int` is a double that happens to hold a whole number, '
+            'and doubles have a negative zero. In C, `-i` for `i = 0` is zero; in JavaScript it is -0, and so are '
+            '`0 * -3`, `-3 % 3` and `Math.trunc(-0.5)`. Nothing goes wrong until that value becomes a double in a '
+            'report, where glibc prints it as -0.00. So the TypeScript back end writes integer negation as `(0 - x)`, '
+            'multiplication as `Math.imul(a, b)`, division as `(a / b) | 0` and remainder as `(a % b) | 0`, each of '
+            'which can only give +0, and keeps unsigned values in range with `>>> 0`.'))
+    A(('p', '**NaN has two signs, and JavaScript\'s literal has the wrong one.** At run time V8 computes 0/0 the way '
+            'the processor does and keeps the bits, through arrays and object fields alike (checked by `tools/libm/test/nan_bits.js`), but the literal '
+            '`NaN` is the other pattern. So the runtime never writes the literal where C would compute a NaN. The '
+            'same care turned up a small fact about glibc itself: its `log10`, `asin` and `acos` on x86-64 still go '
+            'through old compatibility wrappers, which answer a domain error with a NaN whose sign bit is clear, '
+            'while the routine underneath would have set it. The ports copy the wrappers.'))
+    A(('p', '**Neither has pointers or `ref` parameters, and Java will not let a lambda change a local.** A C '
+            'function that takes `double *f` gets a small object with a value in it: a box for a local whose address '
+            'is taken, an element reference for `&a[i]`, a field reference for `&link->flow`. Arrays of numbers become '
+            '`Float64Array` and its kin in TypeScript, `double[]` in Java. In Java a field reference is a pair of '
+            'lambdas over the object, `__o -> __o.depth`, because a lambda may read the object it is given but may not '
+            'assign a local it captures.'))
+    A(('p', '**Java has no unsigned integers and rejects code C allows.** SWMM\'s one hash function uses unsigned '
+            'arithmetic, which Java does in a `long` masked to 32 bits. Java\'s `(int)` of a huge double saturates '
+            'where x86 gives the most negative integer (defect 2 below), so every conversion goes through `R.D2I`, '
+            'exactly as in the other ports. And Java refuses a statement it can prove unreachable, such as the '
+            '`break` after a `return` that C programmers write out of habit; the Java back end applies Java\'s own '
+            'reachability rules to the C and leaves such statements out.'))
 
     # ------------------------------------------------------------------ 9
     A(('h2', 'gate', 'The gate'))
@@ -224,7 +369,7 @@ def essay(D):
             '13.3 at -O2, with `_FORTIFY_SOURCE` off, because Ubuntu\'s fortify check aborts EPA on a relative input '
             'path (defect 3 in the register below).' % (cens['error_decks'] - cens['error_decks_with_out'], n(D['n_models']))))
     ndiff = sum(v for t in T.values() for k, v in t.items() if k not in ('PASS', 'NOTRUN', 'rpt_lines', 'out_bytes'))
-    A(('fig', 'matrix', 'Figure 6. Every model against every engine, drawn from the gate\'s own results. Green is '
+    A(('fig', 'matrix', 'Figure 7. Every model against every engine, drawn from the gate\'s own results. Green is '
                         'byte-identical .out and .rpt; grey is not run. '
                         + ('There is no red because no difference remained.' if not ndiff else
                            'Red marks the %d runs that differ.' % ndiff)))
@@ -250,6 +395,29 @@ def essay(D):
             'end, written afterwards, never inherited it. The fix went into the '
             'translator, the regenerated engine changed in exactly four calls, and the whole Python gate, fast set '
             'and sample, was run again; the numbers above are from that rerun.'))
+    if new_ran:
+        A(('p', 'TypeScript and Java ran every model. An earlier build of the TypeScript engine, before its `pow` fast '
+                'path, was gated first (%s of %s identical; the stored run does not say which build ran, so that rests '
+                'on the session\'s account in `gate/RUNS.md`), then the final build, in four quarters so that no single job ran '
+                'longer than the session allows. Both final engines were then gated a second time, because I had '
+                'deleted the first final runs\' output files to free disk before the app could re-check them (the app '
+                're-hashes every engine\'s files and does not take the gate\'s word). %s; the table gives the second.'
+                % (n(D.get('ts_first_pass', 0)), n(D['n_models']),
+                   ('The first final runs were identical on all %s models in both languages' % n(D['n_models'])
+                    if D.get('ts_final1_pass') == D.get('java_final1_pass') == D['n_models'] else
+                    'The first final runs gave %s (TypeScript) and %s (Java) of %s'
+                    % (n(D.get('ts_final1_pass', 0)), n(D.get('java_final1_pass', 0)), n(D['n_models']))))))
+        jf = D.get('java_first') or {}
+        if jf.get('crashed'):
+            A(('p', 'Java\'s first run, started (by the session\'s account in `gate/RUNS.md`) with a plain `java -jar`, passed %s of %s and crashed on %s with "Java heap '
+                    'space". That model has 613 RDII unit-hydrograph groups whose slow response lasts 9,900 hours, and rdii.c keeps '
+                    'the rainfall history of each at the one-minute wet step: 3.38 GB of arrays (`gate/rdii_memory.py`). EPA\'s own '
+                    'peak resident size on it is 3.11 GB (`gate/results/peak_memory.txt`), and the Java virtual machine\'s default heap is a quarter of the '
+                    'machine\'s memory. The repository\'s launcher, `java/runswmm`, gives it three quarters and the '
+                    'parallel collector, and the final Java run in the table went through that launcher (`gate/RUNS.md`). '
+                    'Run again for this essay with a plain `java -jar`, the model still stops with "Java heap space" '
+                    '(`gate/results/peak_memory.txt`).'
+                    % (n(jf['passed']), n(jf['n']), ', '.join(jf['crashed']))))
 
     # ------------------------------------------------------------------ 10
     A(('h2', 'controls', 'Proving the gate can fail'))
@@ -266,7 +434,7 @@ def essay(D):
             % (C.get('fma_instr', 0), C['fma40_n'] - C['fma40_same'], C['fma40_n'], C['fma_all_n'] - C['fma_all_same'],
                C['fma_all_n'])))
     A(('p', C.get('fma_examples', '')))
-    A(('fig', 'controls', 'Figure 7. The null control comes back identical. The positive control, one rounding rule '
+    A(('fig', 'controls', 'Figure 8. The null control comes back identical. The positive control, one rounding rule '
                           'changed, is caught on some models and missed on the rest.'))
     A(('p', 'That second number deserves a moment, because it cuts both ways. Under this one perturbation, most '
             'models came back identical: rounding once instead of twice never reached what they print or store. A '
@@ -297,8 +465,9 @@ def essay(D):
                 'fix described above, which changed four calls that none of these models reaches.'
                 % (B['n_models'], B['epa_min'], B['epa_max'], B['reps'], B['noise'][0], B['noise'][1],
                    B['noise_pairs'][0], B['noise_pairs'][1], B['n_models'])))
-        A(('fig', 'speed', 'Figure 8. CPU time against EPA on the same model. C++, ' + ('Rust ' if 'Rust' in B['median'] else '') + 'and Fortran sit near EPA, C# pays for '
-                           'its runtime on short models, and Python pays for being Python.'))
+        A(('fig', 'speed', 'Figure 9. CPU time against EPA on the same model. C++, ' + ('Rust ' if 'Rust' in B['median'] else '') + 'and Fortran sit near EPA, C# pays for '
+                           'its runtime on short models, and Python pays for being Python.'
+                           + (' TypeScript and Java pay for a virtual machine and for doing glibc\'s arithmetic in it.' if 'TypeScript' in B['median'] else '')))
         A(('table', ['Engine', 'Median CPU time vs EPA', 'Range over models', 'Start-up (s)'],
            [[e, '%.2fx' % B['median'][e], '%.2f-%.2fx' % (min(B['per_model'][e]), max(B['per_model'][e])),
              '%.3f' % B['startup'].get(e, 0)] for e in B['engines']]))
@@ -341,19 +510,43 @@ def essay(D):
                 % (len(cs_long), min(cs_long), max(cs_long), len(cs_short), min(cs_short), max(cs_short),
                    B['startup']['C#'], B['median']['C#'], B['median']['Python'], min(B['per_model']['Python']),
                    max(B['per_model']['Python']))))
+        if 'TypeScript' in B['median'] and 'Java' in B['median']:
+            tv, jv = B['per_model']['TypeScript'], B['per_model']['Java']
+            ts_long = [c for t, c in zip(B['epa_t'], tv) if t >= 0.17]
+            j_long = [c for t, c in zip(B['epa_t'], jv) if t >= 0.17]
+            A(('p', ('TypeScript and Java were timed last, in a run of their own: the same %d models, %d repetitions, '
+                    'interleaved with EPA and EPA again, every ratio against EPA in that run (EPA against itself there: '
+                    '%.2f to %.2f). Java\'s median is %.2f times EPA, from %.2f to %.2f; starting the Java virtual '
+                    'machine alone takes %.2f seconds, and on the %d models EPA runs in 0.17 seconds or more (in the main benchmark) Java costs '
+                    '%.1f to %.1f times. TypeScript\'s median is %.2f, from %.2f to %.2f (%.1f to %.1f on those same '
+                    'models), with %.2f seconds to start Node. Part of TypeScript\'s price is the mathematics: a '
+                    'fused multiply-add the hardware does in one instruction costs the TypeScript runtime a few dozen '
+                    'floating-point operations, and its `pow` makes sixteen of them on its common path.'
+                    % (B['n_models'], B['tsj_reps'], B['tsj_noise'][0], B['tsj_noise'][1], B['median']['Java'], min(jv), max(jv),
+                       B['startup'].get('Java', 0), len(j_long), min(j_long), max(j_long), B['median']['TypeScript'],
+                       min(tv), max(tv), min(ts_long), max(ts_long), B['startup'].get('TypeScript', 0)))
+                    + (' Timed against the same engines built with their own languages\' `Math` (%d repetitions, '
+                       '`gate/results/bench_math.json`), the copy of glibc makes TypeScript a median %.2f times as slow (%.2f '
+                       'to %.2f by model) and Java %.2f times (%.2f to %.2f): about a quarter of TypeScript\'s time and a '
+                       'tenth of Java\'s. That run had no EPA-against-itself control; a Java ratio below 1 shows its '
+                       'noise is at least that large.'
+                       % tuple(B['math_cost']) if B.get('math_cost') else '')))
     else:
         A(('p', 'The benchmark has not been run yet.'))
 
     # ------------------------------------------------------------------ 13
     A(('h2', 'limits', 'What this does not show'))
-    A(('fig', 'coverage', 'Figure 9. How many of the %s gate models that ran without an input error use each '
+    A(('fig', 'coverage', 'Figure 10. How many of the %s gate models that ran without an input error use each '
                           'feature. Orange bars are features exercised by fewer than ten models; %d are not exercised '
                           'at all: %s.' % (n(cens['ran']), len(cens['not_exercised']), ', '.join(cens['not_exercised']))))
     A(('ul', [
         'It does not show that SWMM is right. Identical to EPA means EPA\'s answers, good or bad. No observed flow '
         'enters anywhere.',
-        'It shows one platform: x86-64 Linux, glibc 2.39, gcc 13.3. On Windows or macOS the math library differs, and '
+        'It shows one platform: x86-64 Linux, glibc 2.39, gcc 13.3 (`gate/results/toolchain.txt`). On Windows or macOS the math library differs, and '
         'a port matches EPA built there only if its math library matches too.',
+        'It shows one kind of processor. EPA itself changes %d models when glibc picks its generic math routines, as '
+        'it would on a processor without FMA and AVX2. Fortran, C#, Python, C++ and Rust should follow EPA there, because they '
+        'call the same library (this was not tested); TypeScript and Java carry the FMA versions and would not.' % (LM.get('generic_n', 0) - LM.get('generic_same', 0)),
         corpus_note(D),
         '%s of the %s stop on an input error. For %d of those EPA writes no results file and the report is the '
         'whole comparison; the other %d write a short one, which is compared.'
@@ -369,8 +562,10 @@ def essay(D):
          'The Rust engine was not run here: its repository was not reachable from this session.'),
         'Only the command-line path was exercised. The API used for stepping a model from another program '
         '(swmm_step and friends) is translated but was not gated.',
+        'The TypeScript and Java math routines were checked against the system libm on the arguments described above, '
+        'not proved equal to it; a disagreement on an argument no test reached is possible, though none was found.',
         'No person has read the %s generated lines. The evidence is the gate and the controls, not review.'
-        % n(L['f90_gen'] + L['cs_gen'] + L['py_gen'])]))
+        % n(L['f90_gen'] + L['cs_gen'] + L['py_gen'] + L['ts_gen'] + L['java_gen'] + L['libm_ts'] + L['libm_java'])]))
 
     # ------------------------------------------------------------------ 14
     A(('h2', 'howto', 'How to use the app and the repositories'))
@@ -382,9 +577,11 @@ def essay(D):
         'of each engine\'s own .out from the reference, period by period.',
         '**Speed** has the benchmark with its noise floor. **Verify** has the parity contract, controls, census and '
         'defect register.',
-        'To rebuild an engine, regenerate it with `tools/c2x/emit_f90.py` (or `emit_cs.py`, `emit_py.py`), build '
-        'with `f90/build.sh` or `cs/build.sh`, then run `gate/gate.py NAME "ENGINE"` against the stored reference '
-        'outputs.']))
+        'To rebuild an engine, regenerate it with `tools/c2x/emit_f90.py` (or `emit_cs.py`, `emit_py.py`, '
+        '`emit_ts.py`, `emit_java.py`), build with `f90/build.sh`, `cs/build.sh`, `npm run build` in `ts/` or '
+        '`java/build.sh`, then run `gate/gate.py NAME "ENGINE"` against the stored reference outputs. '
+        '`tools/libm/make_libm.sh` regenerates the math routines from glibc\'s source, and '
+        '`tools/libm/test/run_tests.sh` checks them against the system libm.']))
 
     # ------------------------------------------------------------------ 15
     A(('h2', 'ai', 'Use of AI'))

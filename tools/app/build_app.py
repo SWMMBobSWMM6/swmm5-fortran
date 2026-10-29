@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Assemble the six-engine app (one HTML file) and the essay sources for the .docx.
+"""Assemble the engines app (one HTML file) and the essay sources for the .docx.
 
-  build_app.py            -> app/six-engines.html, doc/essay.docx.json, doc/fig/*.svg
+  build_app.py            -> app/eight-engines.html, doc/essay.docx.json, doc/fig/*.svg
 
 Reads tools/app/data/models.json (from build_data.py) and the gate's control, benchmark and
 formatter results; every number shown is computed here from those files.
@@ -18,7 +18,8 @@ from swmmout import SwmmOut, SYS_VAR_NAMES, NODE_VAR_NAMES, LINK_VAR_NAMES
 import figures as FG
 import essay as ES
 
-ENGINE_RUN = {'C++ swmm5-cplus': ['cplus'], 'Rust swmm5-rust': ['rust'], 'Fortran': ['fortran3'], 'C#': ['csharp3'], 'Python': ['py_final', 'py_final_slow']}
+ENGINE_RUN = {'C++ swmm5-cplus': ['cplus'], 'Rust swmm5-rust': ['rust'], 'Fortran': ['fortran3'], 'C#': ['csharp3'],
+              'Python': ['py_final', 'py_final_slow'], 'TypeScript': ['ts_final_q1', 'ts_final_q2', 'ts_final_q3', 'ts_final_q4'], 'Java': ['java_final_a', 'java_final_b']}
 
 
 def J(p, default=None):
@@ -95,6 +96,72 @@ def rust_info():
     return dict(commit=c, lines=count_lines(files), files=len(files))
 
 
+def libm_info():
+    """the libm census (gate/results/libm_census.txt), the generic-libm control on EPA itself
+    (gate/results/ctl_libm_generic.json) and the bit-for-bit test of the ports (gate/results/libm_tests.txt)"""
+    out = dict(census=[], tests={}, generic_n=0, generic_same=0, generic_diff=[])
+    p = os.path.join(GATE, 'results', 'libm_census.txt')
+    if os.path.exists(p):
+        for line in open(p):
+            m = re.match(r'^(\w+)\s+([\d,]+) calls in\s+(\d+) models', line)
+            if m:
+                out['census'].append(dict(fn=m.group(1), calls=int(m.group(2).replace(',', '')), models=int(m.group(3))))
+    n, same, rows = gate_counts('ctl_libm_generic')
+    out['generic_n'], out['generic_same'] = n, same
+    out['generic_diff'] = [dict(path=r['path'].split('2030/')[-1], status=r['status'], first=r['first_rpt_diff'])
+                           for r in rows if r['status'] != 'PASS']
+    p = os.path.join(GATE, 'results', 'libm_tests.txt')
+    lang = None
+    if os.path.exists(p):
+        for line in open(p):
+            if line.startswith('== '):
+                lang = line[3:].strip()
+                continue
+            m = re.match(r'^(\w+)\s+(\d+) of (\d+) differ, (\d+) NaN sign', line)
+            if m and lang:
+                t = out['tests'].setdefault(lang, {})
+                fn = m.group(1)
+                a = t.setdefault(fn, [0, 0, 0])
+                a[0] += int(m.group(3)); a[1] += int(m.group(2)); a[2] += int(m.group(4))
+            m = re.match(r'^pow vs pow_exact: (\d+) of (\d+) differ', line)
+            if m:
+                out['powdiff'] = [int(m.group(2)), int(m.group(1))]
+    out['native'] = {}
+    p = os.path.join(GATE, 'results', 'libm_native.txt')
+    if os.path.exists(p):
+        for line in open(p):
+            m = re.match(r'^(V8|Java) Math\.(\w+)\s+(\d+) of (\d+) differ', line)
+            if m:
+                d = out['native'].setdefault(m.group(1), {})
+                d[m.group(2)] = [int(m.group(3)), int(m.group(4))]
+                m2 = re.search(r'StrictMath (\d+)', line)
+                if m2:
+                    out['native'].setdefault('Java StrictMath', {})[m.group(2)] = [int(m2.group(1)), int(m.group(4))]
+    # positive controls: the TypeScript and Java engines with their languages' own Math in place of glibc's
+    # (gate/run_ts_native_control.sh, gate/run_java_native_control.sh), on the 40-model control set
+    out['native_ctl'] = {}
+    for lang, run in (('TypeScript', 'ctl_ts_native'), ('Java', 'ctl_java_native')):
+        n, same, rows = gate_counts(run)
+        if n:
+            out['native_ctl'][lang] = dict(n=n, same=same, diff=[r['path'].split('2030/')[-1] for r in rows if r['status'] != 'PASS'])
+    # TypeScript pow: fast path vs full translation vs V8 (tools/libm/test/powtime.js)
+    p = os.path.join(GATE, 'results', 'powtime.txt')
+    if os.path.exists(p):
+        t = {}
+        for line in open(p):
+            m = re.match(r'^(pow \(fast path\)|pow_exact|Math\.pow)\S*.*?\s([\d.]+) ns/call', line)
+            if m:
+                t[m.group(1).split()[0]] = float(m.group(2))
+        if len(t) == 3:
+            out['powtime'] = ['%.0f' % t['pow'], '%.0f' % t['pow_exact'], '%.0f' % t['Math.pow']]
+    out['native_ctl_all'] = {}
+    for lang, run in (('TypeScript', 'ctl_ts_native_all'), ('Java', 'ctl_java_native_all')):
+        n, same, rows = gate_counts(run)
+        if n:
+            out['native_ctl_all'][lang] = dict(n=n, same=same)
+    return out
+
+
 def bench_stats():
     """Main benchmark (bench.json) plus, when present, the Rust engine's own interleaved run against EPA on
     the same models (bench_rust.json): Rust's ratios are taken against EPA in that run, and its own EPA
@@ -109,6 +176,32 @@ def bench_stats():
         B['rust_noise'] = R['noise']
         B['rust_when'] = R['when']
         B['rust_reps'] = R['reps']
+    # TypeScript and Java: their own interleaved run against EPA on the same models (bench_tsjava.json)
+    X = bench_one('bench_tsjava.json')
+    if B and X:
+        for e in ('TypeScript', 'Java'):
+            if e in X['per_model']:
+                B['engines'].append(e)
+                B['per_model'][e] = X['per_model'][e]
+                B['median'][e] = X['median'][e]
+                B['startup'][e] = X['startup'].get(e, 0)
+        B['tsj_noise'] = X['noise']
+        B['tsj_when'] = X['when']
+        B['tsj_reps'] = X['reps']
+    # what the glibc translations cost: each engine against the same engine with its language's own Math
+    # (bench_math.json; per-model ratio of median CPU times)
+    Mb = J(os.path.join(GATE, 'results', 'bench_math.json'))
+    if B and Mb:
+        by = collections.defaultdict(list)
+        for r in Mb['rows']:
+            if r['rc'] == 0 and r['model'] != '--version':
+                by[(r['engine'], r['model'])].append(r['cpu'])
+        med = {k: statistics.median(v) for k, v in by.items()}
+        mc = [max(len(v) for v in by.values())]
+        for a, b in (('TypeScript', 'TypeScript V8 Math'), ('Java', 'Java own Math')):
+            rat = [med[(a, m)] / med[(b, m)] for (e, m) in med if e == a and (b, m) in med]
+            mc += [statistics.median(rat), min(rat), max(rat)]
+        B['math_cost'] = mc
     return B
 
 
@@ -336,7 +429,16 @@ def main():
     census['gated_over12'] = sorted([[round(m['epa_sec'], 1), m['folder'] + '/' + m['file']] for m in models if m['epa_sec'] > 12])
     L = dict(c=count_lines([os.path.join(ROOT, 'ref/epa524/solver', f) for f in os.listdir(os.path.join(ROOT, 'ref/epa524/solver'))
                             if f.endswith(('.c', '.h', '.dat'))]),
-             translator=count_lines([os.path.join(ROOT, 'tools/c2x', f) for f in ('front.py', 'emit_cs.py', 'emit_py.py', 'emit_f90.py')]),
+             translator=count_lines([os.path.join(ROOT, 'tools/c2x', f) for f in ('front.py', 'emit_cs.py', 'emit_py.py', 'emit_f90.py', 'emit_ts.py', 'emit_java.py')]),
+             ts_gen=count_lines([os.path.join(ROOT, 'ts/src/engine.ts')]),
+             ts_rt=count_lines([os.path.join(ROOT, 'ts/src', f) for f in ('crt.ts', 'overrides.ts', 'runswmm.ts')]),
+             java_gen=count_lines([os.path.join(ROOT, 'java/src/swmm5', f) for f in os.listdir(os.path.join(ROOT, 'java/src/swmm5'))
+                                   if f.startswith('F_') or f in ('Types.java', 'Consts.java')]),
+             java_rt=count_lines([os.path.join(ROOT, 'java/src/swmm5', f) for f in ('R.java', 'Refs.java', 'Overrides.java', 'Main.java')]),
+             libm_ts=count_lines([os.path.join(ROOT, 'ts/src/glibm.ts')]),
+             libm_java=count_lines([os.path.join(ROOT, 'java/src/swmm5/Glibm.java')]),
+             libm_rt=count_lines([os.path.join(ROOT, 'tools/libm', f) for f in ('glibm_rt.ts', 'GlibmRt.java')]),
+             libm_tools=count_lines([os.path.join(ROOT, 'tools/libm', f) for f in ('gim2x.py', 'extract_tables.py', 'build_glibm.sh', 'make_libm.sh', 'census.c', 'census_summary.py', 'run_census.sh')]),
              f90_gen=count_lines([os.path.join(ROOT, 'f90/gen/swmm5_engine.f90')]),
              f90_rt=count_lines([os.path.join(ROOT, 'f90/runtime', f) for f in ('crt_base.f90', 'crt_io.f90', 'crt_format.f90', 'overrides.inc', 'overrides_decl.inc', 'runswmm.f90')]),
              cs_gen=count_lines([os.path.join(ROOT, 'cs/gen', f) for f in os.listdir(os.path.join(ROOT, 'cs/gen'))]),
@@ -360,6 +462,13 @@ def main():
              python_speed=('%.0f' % B['median']['Python']) if B and 'Python' in B['median'] else 'many')
     D['ai_use'] = AI_USE
     D['rust'] = rust_info()
+    D['libm'] = libm_info()
+    D['ts_first_pass'] = gate_counts('ts1')[1]
+    D['ts_final1_pass'] = sum(gate_counts('ts_final1_q%d' % q)[1] for q in range(1, 5))
+    D['java_final1_pass'] = gate_counts('java_final1_a')[1] + gate_counts('java_final1_b')[1]
+    ja, jb = gate_counts('java_a'), gate_counts('java_b')
+    D['java_first'] = dict(n=ja[0] + jb[0], passed=ja[1] + jb[1],
+                           crashed=[r['path'].split('2030/')[-1] for r in ja[2] + jb[2] if r['status'] != 'PASS'])
     D['corpus_note'] = ES.corpus_note(D)
     # ---------------------------------------------------------------- figures
     figdir = os.path.join(HERE, 'doc', 'fig')
@@ -382,23 +491,24 @@ def main():
                          rl=m['rpt_lines'], ob=m['out_bytes'],
                          e={k: v for k, v in m['eng'].items()}))
     app = dict(models=slim, engines=engines, totals=totals, controls=controls, python=py, bench=B, census=census,
-               corpus_note=D['corpus_note'], rust=D['rust'],
+               corpus_note=D['corpus_note'], rust=D['rust'], libm=D['libm'],
                lines=L, front=front, defects=DEFECTS, coverage=cov, graphs=G,
                built=time.strftime('%Y-%m-%d %H:%M'), figs={k: figs_app[k] for k in ('matrix', 'controls', 'speed', 'coverage', 'pointers', 'pipeline')})
     tpl = open(os.path.join(HERE, 'app_template.html')).read()
     page = tpl.replace('/*__DATA__*/null', json.dumps(app, separators=(',', ':'))).replace('<!--__DOC__-->', doc_html)
     page = page.replace('<!--__AIUSE__-->', html.escape(AI_USE))
     os.makedirs(os.path.join(ROOT, 'app'), exist_ok=True)
-    open(os.path.join(ROOT, 'app', 'six-engines.html'), 'w').write(page)
+    open(os.path.join(ROOT, 'app', 'eight-engines.html'), 'w').write(page)
     summary = dict(n_models=len(models), totals=totals, controls={k: v for k, v in controls.items() if k != 'fma_all_diff'},
                    python={k: v for k, v in py.items() if k != 'slow_rows'}, python_slow_rows=py['slow_rows'],
                    bench=None if not B else dict(median=B['median'], range={e: [min(v), max(v)] for e, v in B['per_model'].items()},
                                                   noise=B['noise'], noise_pairs=B.get('noise_pairs'), startup=B['startup'], reps=B['reps'], n_models=B['n_models'],
-                                                  epa_min=B['epa_min'], epa_max=B['epa_max'], when=B['when']),
-                   census=census, lines=L, front=front, defects=DEFECTS, built=app['built'], corpus_note=D['corpus_note'], rust=D['rust'],
+                                                  epa_min=B['epa_min'], epa_max=B['epa_max'], when=B['when'],
+                                                  **{k: B[k] for k in ('rust_noise', 'rust_reps', 'tsj_noise', 'tsj_reps') if k in B}),
+                   census=census, lines=L, front=front, defects=DEFECTS, built=app['built'], corpus_note=D['corpus_note'], rust=D['rust'], libm=D['libm'],
                    essay_title=blocks[0][1])
     json.dump(summary, open(os.path.join(HERE, 'data', 'summary.json'), 'w'), indent=1)
-    print('app/six-engines.html', len(page) // 1024, 'KB;', len(blocks), 'essay blocks;', len(G), 'graph models')
+    print('app/eight-engines.html', len(page) // 1024, 'KB;', len(blocks), 'essay blocks;', len(G), 'graph models')
     for k in ('epa_rerun_same', 'epa_rerun_n', 'fma40_same', 'fma40_n', 'fma_all_same', 'fma_all_n'):
         print(' ', k, controls[k])
     print('  python', {k: v for k, v in py.items() if k != 'slow_rows'})
@@ -406,20 +516,21 @@ def main():
         print('  bench medians', {k: round(v, 3) for k, v in B['median'].items()}, 'noise', B['noise'])
 
 
-AI_USE = ('The three ports, the translator that wrote them, this app and this essay were made with Claude, '
-          'Anthropic\'s AI model, in Claude Code sessions in October 2026, under the direction of Robert (Bob) '
-          'Dickinson. He chose the languages, set the test (byte-identical .out and .rpt against EPA 5.2.4 on his '
-          'corpus), chose the repositories and the app, and is responsible for the work. Claude wrote the '
-          'translator (front end and the Fortran, C# and Python back ends), the hand-written runtimes and '
-          'overrides, the gate and benchmark scripts, ran every test, built this app and wrote this text; one '
-          'Claude subagent wrote the Fortran printf/sscanf/strtod module and its test suite. The checks are '
-          'mechanical: the byte gate on the corpus, the null and positive controls, and the formatter\'s '
-          'comparison with glibc. A second Claude instance, given the files but not the conclusions, audited this '
-          'essay\'s claims against the stored evidence; the claims it found wrong or unsupported were corrected or '
-          'removed. The slow-model sample turned up one Python crash, a translator bug in how scanf arguments were '
-          'passed; it was fixed in the translator and the whole Python gate was rerun. '
-          'No person has yet reviewed the generated code line by line. swmm5-cplus and swmm5-rust were made in '
-          'earlier Claude sessions, also for Bob, and are only built and gated here.')
+AI_USE = ('The five ports, the translator that wrote them, the translations of glibc\'s math routines that the TypeScript '
+          'and Java ports carry, this app and this essay were made with Claude, Anthropic\'s AI model, in Claude Code '
+          'sessions in October 2026, under the direction of Robert (Bob) Dickinson. He chose the languages (Fortran, C# and '
+          'Python first, then TypeScript and Java), set the test (byte-identical .out and .rpt against EPA 5.2.4 on his '
+          'corpus), chose the repositories and the app, and is responsible for the work. Claude wrote the translator (front '
+          'end and the Fortran, C#, Python, TypeScript and Java back ends), the GIMPLE translator for glibc\'s math routines '
+          'and its tests, the hand-written runtimes and overrides, the gate and benchmark scripts, ran every test, built this '
+          'app and wrote this text; one Claude subagent wrote the Fortran printf/sscanf/strtod module and its test suite. '
+          'The checks are mechanical: the byte gate on the corpus, the null and positive controls, the formatter\'s '
+          'comparison with glibc, and the math routines\' comparison with the system libm. A second Claude instance, given '
+          'the files but not the conclusions, audited this essay\'s claims against the stored evidence; the claims it found '
+          'wrong or unsupported were corrected or removed. The slow-model sample turned up one Python crash, a translator bug '
+          'in how scanf arguments were passed; it was fixed in the translator and the whole Python gate was rerun. No person '
+          'has yet reviewed the generated code line by line. swmm5-cplus and swmm5-rust were made in earlier Claude '
+          'sessions, also for Bob, and are only built and gated here.')
 
 
 def inline(s):

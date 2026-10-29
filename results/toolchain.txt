@@ -1,0 +1,15 @@
+uname -m: x86_64
+kernel:   6.18.44-fc-v185
+cpu:      Intel(R) Xeon(R) Processor @ 2.80GHz
+cpu flag: fma present
+cpu flag: avx2 present
+cpu flag: fma4 absent
+gcc:      gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+glibc:    ldd (Ubuntu GLIBC 2.39-0ubuntu8.9) 2.39
+gfortran: GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+dotnet:   8.0.132
+python:   Python 3.13.18
+node:     v22.23.4
+java:     openjdk version "21.0.12.1" 2026-08-18
+javac:    javac 21.0.12.1
+tsc:      Version 5.6.3

@@ -1,11 +1,11 @@
 [
  [
   "h1",
-  "Six Engines, One Answer"
+  "Eight Engines, One Answer"
  ],
  [
   "sub",
-  "How EPA SWMM 5.2.4 was carried into Fortran, C# and Python without changing one bit of what it computes"
+  "How EPA SWMM 5.2.4 was carried into Fortran, C#, Python, TypeScript and Java without changing one bit of what it computes"
  ],
  [
   "h2",
@@ -14,7 +14,7 @@
  ],
  [
   "p",
-  "Bob Dickinson asked how many languages the SWMM5 engine could be carried into. He already had two answers in hand: a C++ restructuring called swmm5-cplus, and a Rust engine. The survey that followed sorted the candidates into languages that can run the engine one way or another and the smaller set that can hold a native port matching EPA byte for byte on Linux. Then he asked for three from that set: Fortran, C# and Python."
+  "Bob Dickinson asked how many languages the SWMM5 engine could be carried into. He already had two answers in hand: a C++ restructuring called swmm5-cplus, and a Rust engine. The survey that followed sorted the candidates into languages that can run the engine one way or another and the smaller set that can hold a native port matching EPA byte for byte on Linux. Then he asked for three from that set: Fortran, C# and Python. When those three matched, he asked for two more, TypeScript and Java, and they turned out to need something the first three did not: a copy of the C library's mathematics."
  ],
  [
   "p",
@@ -35,11 +35,11 @@
  ],
  [
   "p",
-  "Six engines are lined up against 480 models from Bob's 1729-SWMM5-Models-2030 corpus: EPA SWMM 5.2.4 compiled from the USEPA v5.2.4 tag, which is the reference; swmm5-cplus; the Rust engine; and the three new ports. The app shows, model by model, whether each engine's `.out` and `.rpt` match the reference, what the models contain, what their results look like, and what each engine costs to run. This essay explains how the ports were built, how they were judged, and how far the evidence reaches."
+  "Eight engines are lined up against 480 models from Bob's 1729-SWMM5-Models-2030 corpus: EPA SWMM 5.2.4 compiled from the USEPA v5.2.4 tag, which is the reference; swmm5-cplus; the Rust engine; and the five new ports. The app shows, model by model, whether each engine's `.out` and `.rpt` match the reference, what the models contain, what their results look like, and what each engine costs to run. This essay explains how the ports were built, how they were judged, and how far the evidence reaches."
  ],
  [
   "p",
-  "Two of the six were not built here. swmm5-cplus is EPA restructured as a C++ class, and swmm5-rust is a translation into safe Rust (the engine crate forbids `unsafe` code), made in separate sessions and kept in their own repositories. Both were built from those repositories (swmm5-rust at commit de9fbf1) and put through the same gate as the three new ports, with the same reference and the same 480 models."
+  "Two of the eight were not built here. swmm5-cplus is EPA restructured as a C++ class, and swmm5-rust is a translation into safe Rust (the engine crate forbids `unsafe` code), made in separate sessions and kept in their own repositories. Both were built from those repositories (swmm5-rust at commit de9fbf1) and put through the same gate as the five new ports, with the same reference and the same 480 models."
  ],
  [
   "h2",
@@ -52,12 +52,12 @@
  ],
  [
   "p",
-  "So nobody translated by hand. We wrote a translator instead. It reads EPA's C through libclang, the parser inside the Clang compiler, which means it sees the program exactly as a compiler does: every macro expanded, every type resolved, every conversion the C language performs without saying so. One front end builds the tables (968 functions, 626 global variables, 103 structs and unions, 714 enum constants) and works out what every pointer is for. Three back ends then write Fortran, C# and Python."
+  "So nobody translated by hand. We wrote a translator instead. It reads EPA's C through libclang, the parser inside the Clang compiler, which means it sees the program exactly as a compiler does: every macro expanded, every type resolved, every conversion the C language performs without saying so. One front end builds the tables (968 functions, 626 global variables, 103 structs and unions, 714 enum constants) and works out what every pointer is for. Five back ends then write Fortran, C#, Python, TypeScript and Java."
  ],
  [
   "fig",
   "pipeline",
-  "Figure 1. The C source goes through one front end and three back ends; each engine is then judged on bytes. Mismatches were fixed in the translator or the hand-written runtime, never in the generated code."
+  "Figure 1. The C source goes through one front end and five back ends; each engine is then judged on bytes. Mismatches were fixed in the translator or the hand-written runtime, never in the generated code."
  ],
  [
   "p",
@@ -77,8 +77,8 @@
     "EPA; untouched"
    ],
    [
-    "Translator: front end + three back ends (Python)",
-    "5,691",
+    "Translator: front end + five back ends (Python)",
+    "8,439",
     "written for this job"
    ],
    [
@@ -110,6 +110,41 @@
     "Python runtime",
     "1,253",
     "hand-written"
+   ],
+   [
+    "TypeScript engine",
+    "41,192",
+    "generated"
+   ],
+   [
+    "TypeScript runtime",
+    "971",
+    "hand-written"
+   ],
+   [
+    "Java engine (one class per C file)",
+    "44,855",
+    "generated"
+   ],
+   [
+    "Java runtime",
+    "1,078",
+    "hand-written"
+   ],
+   [
+    "glibc math routines in TypeScript / in Java",
+    "5,011 / 4,943",
+    "generated from GCC's GIMPLE; glibc's wrappers and TypeScript's pow fast path come from hand-written text in the translator"
+   ],
+   [
+    "Math translator (with that hand-written text), census and table tools",
+    "1,039",
+    "written for this job"
+   ],
+   [
+    "Math runtimes (fma, bit casts, branred)",
+    "341",
+    "hand-written"
    ]
   ]
  ],
@@ -124,7 +159,7 @@
  ],
  [
   "p",
-  "C has one pointer type, and SWMM uses it for seven different jobs. `double* x` may be an array you index as `x[i]`. It may be one number passed by address so the callee can change it, as in `findroot_Newton(..., &d, ...)`. `TNode* node` may be a single object you reach through with `->`. A `char*` is a string. A `FILE*` is a file. A `void*` is \"whatever the caller had in mind.\" And a pointer to a function is a callback. In C these are one thing. In Fortran, C# and Python they are seven different things, and the translator has to know which one it is looking at before it writes a single line."
+  "C has one pointer type, and SWMM uses it for seven different jobs. `double* x` may be an array you index as `x[i]`. It may be one number passed by address so the callee can change it, as in `findroot_Newton(..., &d, ...)`. `TNode* node` may be a single object you reach through with `->`. A `char*` is a string. A `FILE*` is a file. A `void*` is \"whatever the caller had in mind.\" And a pointer to a function is a callback. In C these are one thing. In Fortran, C#, Python, TypeScript and Java they are seven different things, and the translator has to know which one it is looking at before it writes a single line."
  ],
  [
   "p",
@@ -142,7 +177,7 @@
  ],
  [
   "p",
-  "SWMM reads its input one line at a time and chops each line into tokens with `strtok`, which writes zero bytes into the line and hands back pointers into the middle of it. A Fortran CHARACTER variable, a C# string and a Python str cannot do any of that. They are values, not addresses."
+  "SWMM reads its input one line at a time and chops each line into tokens with `strtok`, which writes zero bytes into the line and hands back pointers into the middle of it. A Fortran CHARACTER variable, a C# string, a Python str, a JavaScript string and a Java String cannot do any of that. They are values, not addresses."
  ],
  [
   "p",
@@ -176,7 +211,7 @@
  ],
  [
   "p",
-  "**The math library.** `exp`, `log`, `pow`, `sin` and the rest are not required to round correctly, and different libraries disagree in the last bit. All three ports call the same glibc library EPA calls: C# through the .NET runtime on Linux, Python through its math module, Fortran through gfortran's built-ins."
+  "**The math library.** `exp`, `log`, `pow`, `sin` and the rest are not required to round correctly, and different libraries disagree in the last bit. Fortran, C# and Python call the same glibc library EPA calls: C# through the .NET runtime on Linux, Python through its math module, Fortran through gfortran's built-ins. JavaScript and Java do not; V8 and the Java virtual machine bring math functions of their own. That story needs a section to itself, further on."
  ],
  [
   "p",
@@ -184,7 +219,7 @@
  ],
  [
   "p",
-  "**NaN.** Zero divided by zero on x86 produces a NaN with its sign bit set, and glibc prints it as `-nan`. EPA's reports carry such cells in plain sight, in tables such as the node depth summary. The reference reports in this gate contain 292 of them. Python's `float('nan')` has the sign bit clear and would print `nan`. The Python port carries the x86 NaN instead."
+  "**NaN.** Zero divided by zero on x86 produces a NaN with its sign bit set, and glibc prints it as `-nan`. EPA's reports carry such cells in plain sight, in tables such as the node depth summary. The reference reports in this gate contain 292 of them. Python's `float('nan')` and JavaScript's `NaN` have the sign bit clear and would print `nan`. The ports carry the x86 NaN instead."
  ],
  [
   "h2",
@@ -202,7 +237,57 @@
  ],
  [
   "p",
-  "The ports do not leave this to luck. The C# port carries its own exact formatter built on big-integer arithmetic. The Python port uses Python's own `%` formatting, which rounds the exact binary value half to even just as glibc does, and adds glibc's spellings of infinity and NaN. The Fortran port carries a formatter written in pure Fortran, and that one was checked against glibc 2.39 directly: 52,402,636 printf cases, 531,658 sscanf cases and 248,060 strtod cases, with 0 mismatches. Those cases cover random magnitudes, exact binary ties, decimal spellings like the ones in SWMM input files, subnormals, infinities and both kinds of NaN. The C# and Python formatters were checked by the gate alone."
+  "The ports do not leave this to luck. The C# port carries its own exact formatter built on big-integer arithmetic. The Python port uses Python's own `%` formatting, which rounds the exact binary value half to even just as glibc does, and adds glibc's spellings of infinity and NaN. The Fortran port carries a formatter written in pure Fortran, and that one was checked against glibc 2.39 directly: 52,402,636 printf cases, 531,658 sscanf cases and 248,060 strtod cases, with 0 mismatches. Those cases cover random magnitudes, exact binary ties, decimal spellings like the ones in SWMM input files, subnormals, infinities and both kinds of NaN. The Java port rounds with `new BigDecimal(x).setScale(p, RoundingMode.HALF_EVEN)`, which is glibc's rule stated in Java. The TypeScript port uses JavaScript's `toFixed`, which is exact but breaks ties away from zero, and repairs the ties: one can only occur when x times 2 to the power p+1 is an odd integer, a test that costs one multiplication. The C#, Python, TypeScript and Java formatters were checked by the gate alone."
+ ],
+ [
+  "h2",
+  "libm",
+  "Carrying the math library along"
+ ],
+ [
+  "p",
+  "Before copying a library it pays to know which parts of it are used. A small interposer, loaded in front of glibc while EPA ran all 480 models, counted every call. `pow` was called 1,235,269,125 times, in 462 models; `sin` and `cos` 135,803,579 and 136,429,895 times; `exp` 13,743,401; `log` 3,256,385; `log10` 135,286; `acos` and `asin` 277,501 and 45,499, in three models; `tan` 453 times, once per model; `atan` never. `sqrt` never reaches the library at all, because the compiler turns it into a single instruction, which is correctly rounded everywhere."
+ ],
+ [
+  "p",
+  "Then came a surprise. glibc does not have one `pow`. On x86-64 it has several, and it picks one when the program starts, according to the processor: on one with fused multiply-add and AVX2, as this machine has, it takes a version compiled to use fused multiply-add, which rounds once where the generic version rounds twice. The same goes for `exp`, `log`, `sin`, `cos`, `tan`, `asin`, `acos` and `atan`. So EPA's own answers depend on the processor. Told to use the generic versions, as glibc would on an older machine, the same EPA binary on the same input files gave 437 of 480 models identical and changed 43."
+ ],
+ [
+  "fig",
+  "libm",
+  "Figure 5. Left: libm calls EPA made across the gate models (log scale). Right: EPA itself, run on glibc's generic math routines instead of the FMA versions this processor selects. The only setting changed was glibc's processor-feature switch, so every change came from the math library."
+ ],
+ [
+  "p",
+  "For Fortran, C# and Python this should change nothing: they call the same library EPA calls, so on a given machine they should get the version EPA gets (only EPA was run on the generic routines). JavaScript and Java bring their own. Held against glibc on the random and census arguments of the test described below, V8's `Math.pow` returns a different double on 9.09% of them and its `Math.exp` on 7.94%; Java's `Math.pow` on 0.08%, and `StrictMath.pow`, Java's port of the old Sun library fdlibm, on 8.73%. One argument in 1,200 sounds harmless until you remember that `pow` is called a billion times. The TypeScript and Java engines therefore carry glibc's routines with them, and not the generic ones: the fused versions EPA actually runs here."
+ ],
+ [
+  "p",
+  "Was that necessary, or only careful? Each engine was built a second time with its own language's `Math` in place of the translations, and gated on the 40 control models. The TypeScript copy differed from EPA on 6 of them; the Java copy on 1, and on 38 of all 480 when it was run on the whole set, about as many as EPA itself changes on glibc's generic routines. Java's `Math` comes much closer than V8's, as its rate on `pow`, the function called most, promised (on `log10` it is the worse of the two), but neither would have passed the gate. (`gate/run_ts_native_control.sh`, `gate/run_java_native_control.sh`.)"
+ ],
+ [
+  "p",
+  "Translating them by hand from glibc's C would not do, for the same reason that matters everywhere else in this essay. The source says `a*b + c`; whether that becomes one fused instruction or two rounded ones is the compiler's decision, and the answer is in the compiled code, not the source. So the translation starts from the compiler. glibc 2.39's sources were compiled with the flags glibc uses for its FMA versions, plus two that turn vectorization off so that every operation stays scalar (whether that changed any result is exactly what the comparison below would catch), and GCC was asked to print its optimized intermediate form, GIMPLE, in which every fusion it chose is spelled out as `.FMA`, `.FMS` or `.FNMA`. A second translator turns that GIMPLE into TypeScript and Java, block by block. The constant tables were copied out of the compiled objects byte for byte. Java has an exactly rounded `Math.fma`; JavaScript has none, so the TypeScript runtime builds one from Dekker's exact product and Boldo and Melquiond's rounding to odd, with a slow exact path for the awkward cases. Nothing compiled from glibc was ever run: the reference is the system's own library."
+ ],
+ [
+  "p",
+  "Then the translations were held against the real library, argument by argument: random arguments over the ranges SWMM uses, every argument the census sampled from the real models, and a set of edge cases (huge angles, negative bases with integer powers, overflow, underflow, subnormals, domain errors). Java: 21,992,590 arguments, 0 differences; TypeScript: 21,992,590 arguments, 0 differences. Every function, both languages: not one bit different, and not one NaN with the wrong sign."
+ ],
+ [
+  "p",
+  "The comparison earned its keep twice, and both times the fault was the translator's. `pow` came out wrong for negative bases raised to even powers, though `exp` and `log` were already exact. glibc's source asks whether the lowest integer bit of the exponent is set. GCC rewrote that test as a conversion to a one-bit boolean, and in GIMPLE such a conversion keeps the low bit; the translator had read it as C's \"not zero\" (`gate/results/checkint_evidence.txt`):"
+ ],
+ [
+  "code",
+  "if (iy & (1ULL << (0x3ff + 52 - e)))   /* glibc 2.39 e_pow.c:264, checkint */\n\n_119 = _54 >> _115;                     /* GCC 13.3 GIMPLE of the FMA build */\n_10 = (_Bool) _119;"
+ ],
+ [
+  "p",
+  "The second: to skip `if (...)` statements, the translator skipped every line that began with \"if\", including assignments to GCC's temporaries, which are named `iftmp`. That one failed loudly, but only on `pow`'s special cases. The first would not have shown up in a spot check of positive bases."
+ ],
+ [
+  "p",
+  "One more thing came out of the census. 81 percent of the calls are `pow`, and JavaScript has no 64-bit integers except BigInt, in which the translation does its 64-bit steps. So TypeScript's `pow` has a hand-written fast path for the common case that does exactly what the translation does, with the 64-bit steps done on 32-bit halves and four of the fused multiply-adds replaced by cheaper operations that give the same bits (an exact product, and the exact rounding error of a product). Everything else falls through to the full translation. The two were compared on 20,000,000 further arguments: 0 differences. The saving is smaller than I expected. On two million arguments the fast path takes 636 nanoseconds a call and the full translation 917; V8's own `Math.pow` takes 120 (`gate/results/powtime.txt`). What remains includes the sixteen fused multiply-adds the runtime must still build out of ordinary arithmetic."
  ],
  [
   "h2",
@@ -220,7 +305,7 @@
  [
   "fig",
   "shortcircuit",
-  "Figure 5. A real guard from climate.c and the Fortran the translator wrote for it. With k = -1 the Fortran never subscripts Pattern, which is what the C promises."
+  "Figure 6. A real guard from climate.c and the Fortran the translator wrote for it. With k = -1 the Fortran never subscripts Pattern, which is what the C promises."
  ],
  [
   "p",
@@ -236,6 +321,31 @@
  ],
  [
   "h2",
+  "jsjava",
+  "What JavaScript and Java made hard"
+ ],
+ [
+  "p",
+  "TypeScript and Java look more like C than Fortran does, and each still found its own ways to be different."
+ ],
+ [
+  "p",
+  "**In JavaScript every number is a double.** An `int` is a double that happens to hold a whole number, and doubles have a negative zero. In C, `-i` for `i = 0` is zero; in JavaScript it is -0, and so are `0 * -3`, `-3 % 3` and `Math.trunc(-0.5)`. Nothing goes wrong until that value becomes a double in a report, where glibc prints it as -0.00. So the TypeScript back end writes integer negation as `(0 - x)`, multiplication as `Math.imul(a, b)`, division as `(a / b) | 0` and remainder as `(a % b) | 0`, each of which can only give +0, and keeps unsigned values in range with `>>> 0`."
+ ],
+ [
+  "p",
+  "**NaN has two signs, and JavaScript's literal has the wrong one.** At run time V8 computes 0/0 the way the processor does and keeps the bits, through arrays and object fields alike (checked by `tools/libm/test/nan_bits.js`), but the literal `NaN` is the other pattern. So the runtime never writes the literal where C would compute a NaN. The same care turned up a small fact about glibc itself: its `log10`, `asin` and `acos` on x86-64 still go through old compatibility wrappers, which answer a domain error with a NaN whose sign bit is clear, while the routine underneath would have set it. The ports copy the wrappers."
+ ],
+ [
+  "p",
+  "**Neither has pointers or `ref` parameters, and Java will not let a lambda change a local.** A C function that takes `double *f` gets a small object with a value in it: a box for a local whose address is taken, an element reference for `&a[i]`, a field reference for `&link->flow`. Arrays of numbers become `Float64Array` and its kin in TypeScript, `double[]` in Java. In Java a field reference is a pair of lambdas over the object, `__o -> __o.depth`, because a lambda may read the object it is given but may not assign a local it captures."
+ ],
+ [
+  "p",
+  "**Java has no unsigned integers and rejects code C allows.** SWMM's one hash function uses unsigned arithmetic, which Java does in a `long` masked to 32 bits. Java's `(int)` of a huge double saturates where x86 gives the most negative integer (defect 2 below), so every conversion goes through `R.D2I`, exactly as in the other ports. And Java refuses a statement it can prove unreachable, such as the `break` after a `return` that C programmers write out of habit; the Java back end applies Java's own reachability rules to the C and leaves such statements out."
+ ],
+ [
+  "h2",
   "gate",
   "The gate"
  ],
@@ -246,7 +356,7 @@
  [
   "fig",
   "matrix",
-  "Figure 6. Every model against every engine, drawn from the gate's own results. Green is byte-identical .out and .rpt; grey is not run. There is no red because no difference remained."
+  "Figure 7. Every model against every engine, drawn from the gate's own results. Green is byte-identical .out and .rpt; grey is not run. There is no red because no difference remained."
  ],
  [
   "table",
@@ -292,6 +402,18 @@
     "465 of 465 identical",
     "966,242,270",
     "132,566"
+   ],
+   [
+    "TypeScript",
+    "480 of 480 identical",
+    "1,244,999,775",
+    "152,690"
+   ],
+   [
+    "Java",
+    "480 of 480 identical",
+    "1,244,999,775",
+    "152,690"
    ]
   ]
  ],
@@ -302,6 +424,14 @@
  [
   "p",
   "The sample earned its keep. Its first run crashed on one model, Horton_Continuous_Model.inp, where rain.c hands `sscanf` pointers it was itself given (`int *year`) instead of `&year`. The Python back end wrapped the second kind for the runtime and passed the first bare. The C# back end had tripped on the same construct in its own first gate run and been given a special case for it; the Python back end, written afterwards, never inherited it. The fix went into the translator, the regenerated engine changed in exactly four calls, and the whole Python gate, fast set and sample, was run again; the numbers above are from that rerun."
+ ],
+ [
+  "p",
+  "TypeScript and Java ran every model. An earlier build of the TypeScript engine, before its `pow` fast path, was gated first (480 of 480 identical; the stored run does not say which build ran, so that rests on the session's account in `gate/RUNS.md`), then the final build, in four quarters so that no single job ran longer than the session allows. Both final engines were then gated a second time, because I had deleted the first final runs' output files to free disk before the app could re-check them (the app re-hashes every engine's files and does not take the gate's word). The first final runs were identical on all 480 models in both languages; the table gives the second."
+ ],
+ [
+  "p",
+  "Java's first run, started (by the session's account in `gate/RUNS.md`) with a plain `java -jar`, passed 479 of 480 and crashed on Hydrology/sewer_rdii_problem.inp with \"Java heap space\". That model has 613 RDII unit-hydrograph groups whose slow response lasts 9,900 hours, and rdii.c keeps the rainfall history of each at the one-minute wet step: 3.38 GB of arrays (`gate/rdii_memory.py`). EPA's own peak resident size on it is 3.11 GB (`gate/results/peak_memory.txt`), and the Java virtual machine's default heap is a quarter of the machine's memory. The repository's launcher, `java/runswmm`, gives it three quarters and the parallel collector, and the final Java run in the table went through that launcher (`gate/RUNS.md`). Run again for this essay with a plain `java -jar`, the model still stops with \"Java heap space\" (`gate/results/peak_memory.txt`)."
  ],
  [
   "h2",
@@ -327,7 +457,7 @@
  [
   "fig",
   "controls",
-  "Figure 7. The null control comes back identical. The positive control, one rounding rule changed, is caught on some models and missed on the rest."
+  "Figure 8. The null control comes back identical. The positive control, one rounding rule changed, is caught on some models and missed on the rest."
  ],
  [
   "p",
@@ -395,7 +525,7 @@
  [
   "fig",
   "speed",
-  "Figure 8. CPU time against EPA on the same model. C++, Rust and Fortran sit near EPA, C# pays for its runtime on short models, and Python pays for being Python."
+  "Figure 9. CPU time against EPA on the same model. C++, Rust and Fortran sit near EPA, C# pays for its runtime on short models, and Python pays for being Python. TypeScript and Java pay for a virtual machine and for doing glibc's arithmetic in it."
  ],
  [
   "table",
@@ -441,6 +571,18 @@
     "81.63x",
     "57.02-99.04x",
     "0.029"
+   ],
+   [
+    "TypeScript",
+    "19.24x",
+    "11.44-73.66x",
+    "0.101"
+   ],
+   [
+    "Java",
+    "9.18x",
+    "4.28-93.97x",
+    "0.118"
    ]
   ]
  ],
@@ -461,6 +603,10 @@
   "C# has no typical ratio; its models fall into two groups. On the 6 that EPA runs in 0.17 seconds or more, C# costs 2.9 to 3.7 times EPA. On the 6 shorter ones it costs 6.7 to 28 times, climbing as the run gets shorter, because fixed costs swamp the work: starting .NET alone takes 0.07 seconds (timed with `--version`), and compiling the engine's methods just in time comes on top of that; I did not time the compiling separately. The median of all twelve, 5.2, falls between the groups and describes neither. Python's median is 82 times EPA, and its models stay between 57 and 99. That is the price of byte identity in a language where every number is an object: the answer is the same, and it takes longer to get it."
  ],
  [
+  "p",
+  "TypeScript and Java were timed last, in a run of their own: the same 12 models, 5 repetitions, interleaved with EPA and EPA again, every ratio against EPA in that run (EPA against itself there: 0.87 to 1.32). Java's median is 9.18 times EPA, from 4.28 to 93.97; starting the Java virtual machine alone takes 0.12 seconds, and on the 6 models EPA runs in 0.17 seconds or more (in the main benchmark) Java costs 4.3 to 8.2 times. TypeScript's median is 19.24, from 11.44 to 73.66 (11.4 to 20.9 on those same models), with 0.10 seconds to start Node. Part of TypeScript's price is the mathematics: a fused multiply-add the hardware does in one instruction costs the TypeScript runtime a few dozen floating-point operations, and its `pow` makes sixteen of them on its common path. Timed against the same engines built with their own languages' `Math` (3 repetitions, `gate/results/bench_math.json`), the copy of glibc makes TypeScript a median 1.32 times as slow (1.17 to 1.78 by model) and Java 1.12 times (0.94 to 1.30): about a quarter of TypeScript's time and a tenth of Java's. That run had no EPA-against-itself control; a Java ratio below 1 shows its noise is at least that large."
+ ],
+ [
   "h2",
   "limits",
   "What this does not show"
@@ -468,20 +614,22 @@
  [
   "fig",
   "coverage",
-  "Figure 9. How many of the 431 gate models that ran without an input error use each feature. Orange bars are features exercised by fewer than ten models; 5 are not exercised at all: Streets and inlets, Climate file, USE HOTSTART, USE INFLOWS (interface), USE RUNOFF."
+  "Figure 10. How many of the 431 gate models that ran without an input error use each feature. Orange bars are features exercised by fewer than ten models; 5 are not exercised at all: Streets and inlets, Climate file, USE HOTSTART, USE INFLOWS (interface), USE RUNOFF."
  ],
  [
   "ul",
   [
    "It does not show that SWMM is right. Identical to EPA means EPA's answers, good or bad. No observed flow enters anywhere.",
-   "It shows one platform: x86-64 Linux, glibc 2.39, gcc 13.3. On Windows or macOS the math library differs, and a port matches EPA built there only if its math library matches too.",
+   "It shows one platform: x86-64 Linux, glibc 2.39, gcc 13.3 (`gate/results/toolchain.txt`). On Windows or macOS the math library differs, and a port matches EPA built there only if its math library matches too.",
+   "It shows one kind of processor. EPA itself changes 43 models when glibc picks its generic math routines, as it would on a processor without FMA and AVX2. Fortran, C#, Python, C++ and Rust should follow EPA there, because they call the same library (this was not tested); TypeScript and Java carry the FMA versions and would not.",
    "The gate set is 480 of the 518 distinct models (distinct by content) in six folders of the corpus, which holds 4,540 .inp files. The other 38 were left out by an early timing survey with a 12-second limit, whose records were not kept. The cut is rough. Re-timed for this essay on a busy machine, 13 of the 38 ran past a 30-second limit and the rest took 5.8 to 29.6 seconds, 4 of them within 12; and 3 gate models took longer than 12 seconds in the reference run (attenuation_KW_High_CE.inp, 13 s, SCANLON.inp, 35 s, 72_H&H_Elements(2).inp, 39 s).",
    "49 of the 480 stop on an input error. For 39 of those EPA writes no results file and the report is the whole comparison; the other 10 write a short one, which is compared.",
    "Some paths are thin or missing. Counting only models that ran, none exercises these: Streets and inlets; Climate file; USE HOTSTART; USE INFLOWS (interface); USE RUNOFF. (Street and inlet hydraulics appear in one deck, which stops on input errors before simulating.) Snow packs appear in 4 models that ran, and only 2 of them supply the temperatures snowmelt needs.",
    "Python ran the 451 fast models and 14 of the 29 slow ones, not all 480.",
    "swmm5-cplus and swmm5-rust were gated as built from their repositories; how they were made is their own repositories' story, and this essay does not re-examine it.",
    "Only the command-line path was exercised. The API used for stepping a model from another program (swmm_step and friends) is translated but was not gated.",
-   "No person has read the 119,361 generated lines. The evidence is the gate and the controls, not review."
+   "The TypeScript and Java math routines were checked against the system libm on the arguments described above, not proved equal to it; a disagreement on an argument no test reached is possible, though none was found.",
+   "No person has read the 215,362 generated lines. The evidence is the gate and the controls, not review."
   ]
  ],
  [
@@ -496,7 +644,7 @@
    "**Models** lists every gate model. Filter by folder or name, and open a row to see its report statistics and each engine's output fingerprint.",
    "**Graphs** plots results from the reference .out for a chosen model and object, and under it the difference of each engine's own .out from the reference, period by period.",
    "**Speed** has the benchmark with its noise floor. **Verify** has the parity contract, controls, census and defect register.",
-   "To rebuild an engine, regenerate it with `tools/c2x/emit_f90.py` (or `emit_cs.py`, `emit_py.py`), build with `f90/build.sh` or `cs/build.sh`, then run `gate/gate.py NAME \"ENGINE\"` against the stored reference outputs."
+   "To rebuild an engine, regenerate it with `tools/c2x/emit_f90.py` (or `emit_cs.py`, `emit_py.py`, `emit_ts.py`, `emit_java.py`), build with `f90/build.sh`, `cs/build.sh`, `npm run build` in `ts/` or `java/build.sh`, then run `gate/gate.py NAME \"ENGINE\"` against the stored reference outputs. `tools/libm/make_libm.sh` regenerates the math routines from glibc's source, and `tools/libm/test/run_tests.sh` checks them against the system libm."
   ]
  ],
  [
@@ -506,6 +654,6 @@
  ],
  [
   "p",
-  "The three ports, the translator that wrote them, this app and this essay were made with Claude, Anthropic's AI model, in Claude Code sessions in October 2026, under the direction of Robert (Bob) Dickinson. He chose the languages, set the test (byte-identical .out and .rpt against EPA 5.2.4 on his corpus), chose the repositories and the app, and is responsible for the work. Claude wrote the translator (front end and the Fortran, C# and Python back ends), the hand-written runtimes and overrides, the gate and benchmark scripts, ran every test, built this app and wrote this text; one Claude subagent wrote the Fortran printf/sscanf/strtod module and its test suite. The checks are mechanical: the byte gate on the corpus, the null and positive controls, and the formatter's comparison with glibc. A second Claude instance, given the files but not the conclusions, audited this essay's claims against the stored evidence; the claims it found wrong or unsupported were corrected or removed. The slow-model sample turned up one Python crash, a translator bug in how scanf arguments were passed; it was fixed in the translator and the whole Python gate was rerun. No person has yet reviewed the generated code line by line. swmm5-cplus and swmm5-rust were made in earlier Claude sessions, also for Bob, and are only built and gated here."
+  "The five ports, the translator that wrote them, the translations of glibc's math routines that the TypeScript and Java ports carry, this app and this essay were made with Claude, Anthropic's AI model, in Claude Code sessions in October 2026, under the direction of Robert (Bob) Dickinson. He chose the languages (Fortran, C# and Python first, then TypeScript and Java), set the test (byte-identical .out and .rpt against EPA 5.2.4 on his corpus), chose the repositories and the app, and is responsible for the work. Claude wrote the translator (front end and the Fortran, C#, Python, TypeScript and Java back ends), the GIMPLE translator for glibc's math routines and its tests, the hand-written runtimes and overrides, the gate and benchmark scripts, ran every test, built this app and wrote this text; one Claude subagent wrote the Fortran printf/sscanf/strtod module and its test suite. The checks are mechanical: the byte gate on the corpus, the null and positive controls, the formatter's comparison with glibc, and the math routines' comparison with the system libm. A second Claude instance, given the files but not the conclusions, audited this essay's claims against the stored evidence; the claims it found wrong or unsupported were corrected or removed. The slow-model sample turned up one Python crash, a translator bug in how scanf arguments were passed; it was fixed in the translator and the whole Python gate was rerun. No person has yet reviewed the generated code line by line. swmm5-cplus and swmm5-rust were made in earlier Claude sessions, also for Bob, and are only built and gated here."
  ]
 ]
