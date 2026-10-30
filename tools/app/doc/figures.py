@@ -11,12 +11,12 @@ FONT = "IBM Plex Sans, Helvetica, Arial, sans-serif"
 MONO = "IBM Plex Mono, Menlo, Consolas, monospace"
 
 APP_PALETTE = {k: 'var(--f-%s)' % k for k in
-               ('ink', 'dim', 'line', 'face', 'soft', 'a', 'ok', 'bad', 'warn', 'epa', 'cpp', 'rust', 'f90', 'cs', 'py', 'ts', 'java')}
+               ('ink', 'dim', 'line', 'face', 'soft', 'a', 'ok', 'bad', 'warn', 'epa', 'cpp', 'rust', 'f90', 'cs', 'py', 'ts', 'java', 'go')}
 DOCX_PALETTE = dict(ink='#1b2733', dim='#5a6878', line='#cfd8e3', face='#ffffff', soft='#eef3f8', a='#1f6fd1',
                     ok='#1d8a4c', bad='#c2352b', warn='#b45309', epa='#b45309', cpp='#1f6fd1', rust='#c2410c',
-                    f90='#6b4fbb', cs='#1d8a4c', py='#0e7490', ts='#be185d', java='#4d7c0f')
+                    f90='#6b4fbb', cs='#1d8a4c', py='#0e7490', ts='#be185d', java='#4d7c0f', go='#803a71')
 ENGINE_KEY = {'EPA 5.2.4 (C)': 'epa', 'C++ swmm5-cplus': 'cpp', 'Rust swmm5-rust': 'rust', 'Fortran': 'f90',
-              'C#': 'cs', 'Python': 'py', 'TypeScript': 'ts', 'Java': 'java'}
+              'C#': 'cs', 'Python': 'py', 'TypeScript': 'ts', 'Java': 'java', 'Go': 'go'}
 
 
 def esc(s):
@@ -65,8 +65,8 @@ class S:
 
 # --------------------------------------------------------------------------- 1. the pipeline
 def fig_pipeline(D, P):
-    s = S(760, 360, P, 'How the five ports are made and judged')
-    s.text(20, 28, 'One front end, five back ends, one gate', 15, weight=600)
+    s = S(760, 420, P, 'How the six ports are made and judged')
+    s.text(20, 28, 'One front end, six back ends, one gate', 15, weight=600)
     # C source
     s.rect(20, 60, 150, 92, fill='soft', stroke='line')
     s.text(95, 84, 'EPA SWMM 5.2.4', 13, anchor='middle', weight=600)
@@ -83,17 +83,17 @@ def fig_pipeline(D, P):
                            '%s pointers classified' % format(sum(D['front']['modes'].values()), ',')]):
         s.text(305, 94 + 18 * i, t, 11.5, 'dim', 'middle')
     # back ends
-    ys = [42, 96, 150, 204, 258]
+    ys = [40, 88, 136, 184, 232, 280]
     names = [('emit_f90.py', 'Fortran 2008 module', 'f90'), ('emit_cs.py', 'C# static class', 'cs'), ('emit_py.py', 'pure Python', 'py'),
-             ('emit_ts.py', 'TypeScript module', 'ts'), ('emit_java.py', 'Java classes', 'java')]
+             ('emit_ts.py', 'TypeScript module', 'ts'), ('emit_java.py', 'Java classes', 'java'), ('emit_go.py', 'Go package', 'go')]
     for y, (n, what, k) in zip(ys, names):
-        s.line(400, 106, 450, y + 22, 'dim', 1.2, arrow=True)
-        s.rect(450, y, 140, 46, fill='soft', stroke=k, sw=2)
-        s.text(520, y + 19, n, 12.5, anchor='middle', weight=600, mono=True)
-        s.text(520, y + 36, what, 11, 'dim', 'middle')
-        s.line(590, y + 22, 630, 160, 'dim', 1.2, arrow=True)
-    s.text(520, 326, '+ hand-written runtime per language (printf, sscanf,', 10.5, 'dim', 'middle')
-    s.text(520, 341, 'FILE, odesolve); TS and Java also carry glibc\'s math', 10.5, 'dim', 'middle')
+        s.line(400, 106, 450, y + 20, 'dim', 1.2, arrow=True)
+        s.rect(450, y, 140, 40, fill='soft', stroke=k, sw=2)
+        s.text(520, y + 17, n, 12.5, anchor='middle', weight=600, mono=True)
+        s.text(520, y + 32, what, 11, 'dim', 'middle')
+        s.line(590, y + 20, 630, 160, 'dim', 1.2, arrow=True)
+    s.text(520, 394, '+ hand-written runtime per language (printf, sscanf,', 10.5, 'dim', 'middle')
+    s.text(520, 409, 'FILE, odesolve); TS, Java and Go also carry glibc\'s math', 10.5, 'dim', 'middle')
     # gate
     s.rect(630, 120, 115, 80, fill='soft', stroke='ok', sw=2)
     s.text(687, 146, 'gate', 13, anchor='middle', weight=600)
@@ -102,7 +102,7 @@ def fig_pipeline(D, P):
     s.text(687, 228, 'a mismatch is fixed', 11, 'bad', 'middle')
     s.text(687, 244, 'in the translator or runtime,', 11, 'bad', 'middle')
     s.text(687, 260, 'never in the output', 11, 'bad', 'middle')
-    s.path('M687 270 C 687 300, 330 300, 305 166', stroke='bad', sw=1.2)
+    s.path('M687 270 C 687 392, 330 392, 305 166', stroke='bad', sw=1.2)
     s.line(305, 172, 305, 164, 'bad', 1.2, arrow=True)
     return s.done()
 
@@ -110,18 +110,18 @@ def fig_pipeline(D, P):
 # --------------------------------------------------------------------------- 2. pointer modes
 def fig_pointers(D, P):
     modes = D['front']['modes']
-    order = [('array', 'indexed array', 'pointer(0:)', 'T[]', 'list', 'Float64Array', 'double[]'),
-             ('obj', 'one object', 'type(T),pointer', 'class ref', 'object', 'object', 'object'),
-             ('char', 'string', 'CPtr', 'CPtr', 'CPtr', 'CPtr', 'CPtr'),
-             ('ref', 'reference to a number', 'intent(inout)', 'ref double', 'Box', 'Box/ElemRef', 'DRef'),
-             ('file', 'FILE*', 'CFile', 'CFile', 'CFile', 'CFile', 'CFile'),
-             ('void', 'untyped void*', 'type(c_ptr)', 'object', 'object', 'any', 'Object'),
-             ('func', 'function pointer', 'interface', 'delegate', 'function', 'function', 'FPn::call')]
+    order = [('array', 'indexed array', 'pointer(0:)', 'T[]', 'list', 'Float64Array', 'double[]', '[]T'),
+             ('obj', 'one object', 'type(T),pointer', 'class ref', 'object', 'object', 'object', '*T'),
+             ('char', 'string', 'CPtr', 'CPtr', 'CPtr', 'CPtr', 'CPtr', 'R.CPtr'),
+             ('ref', 'reference to a number', 'intent(inout)', 'ref double', 'Box', 'Box/ElemRef', 'DRef', '*float64'),
+             ('file', 'FILE*', 'CFile', 'CFile', 'CFile', 'CFile', 'CFile', '*R.CFile'),
+             ('void', 'untyped void*', 'type(c_ptr)', 'object', 'object', 'any', 'Object', 'any'),
+             ('func', 'function pointer', 'interface', 'delegate', 'function', 'function', 'FPn::call', 'func type')]
     s = S(760, 330, P, 'What each C pointer became')
     s.text(20, 28, 'One C pointer type, seven jobs: pointer and array declarations by kind, and what each became', 14, weight=600)
     mx = max(modes.values())
-    x0, bw = 170, 90
-    cols = [(300, 'Fortran', 'f90'), (395, 'C#', 'cs'), (468, 'Python', 'py'), (533, 'TypeScript', 'ts'), (643, 'Java', 'java')]
+    x0, bw = 170, 66
+    cols = [(276, 'Fortran', 'f90'), (370, 'C#', 'cs'), (436, 'Python', 'py'), (490, 'TypeScript', 'ts'), (572, 'Java', 'java'), (636, 'Go', 'go')]
     s.text(x0, 54, 'declarations', 11, 'dim')
     for x, lab, k in cols:
         s.text(x, 54, lab, 11, k, weight=600)
@@ -284,7 +284,7 @@ def fig_controls(D, P):
 # --------------------------------------------------------------------------- 8. speed
 def fig_speed(D, P):
     B = D.get('bench')
-    s = S(760, 362, P, 'CPU time of each engine relative to EPA')
+    s = S(760, 378, P, 'CPU time of each engine relative to EPA')
     s.text(20, 28, 'CPU time per run, relative to EPA on the same model (log scale; each dot is one model, median of reps)', 13.5, weight=600)
     if not B:
         s.text(380, 170, 'benchmark not run yet', 13, 'dim', 'middle')
@@ -305,6 +305,8 @@ def fig_speed(D, P):
         k = ENGINE_KEY.get(e, {'EPA again': 'epa', 'C++': 'cpp', 'Rust': 'rust'}.get(e, 'a'))
         if e in ('TypeScript', 'Java') and B.get('tsj_noise'):
             s.rect(X(B['tsj_noise'][0]), y - 9, max(2, X(B['tsj_noise'][1]) - X(B['tsj_noise'][0])), 18, fill='warn', rx=0, op=0.12)
+        if e == 'Go' and B.get('go_noise'):
+            s.rect(X(B['go_noise'][0]), y - 9, max(2, X(B['go_noise'][1]) - X(B['go_noise'][0])), 18, fill='warn', rx=0, op=0.12)
         s.text(x0 - 10, y + 5, e, 12, anchor='end')
         for v in B['per_model'][e]:
             s.circle(X(v), y, 4, fill=k)
@@ -316,6 +318,8 @@ def fig_speed(D, P):
         s.text(x0, 338, 'Rust was timed in a separate run on another machine; EPA against itself there: %.2f-%.2fx.' % tuple(B['rust_noise']), 10.5, 'dim')
     if B.get('tsj_noise'):
         s.text(x0, 354, 'TypeScript and Java were timed in a later run of their own (row bands: EPA against itself there, %.2f-%.2fx).' % tuple(B['tsj_noise']), 10.5, 'dim')
+    if B.get('go_noise'):
+        s.text(x0, 370, 'Go was timed last, in a run of its own (row band: EPA against itself there, %.2f-%.2fx).' % tuple(B['go_noise']), 10.5, 'dim')
     return s.done()
 
 
@@ -362,7 +366,7 @@ def fig_libm(D, P):
         s.rect(xs + 220 * same / n, 136, 220 * (n - same) / n, 20, fill='bad', rx=2)
         s.text(xs + 6, 151, '%d identical' % same, 11, 'face', weight=600)
         s.text(xs, 176, '%d models change' % (n - same), 11.5, 'bad', weight=600)
-    s.text(xs, 206, 'TypeScript and Java carry the FMA', 10.5, 'dim', italic=True)
+    s.text(xs, 206, 'TypeScript, Java and Go carry the FMA', 10.5, 'dim', italic=True)
     s.text(xs, 221, 'versions, translated from GCC\'s GIMPLE', 10.5, 'dim', italic=True)
     s.text(xs, 236, 'and checked bit for bit against libm.', 10.5, 'dim', italic=True)
     s.text(20, 290, 'Census: LD_PRELOAD interposer around glibc 2.39 (tools/libm/census.c). sqrt is an instruction and never calls libm; atan is never called.', 10, 'dim')

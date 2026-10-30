@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Assemble the engines app (one HTML file) and the essay sources for the .docx.
 
-  build_app.py            -> app/eight-engines.html, doc/essay.docx.json, doc/fig/*.svg
+  build_app.py            -> app/nine-engines.html, doc/essay.docx.json, doc/fig/*.svg
 
 Reads tools/app/data/models.json (from build_data.py) and the gate's control, benchmark and
 formatter results; every number shown is computed here from those files.
@@ -19,7 +19,7 @@ import figures as FG
 import essay as ES
 
 ENGINE_RUN = {'C++ swmm5-cplus': ['cplus'], 'Rust swmm5-rust': ['rust'], 'Fortran': ['fortran3'], 'C#': ['csharp3'],
-              'Python': ['py_final', 'py_final_slow'], 'TypeScript': ['ts_final_q1', 'ts_final_q2', 'ts_final_q3', 'ts_final_q4'], 'Java': ['java_final_a', 'java_final_b']}
+              'Python': ['py_final', 'py_final_slow'], 'TypeScript': ['ts_final_q1', 'ts_final_q2', 'ts_final_q3', 'ts_final_q4'], 'Java': ['java_final_a', 'java_final_b'], 'Go': ['go_final']}
 
 
 def J(p, default=None):
@@ -130,7 +130,7 @@ def libm_info():
     p = os.path.join(GATE, 'results', 'libm_native.txt')
     if os.path.exists(p):
         for line in open(p):
-            m = re.match(r'^(V8|Java) Math\.(\w+)\s+(\d+) of (\d+) differ', line)
+            m = re.match(r'^(V8|Java|Go) [Mm]ath\.(\w+)\s+(\d+) of (\d+) differ', line)
             if m:
                 d = out['native'].setdefault(m.group(1), {})
                 d[m.group(2)] = [int(m.group(3)), int(m.group(4))]
@@ -140,7 +140,7 @@ def libm_info():
     # positive controls: the TypeScript and Java engines with their languages' own Math in place of glibc's
     # (gate/run_ts_native_control.sh, gate/run_java_native_control.sh), on the 40-model control set
     out['native_ctl'] = {}
-    for lang, run in (('TypeScript', 'ctl_ts_native'), ('Java', 'ctl_java_native')):
+    for lang, run in (('TypeScript', 'ctl_ts_native'), ('Java', 'ctl_java_native'), ('Go', 'ctl_go_native')):
         n, same, rows = gate_counts(run)
         if n:
             out['native_ctl'][lang] = dict(n=n, same=same, diff=[r['path'].split('2030/')[-1] for r in rows if r['status'] != 'PASS'])
@@ -155,7 +155,7 @@ def libm_info():
         if len(t) == 3:
             out['powtime'] = ['%.0f' % t['pow'], '%.0f' % t['pow_exact'], '%.0f' % t['Math.pow']]
     out['native_ctl_all'] = {}
-    for lang, run in (('TypeScript', 'ctl_ts_native_all'), ('Java', 'ctl_java_native_all')):
+    for lang, run in (('TypeScript', 'ctl_ts_native_all'), ('Java', 'ctl_java_native_all'), ('Go', 'ctl_go_native_all')):
         n, same, rows = gate_counts(run)
         if n:
             out['native_ctl_all'][lang] = dict(n=n, same=same)
@@ -188,6 +188,26 @@ def bench_stats():
         B['tsj_noise'] = X['noise']
         B['tsj_when'] = X['when']
         B['tsj_reps'] = X['reps']
+    # Go: its own interleaved run against EPA on the same models (bench_go.json)
+    G = bench_one('bench_go.json')
+    if B and G and 'Go' in G['per_model']:
+        B['engines'].append('Go')
+        B['per_model']['Go'] = G['per_model']['Go']
+        B['median']['Go'] = G['median']['Go']
+        B['startup']['Go'] = G['startup'].get('Go', 0)
+        B['go_noise'] = G['noise']
+        B['go_when'] = G['when']
+        B['go_reps'] = G['reps']
+    GM = J(os.path.join(GATE, 'results', 'bench_math_go.json'))
+    if B and GM:
+        by = collections.defaultdict(list)
+        for r in GM['rows']:
+            if r['rc'] == 0 and r['model'] != '--version':
+                by[(r['engine'], r['model'])].append(r['cpu'])
+        med = {k: statistics.median(v) for k, v in by.items()}
+        rat = [med[('Go', m)] / med[('Go own math', m)] for (e, m) in med if e == 'Go' and ('Go own math', m) in med]
+        if rat:
+            B['go_math_cost'] = [GM['meta']['reps'], statistics.median(rat), min(rat), max(rat)]
     # what the glibc translations cost: each engine against the same engine with its language's own Math
     # (bench_math.json; per-model ratio of median CPU times)
     Mb = J(os.path.join(GATE, 'results', 'bench_math.json'))
@@ -258,7 +278,97 @@ def fmt_results():
     return dict(fmt_printf=g(r'printf  all:\s+cases (\d+)'), fmt_sscanf=g(r'sscanf  all:\s+cases (\d+)'),
                 fmt_strtod=g(r'strtod  all:\s+cases (\d+)'),
                 fmt_mismatch=sum(int(x) for x in re.findall(r'all:\s+cases \d+\s+mismatches (\d+)', t)),
-                fmt_pass='RESULT: PASS' in t)
+                fmt_pass='RESULT: PASS' in t, go_fmt=go_fmt_results())
+
+
+def go_fmt_results():
+    """the Go runtime's printf/strtod/sscanf against glibc (gate/results/go_crt_check.txt)"""
+    p = os.path.join(GATE, 'results', 'go_crt_check.txt')
+    if not os.path.exists(p):
+        return None
+    t = open(p).read()
+    out = {}
+    for k in ('printf', 'strtod', 'sscanf'):
+        m = re.search(r'^%s: (\d+) cases, (\d+) differ' % k, t, re.M)
+        out[k] = [int(m.group(1)), int(m.group(2))] if m else [0, 0]
+    m = re.search(r'^\s+f (%#\S+) arg=(\S+)\s+glibc="([^"]*)"\s+go="([^"]*)"', t, re.M)
+    if m:
+        import struct
+        v = struct.unpack('<d', struct.pack('<Q', int(m.group(2), 16)))[0]
+        out['quirk'] = [m.group(1), repr(v), m.group(3), m.group(4)]
+        out['note'] = ('%s of %r: glibc prints %s, the Go runtime %s; a glibc quirk on the # flag, which SWMM never uses'
+                       % (m.group(1), v, m.group(3), m.group(4)))
+    else:
+        out['note'] = ''
+    return out
+
+
+def go_fma_check():
+    """fused multiply-add instructions in the Go engine binary, by function (gate/results/go_fma_check.txt)"""
+    p = os.path.join(GATE, 'results', 'go_fma_check.txt')
+    if not os.path.exists(p):
+        return None
+    t = open(p).read()
+    funcs = re.findall(r'^\s*(\d+) <([^>]+)>:', t, re.M)
+    tot = re.search(r'^\s*(\d+) total', t, re.M)
+    out = re.search(r'^outside glibm: (\d+)', t, re.M)
+    demo = dict(re.findall(r'^fusedemo (GOAMD64=v\d main\.\w+): (\d+) fused', t, re.M))
+    res = dict(total=int(tot.group(1)) if tot else 0, funcs=len(funcs), outside=int(out.group(1)) if out else -1,
+               names=[f.split('.')[-1] for _, f in funcs], x86_demo={k: int(v) for k, v in demo.items()})
+    p = os.path.join(GATE, 'results', 'go_fma_arm64.txt')
+    if os.path.exists(p):
+        t = open(p).read()
+        sec = t.split('-- the engine')
+        demo = sec[0]
+        plain = re.search(r'main\.plain\(SB\)\n((?:\s{6}.*\n)+)', demo)
+        wrapped = re.search(r'main\.wrapped\(SB\)\n((?:\s{6}.*\n)+)', demo)
+        rows = re.findall(r'^\s*(\d+) (\S+)\(SB\)', sec[1] if len(sec) > 1 else '', re.M)
+        ops = lambda m: [ln.split()[0] for ln in m.group(1).strip().split('\n')] if m else []
+        res['arm64'] = dict(plain=ops(plain), wrapped=ops(wrapped),
+                            glibm=sum(int(n) for n, f in rows if 'glibm' in f),
+                            runtime=sum(int(n) for n, f in rows if f.startswith('runtime.')),
+                            main=int(re.search(r'in package main[^:]*: (\d+)', t).group(1)))
+    return res
+
+
+def go_powtime():
+    """ns per call of pow/sin/cos: glibc, the Go translations (dispatch loop, then goto) and Go's math (go_powtime.txt)"""
+    p = os.path.join(GATE, 'results', 'go_powtime.txt')
+    if not os.path.exists(p):
+        return None
+    out = {}
+    key = {'glibc (C)': 'glibc', 'Go glibm, dispatch loop': 'loop', 'Go glibm': 'glibm', 'Go math': 'math'}
+    for line in open(p):
+        m = re.match(r'^(.*?)\s+pow\s+([\d.]+) ns\s+sin\s+([\d.]+) ns\s+cos\s+([\d.]+) ns', line)
+        if m and m.group(1).strip() in key:
+            out[key[m.group(1).strip()]] = dict(pow=float(m.group(2)), sin=float(m.group(3)), cos=float(m.group(4)))
+    return out
+
+
+def go_pprof():
+    """the Go engine's CPU profile on one model (gate/results/go_pprof.txt): model, seconds, top functions by flat time"""
+    p = os.path.join(GATE, 'results', 'go_pprof.txt')
+    if not os.path.exists(p):
+        return None
+    t = open(p).read()
+    m = re.search(r'^model: (\S+)', t, re.M)
+    d = re.search(r'Total samples = ([\d.]+)s', t)
+    top = re.findall(r'^\s+[\d.]+m?s\s+([\d.]+)%\s+[\d.]+%\s+[\d.]+m?s\s+[\d.]+%\s+(\S+)$', t.split('\n\n')[0], re.M)
+    same = 'identical to EPA' in t
+    return dict(model=m.group(1) if m else '?', sec=float(d.group(1)) if d else 0, same=same,
+                top=[(f.replace('swmm5go/glibm.', 'glibm.').replace('main.', ''), float(pc)) for pc, f in top[:8]])
+
+
+def go_constants():
+    """Go's exact constant arithmetic against C's rounding (gate/results/go_constants.txt)"""
+    p = os.path.join(GATE, 'results', 'go_constants.txt')
+    if not os.path.exists(p):
+        return None
+    t = open(p).read()
+    c = re.search(r'^constant 0\.1 \* 3\.0\s+= (\S+)', t, re.M)
+    g = re.search(r'^C \(gcc[^)]*\) 0\.1 \* 3\.0\s+= (\S+)', t, re.M)
+    ty = re.search(r'^typed float64\(float64\(0\.1\) \* 3\.0\)\s+= (\S+)', t, re.M)
+    return dict(const=c.group(1), c=g.group(1), typed=ty.group(1)) if c and g and ty else None
 
 
 def downsample(xs, ys, n=360):
@@ -358,6 +468,7 @@ def main():
     fb = J(os.path.join(GATE, 'results', 'fma_control_build.json'), {}) or {}
     controls['fma_instr'] = fb.get('fma_instr_control', 0)
     controls['fma_examples'] = fma_examples(r3)
+    controls['go_fma'] = go_fma_check()
     # python fast / slow
     fast = set(open(os.path.join(GATE, 'ids_py_fast.txt')).read().split())
     pn, ps, _ = gate_counts('py_final')
@@ -429,7 +540,12 @@ def main():
     census['gated_over12'] = sorted([[round(m['epa_sec'], 1), m['folder'] + '/' + m['file']] for m in models if m['epa_sec'] > 12])
     L = dict(c=count_lines([os.path.join(ROOT, 'ref/epa524/solver', f) for f in os.listdir(os.path.join(ROOT, 'ref/epa524/solver'))
                             if f.endswith(('.c', '.h', '.dat'))]),
-             translator=count_lines([os.path.join(ROOT, 'tools/c2x', f) for f in ('front.py', 'emit_cs.py', 'emit_py.py', 'emit_f90.py', 'emit_ts.py', 'emit_java.py')]),
+             translator=count_lines([os.path.join(ROOT, 'tools/c2x', f) for f in ('front.py', 'emit_cs.py', 'emit_py.py', 'emit_f90.py', 'emit_ts.py', 'emit_java.py', 'emit_go.py')]),
+             go_gen=count_lines([os.path.join(ROOT, 'go/swmm5', f) for f in os.listdir(os.path.join(ROOT, 'go/swmm5'))
+                                 if f.startswith('f_') or f in ('types.go', 'consts.go')]),
+             go_rt=count_lines([os.path.join(ROOT, 'go/crt', f) for f in os.listdir(os.path.join(ROOT, 'go/crt')) if f.endswith('.go')] +
+                               [os.path.join(ROOT, 'go/swmm5', f) for f in ('overrides.go', 'main.go')]),
+             libm_go=count_lines([os.path.join(ROOT, 'go/glibm/glibm.go')]),
              ts_gen=count_lines([os.path.join(ROOT, 'ts/src/engine.ts')]),
              ts_rt=count_lines([os.path.join(ROOT, 'ts/src', f) for f in ('crt.ts', 'overrides.ts', 'runswmm.ts')]),
              java_gen=count_lines([os.path.join(ROOT, 'java/src/swmm5', f) for f in os.listdir(os.path.join(ROOT, 'java/src/swmm5'))
@@ -437,7 +553,7 @@ def main():
              java_rt=count_lines([os.path.join(ROOT, 'java/src/swmm5', f) for f in ('R.java', 'Refs.java', 'Overrides.java', 'Main.java')]),
              libm_ts=count_lines([os.path.join(ROOT, 'ts/src/glibm.ts')]),
              libm_java=count_lines([os.path.join(ROOT, 'java/src/swmm5/Glibm.java')]),
-             libm_rt=count_lines([os.path.join(ROOT, 'tools/libm', f) for f in ('glibm_rt.ts', 'GlibmRt.java')]),
+             libm_rt=count_lines([os.path.join(ROOT, 'tools/libm', f) for f in ('glibm_rt.ts', 'GlibmRt.java', 'glibm_rt.go')]),
              libm_tools=count_lines([os.path.join(ROOT, 'tools/libm', f) for f in ('gim2x.py', 'extract_tables.py', 'build_glibm.sh', 'make_libm.sh', 'census.c', 'census_summary.py', 'run_census.sh')]),
              f90_gen=count_lines([os.path.join(ROOT, 'f90/gen/swmm5_engine.f90')]),
              f90_rt=count_lines([os.path.join(ROOT, 'f90/runtime', f) for f in ('crt_base.f90', 'crt_io.f90', 'crt_format.f90', 'overrides.inc', 'overrides_decl.inc', 'runswmm.f90')]),
@@ -469,6 +585,14 @@ def main():
     ja, jb = gate_counts('java_a'), gate_counts('java_b')
     D['java_first'] = dict(n=ja[0] + jb[0], passed=ja[1] + jb[1],
                            crashed=[r['path'].split('2030/')[-1] for r in ja[2] + jb[2] if r['status'] != 'PASS'])
+    gd = gate_counts('go_disc1')
+    D['go_first'] = dict(n=gd[0], passed=gd[1])
+    g1 = gate_counts('go_final1')
+    D['go_final1'] = dict(n=g1[0], passed=g1[1])
+    D['go_const'] = go_constants()
+    D['go_powtime'] = go_powtime()
+    D['go_pprof'] = go_pprof()
+    D['go_version'] = go_version()
     D['corpus_note'] = ES.corpus_note(D)
     # ---------------------------------------------------------------- figures
     figdir = os.path.join(HERE, 'doc', 'fig')
@@ -491,24 +615,24 @@ def main():
                          rl=m['rpt_lines'], ob=m['out_bytes'],
                          e={k: v for k, v in m['eng'].items()}))
     app = dict(models=slim, engines=engines, totals=totals, controls=controls, python=py, bench=B, census=census,
-               corpus_note=D['corpus_note'], rust=D['rust'], libm=D['libm'],
+               corpus_note=D['corpus_note'], rust=D['rust'], libm=D['libm'], go_version=D['go_version'],
                lines=L, front=front, defects=DEFECTS, coverage=cov, graphs=G,
                built=time.strftime('%Y-%m-%d %H:%M'), figs={k: figs_app[k] for k in ('matrix', 'controls', 'speed', 'coverage', 'pointers', 'pipeline')})
     tpl = open(os.path.join(HERE, 'app_template.html')).read()
     page = tpl.replace('/*__DATA__*/null', json.dumps(app, separators=(',', ':'))).replace('<!--__DOC__-->', doc_html)
     page = page.replace('<!--__AIUSE__-->', html.escape(AI_USE))
     os.makedirs(os.path.join(ROOT, 'app'), exist_ok=True)
-    open(os.path.join(ROOT, 'app', 'eight-engines.html'), 'w').write(page)
+    open(os.path.join(ROOT, 'app', 'nine-engines.html'), 'w').write(page)
     summary = dict(n_models=len(models), totals=totals, controls={k: v for k, v in controls.items() if k != 'fma_all_diff'},
                    python={k: v for k, v in py.items() if k != 'slow_rows'}, python_slow_rows=py['slow_rows'],
                    bench=None if not B else dict(median=B['median'], range={e: [min(v), max(v)] for e, v in B['per_model'].items()},
                                                   noise=B['noise'], noise_pairs=B.get('noise_pairs'), startup=B['startup'], reps=B['reps'], n_models=B['n_models'],
                                                   epa_min=B['epa_min'], epa_max=B['epa_max'], when=B['when'],
-                                                  **{k: B[k] for k in ('rust_noise', 'rust_reps', 'tsj_noise', 'tsj_reps') if k in B}),
+                                                  **{k: B[k] for k in ('rust_noise', 'rust_reps', 'tsj_noise', 'tsj_reps', 'go_noise', 'go_reps', 'go_math_cost') if k in B}),
                    census=census, lines=L, front=front, defects=DEFECTS, built=app['built'], corpus_note=D['corpus_note'], rust=D['rust'], libm=D['libm'],
                    essay_title=blocks[0][1])
     json.dump(summary, open(os.path.join(HERE, 'data', 'summary.json'), 'w'), indent=1)
-    print('app/eight-engines.html', len(page) // 1024, 'KB;', len(blocks), 'essay blocks;', len(G), 'graph models')
+    print('app/nine-engines.html', len(page) // 1024, 'KB;', len(blocks), 'essay blocks;', len(G), 'graph models')
     for k in ('epa_rerun_same', 'epa_rerun_n', 'fma40_same', 'fma40_n', 'fma_all_same', 'fma_all_n'):
         print(' ', k, controls[k])
     print('  python', {k: v for k, v in py.items() if k != 'slow_rows'})
@@ -516,21 +640,31 @@ def main():
         print('  bench medians', {k: round(v, 3) for k, v in B['median'].items()}, 'noise', B['noise'])
 
 
-AI_USE = ('The five ports, the translator that wrote them, the translations of glibc\'s math routines that the TypeScript '
-          'and Java ports carry, this app and this essay were made with Claude, Anthropic\'s AI model, in Claude Code '
+AI_USE = ('The six ports, the translator that wrote them, the translations of glibc\'s math routines that the TypeScript, '
+          'Java and Go ports carry, this app and this essay were made with Claude, Anthropic\'s AI model, in Claude Code '
           'sessions in October 2026, under the direction of Robert (Bob) Dickinson. He chose the languages (Fortran, C# and '
-          'Python first, then TypeScript and Java), set the test (byte-identical .out and .rpt against EPA 5.2.4 on his '
+          'Python first, then TypeScript and Java, then Go after a survey of the languages in his Code Rosetta Stone app), set the test (byte-identical .out and .rpt against EPA 5.2.4 on his '
           'corpus), chose the repositories and the app, and is responsible for the work. Claude wrote the translator (front '
-          'end and the Fortran, C#, Python, TypeScript and Java back ends), the GIMPLE translator for glibc\'s math routines '
+          'end and the Fortran, C#, Python, TypeScript, Java and Go back ends), the GIMPLE translator for glibc\'s math routines '
           'and its tests, the hand-written runtimes and overrides, the gate and benchmark scripts, ran every test, built this '
           'app and wrote this text; one Claude subagent wrote the Fortran printf/sscanf/strtod module and its test suite. '
-          'The checks are mechanical: the byte gate on the corpus, the null and positive controls, the formatter\'s '
-          'comparison with glibc, and the math routines\' comparison with the system libm. A second Claude instance, given '
+          'The checks are mechanical: the byte gate on the corpus, the null and positive controls, the Fortran and Go formatters\' '
+          'comparisons with glibc, and the math routines\' comparison with the system libm. A second Claude instance, given '
           'the files but not the conclusions, audited this essay\'s claims against the stored evidence; the claims it found '
           'wrong or unsupported were corrected or removed. The slow-model sample turned up one Python crash, a translator bug '
           'in how scanf arguments were passed; it was fixed in the translator and the whole Python gate was rerun. No person '
           'has yet reviewed the generated code line by line. swmm5-cplus and swmm5-rust were made in earlier Claude '
           'sessions, also for Bob, and are only built and gated here.')
+
+
+def go_version():
+    """the Go toolchain the engine was built and gated with (gate/results/toolchain.txt, else go version)"""
+    p = os.path.join(GATE, 'results', 'toolchain.txt')
+    if os.path.exists(p):
+        m = re.search(r'\bgo(1\.\d+(?:\.\d+)?)\b', open(p).read())
+        if m:
+            return 'Go ' + m.group(1)
+    return 'Go'
 
 
 def inline(s):

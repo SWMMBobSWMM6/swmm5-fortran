@@ -1,0 +1,23 @@
+go version go1.24.7 linux/amd64; GOARCH=arm64
+-- go/internal/fusedemo:
+  main.plain(SB)
+      FMADDD F0, F2, F1, F0
+  main.wrapped(SB)
+      FMULD F1, F0, F1 
+      FADDD F2, F1, F0 
+-- the engine (go/swmm5), fused instructions by function:
+    2 runtime.(*gcControllerState).startCycle(SB)
+    2 runtime.(*piController).next(SB)
+    1 runtime.(*scavengerState).run(SB)
+    1 runtime.fastexprand(SB)
+   28 swmm5go/glibm.Atan(SB)
+   70 swmm5go/glibm.Cos(SB)
+    9 swmm5go/glibm.Exp(SB)
+   23 swmm5go/glibm.Log(SB)
+   21 swmm5go/glibm.Pow(SB)
+   70 swmm5go/glibm.Sin(SB)
+   50 swmm5go/glibm.Tan(SB)
+   60 swmm5go/glibm.ieee754_acos(SB)
+   61 swmm5go/glibm.ieee754_asin(SB)
+  398 total
+in package main (the SWMM engine): 0

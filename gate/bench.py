@@ -24,11 +24,13 @@ ENGINES = {
     'Rust': [os.environ.get('SWMM5_RUST', '/home/claude/swmmbobswmm6/swmm5-rust/target/release/runswmm-rs')],
     'TypeScript': ['node', os.path.join(ROOT, 'ts/dist/runswmm.js')],
     'Java': [os.path.join(ROOT, 'java/runswmm')],
+    'Go': [os.path.join(ROOT, 'go/bin/runswmm')],
     # the math-library controls (built by gate/run_ts_native_control.sh and gate/run_java_native_control.sh):
     # the same engines with their language's own Math in place of the glibc translations, timed to price the math
     'TypeScript V8 Math': ['node', os.path.join(ROOT, 'build/ts_native/runswmm.js')],
     'Java own Math': ['java', '-XX:+UseParallelGC', '-XX:MaxRAMPercentage=75', '-cp',
                        os.path.join(ROOT, 'build/java_native/classes'), 'swmm5.Main'],
+    'Go own math': [os.path.join(ROOT, 'build/go_native/bin/runswmm')],   # gate/run_go_native_control.sh
 }
 
 
@@ -46,7 +48,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('ids'); ap.add_argument('out')
     ap.add_argument('--reps', type=int, default=5); ap.add_argument('--seed', type=int, default=1729)
-    ap.add_argument('--engines', default=','.join(e for e in ENGINES if e not in ('Rust', 'TypeScript', 'Java', 'TypeScript V8 Math', 'Java own Math')))
+    ap.add_argument('--engines', default=','.join(e for e in ENGINES if e not in ('Rust', 'TypeScript', 'Java', 'Go', 'TypeScript V8 Math', 'Java own Math', 'Go own math')))
     a = ap.parse_args()
     names = a.engines.split(',')
     paths = dict(l.rstrip('\n').split('\t', 1) for l in open(os.path.join(HERE, 'models_all.tsv')))

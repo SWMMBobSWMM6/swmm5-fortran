@@ -2,7 +2,7 @@
 # measure_env.sh - record the toolchain and processor the stored runs used, and peak memory on the largest model.
 #   gate/measure_env.sh   writes gate/results/toolchain.txt and gate/results/peak_memory.txt
 # Peak resident memory is the kernel's ru_maxrss for the engine process (and its children), read by Python's
-# resource module, for EPA's reference build, the TypeScript engine and the Java engine through its launcher, on
+# resource module, for EPA's reference build, the TypeScript engine, the Java engine through its launcher and the Go engine, on
 # Hydrology/sewer_rdii_problem.inp, the model behind lesson 14; and the jar run with no heap flags, which is how
 # the first Java gate run (java_a/java_b) crashed on it.
 # Written by Claude (Anthropic); see AI-USE.md.
@@ -23,6 +23,7 @@ CORPUS=${SWMM_CORPUS:-/home/claude/swmmbobswmm6/1729-swmm5-models-2030}
   echo "java:     $(java -version 2>&1 | grep -v '^Picked up' | sed -n 1p)"
   echo "javac:    $(javac -version 2>&1 | grep -v '^Picked up' | sed -n 1p)"
   echo "tsc:      $(cd "$ROOT/ts" && npx tsc --version)"
+  echo "go:       $(go version 2>/dev/null || echo absent)"
 } > "$HERE/results/toolchain.txt"
 cat "$HERE/results/toolchain.txt"
 
@@ -49,6 +50,7 @@ EOF
   peak "TypeScript (node)" node "$ROOT/ts/dist/runswmm.js"
   peak "Java (java/runswmm)" "$ROOT/java/runswmm"
   peak "Java (plain java -jar)" java -jar "$ROOT/java/swmm5.jar"
+  peak "Go (go/bin/runswmm)" "$ROOT/go/bin/runswmm"
 } > "$HERE/results/peak_memory.txt"
 cat "$HERE/results/peak_memory.txt"
 rm -rf "$W"

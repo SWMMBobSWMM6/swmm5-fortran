@@ -36,6 +36,11 @@
    "PASS": 480,
    "rpt_lines": 152690,
    "out_bytes": 1244999775
+  },
+  "Go": {
+   "PASS": 480,
+   "rpt_lines": 152690,
+   "out_bytes": 1244999775
   }
  },
  "controls": {
@@ -50,8 +55,63 @@
   "fmt_strtod": 248060,
   "fmt_mismatch": 0,
   "fmt_pass": true,
+  "go_fmt": {
+   "printf": [
+    1194187,
+    1
+   ],
+   "strtod": [
+    200052,
+    0
+   ],
+   "sscanf": [
+    13,
+    0
+   ],
+   "quirk": [
+    "%#g",
+    "999999.5",
+    "1.e+06",
+    "1.00000e+06"
+   ],
+   "note": "%#g of 999999.5: glibc prints 1.e+06, the Go runtime 1.00000e+06; a glibc quirk on the # flag, which SWMM never uses"
+  },
   "fma_instr": 101,
-  "fma_examples": "Many differences are what one rounding step per operation does to a long calculation: in the 40-model control set, a control rule acting at 03:28:08 instead of EPA's 03:28:14 (Clocktime_Pump_Rules.inp), a node's time of maximum moving six minutes (FM_Example2.inp), a continuity error moving from 0.066 to 0.068 percent (CN_Horton.inp). Times can jump: in 31_Subs.inp, node 3060 reports the same maximum depth, 3.22, reached nearly seven hours earlier (day 0 17:02 instead of day 1 00:00). Some are not small. Among decimal quantities in the first report line that differs, the largest relative changes: vsp_pump_si_units.inp, 0.905 to 1.021 (+13%); 5_H&H_Elements (1).inp, -0.170 to -0.179 (-5%)."
+  "fma_examples": "Many differences are what one rounding step per operation does to a long calculation: in the 40-model control set, a control rule acting at 03:28:08 instead of EPA's 03:28:14 (Clocktime_Pump_Rules.inp), a node's time of maximum moving six minutes (FM_Example2.inp), a continuity error moving from 0.066 to 0.068 percent (CN_Horton.inp). Times can jump: in 31_Subs.inp, node 3060 reports the same maximum depth, 3.22, reached nearly seven hours earlier (day 0 17:02 instead of day 1 00:00). Some are not small. Among decimal quantities in the first report line that differs, the largest relative changes: vsp_pump_si_units.inp, 0.905 to 1.021 (+13%); 5_H&H_Elements (1).inp, -0.170 to -0.179 (-5%).",
+  "go_fma": {
+   "total": 392,
+   "funcs": 9,
+   "outside": 0,
+   "names": [
+    "Atan",
+    "Cos",
+    "Exp",
+    "Log",
+    "Pow",
+    "Sin",
+    "Tan",
+    "ieee754_acos",
+    "ieee754_asin"
+   ],
+   "x86_demo": {
+    "GOAMD64=v1 main.plain": 0,
+    "GOAMD64=v1 main.wrapped": 0,
+    "GOAMD64=v3 main.plain": 0,
+    "GOAMD64=v3 main.wrapped": 0
+   },
+   "arm64": {
+    "plain": [
+     "FMADDD"
+    ],
+    "wrapped": [
+     "FMULD",
+     "FADDD"
+    ],
+    "glibm": 392,
+    "runtime": 6,
+    "main": 0
+   }
+  }
  },
  "python": {
   "fast_n": 451,
@@ -141,7 +201,8 @@
    "Python": 81.62827633573721,
    "Rust": 1.1062617076386814,
    "TypeScript": 19.235503776361483,
-   "Java": 9.175083828811127
+   "Java": 9.175083828811127,
+   "Go": 1.7233645445368384
   },
   "range": {
    "EPA again": [
@@ -175,6 +236,10 @@
    "Java": [
     4.27716852396009,
     93.97233201581363
+   ],
+   "Go": [
+    1.472225268617996,
+    2.1368474545593563
    ]
   },
   "noise": [
@@ -194,7 +259,8 @@
    "C#": 0.06843300000000418,
    "Rust": 0.002128999999996495,
    "TypeScript": 0.10104400000000001,
-   "Java": 0.1175160000000135
+   "Java": 0.1175160000000135,
+   "Go": 0.002820999999997298
   },
   "reps": 3,
   "n_models": 12,
@@ -210,7 +276,18 @@
    0.8666040710402156,
    1.3222159204294377
   ],
-  "tsj_reps": 5
+  "tsj_reps": 5,
+  "go_noise": [
+   0.9481285293088205,
+   1.0705754614549599
+  ],
+  "go_reps": 5,
+  "go_math_cost": [
+   5,
+   0.8148953455277932,
+   0.730645643966304,
+   0.8918717155346053
+  ]
  },
  "census": {
   "nan_cells": 292,
@@ -312,15 +389,18 @@
  },
  "lines": {
   "c": 50788,
-  "translator": 8439,
+  "translator": 10231,
+  "go_gen": 40094,
+  "go_rt": 1846,
+  "libm_go": 5376,
   "ts_gen": 41192,
   "ts_rt": 971,
   "java_gen": 44855,
   "java_rt": 1078,
   "libm_ts": 5011,
   "libm_java": 4943,
-  "libm_rt": 341,
-  "libm_tools": 1039,
+  "libm_rt": 551,
+  "libm_tools": 1508,
   "f90_gen": 46364,
   "f90_rt": 4048,
   "cs_gen": 41429,
@@ -378,7 +458,7 @@
    "what": "size is nrows*ncols (project.c:401), a count of doubles, but memset counts bytes, so seven eighths of the matrix keeps malloc's contents. Only USE INFLOWS reaches it, and no gate model does. There is nothing defined to copy, so the ports zero the whole matrix."
   }
  ],
- "built": "2026-10-29 14:50",
+ "built": "2026-10-29 20:44",
  "corpus_note": "The gate set is 480 of the 518 distinct models (distinct by content) in six folders of the corpus, which holds 4,540 .inp files. The other 38 were left out by an early timing survey with a 12-second limit, whose records were not kept. The cut is rough. Re-timed for this essay on a busy machine, 13 of the 38 ran past a 30-second limit and the rest took 5.8 to 29.6 seconds, 4 of them within 12; and 3 gate models took longer than 12 seconds in the reference run (attenuation_KW_High_CE.inp, 13 s, SCANLON.inp, 35 s, 72_H&H_Elements(2).inp, 39 s).",
  "rust": {
   "commit": "de9fbf1edaa0a1c9ee644744a381f535330bac41",
@@ -502,6 +582,63 @@
     ]
    },
    "Java": {
+    "exp": [
+     2574711,
+     0,
+     0
+    ],
+    "log": [
+     1287502,
+     0,
+     0
+    ],
+    "log10": [
+     756379,
+     0,
+     0
+    ],
+    "pow": [
+     7988343,
+     0,
+     0
+    ],
+    "sin": [
+     3054755,
+     0,
+     0
+    ],
+    "cos": [
+     3050117,
+     0,
+     0
+    ],
+    "tan": [
+     700469,
+     0,
+     0
+    ],
+    "asin": [
+     720026,
+     0,
+     0
+    ],
+    "acos": [
+     760016,
+     0,
+     0
+    ],
+    "atan": [
+     700016,
+     0,
+     0
+    ],
+    "fma": [
+     400256,
+     0,
+     0
+    ]
+   },
+   "Go": {
     "exp": [
      2574711,
      0,
@@ -1020,6 +1157,48 @@
      5663,
      400016
     ]
+   },
+   "Go": {
+    "exp": [
+     242147,
+     2274711
+    ],
+    "log": [
+     50333,
+     1087502
+    ],
+    "log10": [
+     56595,
+     456379
+    ],
+    "pow": [
+     2613169,
+     7288343
+    ],
+    "sin": [
+     380207,
+     2754755
+    ],
+    "cos": [
+     718541,
+     2750117
+    ],
+    "tan": [
+     108008,
+     400469
+    ],
+    "asin": [
+     108359,
+     420026
+    ],
+    "acos": [
+     154488,
+     460016
+    ],
+    "atan": [
+     84614,
+     400016
+    ]
    }
   },
   "native_ctl": {
@@ -1041,6 +1220,22 @@
     "diff": [
      "Hydrology/CN_Horton.inp"
     ]
+   },
+   "Go": {
+    "n": 40,
+    "same": 30,
+    "diff": [
+     "EPA/Clocktime_Pump_Rules.inp",
+     "EPA/attenuation_DW_High_CE.inp",
+     "Hydraulics/FM_Example2.inp",
+     "Hydraulics/extran1_gothic.inp",
+     "Hydrology/CN_Horton.inp",
+     "Hydrology/feng_scs_test_model_v13.inp",
+     "Hydrology/hydrology_100L.inp",
+     "OWA_EXTRAN/extran1_rectangular.inp",
+     "OWA_ROUTING/routing_init_depth.inp",
+     "OWA_ROUTING/routing_init_flow.inp"
+    ]
    }
   },
   "powtime": [
@@ -1052,8 +1247,12 @@
    "Java": {
     "n": 480,
     "same": 442
+   },
+   "Go": {
+    "n": 480,
+    "same": 372
    }
   }
  },
- "essay_title": "Eight Engines, One Answer"
+ "essay_title": "Nine Engines, One Answer"
 }

@@ -1,5 +1,6 @@
 Peak resident memory on Hydrology/sewer_rdii_problem.inp (machine: 7 GB):
-EPA 5.2.4 (ref/runswmm)      peak resident  3.11 GB   exit 0   10 s
-TypeScript (node)            peak resident  3.23 GB   exit 0   106 s
-Java (java/runswmm)          peak resident  4.92 GB   exit 0   15 s
-Java (plain java -jar)       peak resident  1.45 GB   exit 1   1 s   Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
+EPA 5.2.4 (ref/runswmm)      peak resident  3.11 GB   exit 0   9 s
+TypeScript (node)            peak resident  3.23 GB   exit 0   94 s
+Java (java/runswmm)          peak resident  4.92 GB   exit 0   14 s
+Java (plain java -jar)       peak resident  1.44 GB   exit 1   1 s   Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
+Go (go/bin/runswmm)          peak resident  3.09 GB   exit 0   12 s

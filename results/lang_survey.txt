@@ -1,0 +1,84 @@
+Language survey: own math functions and own printf against glibc 2.39
+(go1.24.7, perl v5.38.2, ruby 3.3.6, fpc 3.2.2)
+
+Math: results whose bits differ from glibc's (100,000 arguments per function)
+-- Go math package
+pow      45738 of 100000 differ
+exp      13482 of 100000 differ
+log       2728 of 100000 differ
+log10    16048 of 100000 differ
+sin      25441 of 100000 differ
+cos      24574 of 100000 differ
+-- Perl (calls the C library)
+pow          0 of 100000 differ
+exp          0 of 100000 differ
+log          0 of 100000 differ
+log10        0 of 100000 differ
+sin          0 of 100000 differ
+cos          0 of 100000 differ
+-- Ruby Math (calls the C library)
+pow          0 of 100000 differ
+exp          0 of 100000 differ
+log          0 of 100000 differ
+log10        0 of 100000 differ
+sin          0 of 100000 differ
+cos          0 of 100000 differ
+-- Free Pascal Math unit
+pow        126 of 100000 differ
+exp         82 of 100000 differ
+log         39 of 100000 differ
+log10     1864 of 100000 differ
+sin        168 of 100000 differ
+cos        164 of 100000 differ
+-- Free Pascal calling glibc's libm directly
+pow          0 of 100000 differ
+exp          0 of 100000 differ
+log          0 of 100000 differ
+log10        0 of 100000 differ
+sin          0 of 100000 differ
+cos          0 of 100000 differ
+
+printf: cases (of 20) printed differently from C's snprintf
+go     0
+perl   0
+ruby   5
+fpc    8
+
+C's output, then each language's lines that differ:
+%.2f 0.125 -> [0.12]
+%.2f 0.375 -> [0.38]
+%.2f 2.675 -> [2.67]
+%.2f 1.005 -> [1.00]
+%.0f 0.5 -> [0]
+%.0f 1.5 -> [2]
+%.0f 2.5 -> [2]
+%.1f 0.25 -> [0.2]
+%.1f 0.35 -> [0.3]
+%.3f 1.0005 -> [1.000]
+%.2f -0.0 -> [-0.00]
+%.2f 1e21 -> [1000000000000000000000.00]
+%.2f 123456.785 -> [123456.79]
+%.3f 2.0004999999999997 -> [2.000]
+%.1e 1.25e-05 -> [1.3e-05]
+%.3e 6.0215e+23 -> [6.021e+23]
+%.4f 1e-05 -> [0.0000]
+%.2f -0.004 -> [-0.00]
+%10.3f 3.14159 -> [     3.142]
+%.6f 0.1 -> [0.100000]
+-- go
+-- perl
+-- ruby
+%.2f 2.675 -> [2.68]
+%.1f 0.35 -> [0.4]
+%.2f 123456.785 -> [123456.78]
+%.1e 1.25e-05 -> [1.2e-05]
+%.3e 6.0215e+23 -> [6.022e+23]
+-- fpc
+%.2f 0.125 -> [0.13]
+%.0f 0.5 -> [1]
+%.0f 2.5 -> [3]
+%.1f 0.25 -> [0.3]
+%.2f -0.0 -> [0.00]
+%.1e 1.25e-05 -> [1.3E-005]
+%.3e 6.0215e+23 -> [6.02E+023]
+%.2f -0.004 -> [0.00]

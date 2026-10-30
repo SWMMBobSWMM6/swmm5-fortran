@@ -24,6 +24,7 @@ RUNS = collections.OrderedDict([
     ('Python', ['py_final', 'py_final_slow']),
     ('TypeScript', ['ts_final_q1', 'ts_final_q2', 'ts_final_q3', 'ts_final_q4']),
     ('Java', ['java_final_a', 'java_final_b']),
+    ('Go', ['go_final']),
 ])
 TS = re.compile(rb'Analysis begun|Analysis ended|Total elapsed time')
 

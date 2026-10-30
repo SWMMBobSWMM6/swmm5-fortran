@@ -31,6 +31,7 @@ wherever EPA's behaviour is defined (see `lessons/02-epa-defects-found.md`).
 | Python | 465 identical (451 fast models, then a 14-model sample of the 29 slow ones) |
 | TypeScript | 480 of 480 identical |
 | Java | 480 of 480 identical |
+| Go | 480 of 480 identical |
 
 Controls: EPA run twice gives 40 of 40 identical files (null control). The Fortran
 engine rebuilt with `-ffp-contract=fast -mfma` in place of `-ffp-contract=off` (`gate/build_fma_control.sh`)
@@ -75,21 +76,21 @@ SWMM_CORPUS=/path/to/1729-SWMM5-Models-2030 python3 gate/gate.py mine "$PWD/f90/
 `gate/gate.py` prints a summary and writes `gate/results/mine.json`; the stored runs behind the numbers above
 are in `results/`.
 
-## The eight-engine app and the essay
+## The nine-engine app and the essay
 
-`app/eight-engines.html` compares EPA 5.2.4, swmm5-cplus, swmm5-rust (safe Rust, built from its repository at de9fbf1 and gated here), and the Fortran, C#, Python,
-TypeScript and Java ports on the stored corpus runs: gate results per model, report statistics, graphs with each
+`app/nine-engines.html` compares EPA 5.2.4, swmm5-cplus, swmm5-rust (safe Rust, built from its repository at de9fbf1 and gated here), and the Fortran, C#, Python,
+TypeScript, Java and Go ports on the stored corpus runs: gate results per model, report statistics, graphs with each
 engine's difference from EPA, the benchmark, the controls, the math-library census and checks, and the defect
-register. Its Doc tab is the essay *Eight Engines, One Answer*, also in
-`docs/eight-engines.docx`. Rebuild both with
-`python3 tools/app/build_aux_data.py && python3 tools/app/build_data.py && python3 tools/app/build_app.py` and `node tools/app/doc/build_docx.js docs/eight-engines.docx`.
+register. Its Doc tab is the essay *Nine Engines, One Answer*, also in
+`docs/nine-engines.docx`. Rebuild both with
+`python3 tools/app/build_aux_data.py && python3 tools/app/build_data.py && python3 tools/app/build_app.py` and `node tools/app/doc/build_docx.js docs/nine-engines.docx`.
 
 ## What this does not show
 
 - That SWMM is right: identical to EPA means EPA's answers, good or bad. No observed data enter anywhere.
 - Other platforms: the math library differs on Windows and macOS, and a port matches EPA built there only if its
   math library matches too. On x86-64 Linux, EPA itself changes 43 of 480 models when glibc picks its generic (non-FMA) math
-  routines; the ports that call the system libm should follow EPA there (not tested), the TypeScript and Java ports would not.
+  routines; the ports that call the system libm should follow EPA there (not tested), the TypeScript, Java and Go ports would not.
 - Paths no gate model exercises (counting only models that ran without an input error):
   Streets and inlets, Climate file, USE HOTSTART, USE INFLOWS (interface), USE RUNOFF. Street and inlet hydraulics appear in one deck, which stops on
   input errors; snowmelt runs in 4.

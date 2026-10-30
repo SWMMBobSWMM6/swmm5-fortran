@@ -1,0 +1,11 @@
+ctl_go_native: 40 models  PASS 30, RPTDIFF 7, RPTDIFF+OUTDIFF 2, OUTDIFF 1
+  RPTDIFF+OUTDIFF  EPA/Clocktime_Pump_Rules.inp  (1139, '01/01/1988: 01:46:57 Link L1_1 setting changed to   0.00 by Control 1', '01/01/1988: 01:46:58 Link L1_1 setting changed to   0.00 by Control 1')
+  OUTDIFF          EPA/attenuation_DW_High_CE.inp  
+  RPTDIFF          Hydraulics/FM_Example2.inp  (127, '10309                JUNCTION      0.00    30.95     0  02:04           0        2.85      -0.010', '10309                JUNCTION      0.00    30.95     0  01:43           0        2.85      -0.010')
+  RPTDIFF          Hydraulics/extran1_gothic.inp  (126, 'Link 1630 (3)', 'Link 1630 (2)')
+  RPTDIFF+OUTDIFF  Hydrology/CN_Horton.inp  (50, 'Dry Weather Inflow .......         3.931        39.310', 'Dry Weather Inflow .......         3.931        39.309')
+  RPTDIFF          Hydrology/feng_scs_test_model_v13.inp  (296, 'E                    JUNCTION      0.00     0.34     0  02:02           0       0.107       0.129', 'E                    JUNCTION      0.00     0.34     0  02:01           0       0.107       0.129')
+  RPTDIFF          Hydrology/hydrology_100L.inp  (504, 'C4                   CONDUIT     1.836     0  16:08      2.62    1.00    1.00', 'C4                   CONDUIT     1.836     0  16:10      2.62    1.00    1.00')
+  RPTDIFF          OWA_EXTRAN/extran1_rectangular.inp  (103, '10208                OUTFALL      1.22     2.59    92.49     0  01:34        2.59', '10208                OUTFALL      1.22     2.59    92.49     0  01:33        2.59')
+  RPTDIFF          OWA_ROUTING/routing_init_depth.inp  (64, 'Link 2 (2)', 'Link 4 (2)')
+  RPTDIFF          OWA_ROUTING/routing_init_flow.inp  (62, 'All links are stable.', 'Link 3 (2)')

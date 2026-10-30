@@ -1,0 +1,15 @@
+   28 <swmm5go/glibm.Atan>:
+   70 <swmm5go/glibm.Cos>:
+    9 <swmm5go/glibm.Exp>:
+   23 <swmm5go/glibm.Log>:
+   21 <swmm5go/glibm.Pow>:
+   70 <swmm5go/glibm.Sin>:
+   50 <swmm5go/glibm.Tan>:
+   60 <swmm5go/glibm.ieee754_acos>:
+   61 <swmm5go/glibm.ieee754_asin>:
+  392 total
+outside glibm: 0 instructions
+fusedemo GOAMD64=v1 main.plain: 0 fused
+fusedemo GOAMD64=v1 main.wrapped: 0 fused
+fusedemo GOAMD64=v3 main.plain: 0 fused
+fusedemo GOAMD64=v3 main.wrapped: 0 fused

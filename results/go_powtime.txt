@@ -1,0 +1,5 @@
+# ns per call, 2,000,000 arguments (x in 0.001-100; y = 2/3, 5/3 or uniform -4..4), third of three passes; go1.24.7, gcc 13.3.0 -O2
+glibc (C)        pow  17.7 ns   sin  20.5 ns   cos  35.1 ns
+Go glibm         pow  22.6 ns   sin  29.9 ns   cos  29.0 ns
+Go math          pow  65.4 ns   sin  21.5 ns   cos  27.5 ns
+Go glibm, dispatch loop pow  93.3 ns   sin  83.5 ns   cos  77.3 ns

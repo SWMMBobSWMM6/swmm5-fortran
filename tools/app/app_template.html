@@ -1,4 +1,4 @@
-<title>Eight SWMM5 Engines</title>
+<title>Nine SWMM5 Engines</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="color-scheme" content="dark light">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,7 +22,7 @@
   /* figure tokens (Doc tab SVGs read these) */
   --f-ink:#e6edf7; --f-dim:#a3b1c6; --f-line:#2e3c58; --f-face:#0f1a2c; --f-soft:#16223a;
   --f-a:#60a5fa; --f-ok:#4ade80; --f-bad:#f87171; --f-warn:#fbbf24;
-  --f-epa:#fbbf24; --f-cpp:#60a5fa; --f-rust:#fb923c; --f-f90:#c084fc; --f-cs:#4ade80; --f-py:#22d3ee; --f-ts:#f472b6; --f-java:#a3e635;
+  --f-epa:#fbbf24; --f-cpp:#60a5fa; --f-rust:#fb923c; --f-f90:#c084fc; --f-cs:#4ade80; --f-py:#22d3ee; --f-ts:#f472b6; --f-java:#a3e635; --f-go:#eeabdd;
   --font-display:"Archivo","Arial Narrow",Arial,sans-serif;
   --font-ui:"IBM Plex Sans","Segoe UI",Helvetica,Arial,sans-serif;
   --font-read:"Source Serif 4",Georgia,"Times New Roman",serif;
@@ -44,7 +44,7 @@
   --code-bg:#0f172a; --code-ink:#e2e8f0; --shadow:rgba(15,23,42,.06);
   --f-ink:#1b2733; --f-dim:#5a6878; --f-line:#cfd8e3; --f-face:#ffffff; --f-soft:#eef3f8;
   --f-a:#1f6fd1; --f-ok:#1d8a4c; --f-bad:#c2352b; --f-warn:#b45309;
-  --f-epa:#b45309; --f-cpp:#1f6fd1; --f-rust:#c2410c; --f-f90:#6b4fbb; --f-cs:#1d8a4c; --f-py:#0e7490; --f-ts:#be185d; --f-java:#4d7c0f;
+  --f-epa:#b45309; --f-cpp:#1f6fd1; --f-rust:#c2410c; --f-f90:#6b4fbb; --f-cs:#1d8a4c; --f-py:#0e7490; --f-ts:#be185d; --f-java:#4d7c0f; --f-go:#803a71;
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -164,8 +164,8 @@ details summary{cursor:pointer;padding:6px 0}
         <path d="M30 33 L35 28" style="stroke:var(--tab-on);stroke-width:2.5;stroke-linecap:round"/>
       </svg>
       <div>
-        <h1>Eight SWMM5 Engines</h1>
-        <div class="sub" id="hdr-sub">EPA 5.2.4, C++, Rust, Fortran, C#, Python, TypeScript and Java, judged byte for byte</div>
+        <h1>Nine SWMM5 Engines</h1>
+        <div class="sub" id="hdr-sub">EPA 5.2.4, C++, Rust, Fortran, C#, Python, TypeScript, Java and Go, judged byte for byte</div>
       </div>
     </div>
     <div class="cluster">
@@ -266,13 +266,13 @@ details summary{cursor:pointer;padding:6px 0}
       <div class="figwrap" id="vf-controls"></div>
       <p class="note" id="vf-controls-note"></p>
       <details><summary class="note" id="vf-fma-sum">Models that noticed the change</summary><div class="tablewrap"><table id="vf-fma"></table></div></details>
-      <h3>The Fortran formatter against glibc</h3>
+      <h3>The Fortran and Go formatters against glibc</h3>
       <p class="note" id="vf-fmt"></p>
     </div>
     <div class="card stack">
-      <h2>The math library: what EPA calls, and the TypeScript and Java copies of it</h2>
+      <h2>The math library: what EPA calls, and the TypeScript, Java and Go copies of it</h2>
       <p class="note" id="vf-libm-note"></p>
-      <div class="grid2">
+      <div class="stack">
         <div class="tablewrap"><table id="vf-libm-census"></table></div>
         <div class="tablewrap"><table id="vf-libm-tests"></table></div>
       </div>
@@ -302,7 +302,7 @@ details summary{cursor:pointer;padding:6px 0}
     <div class="intro"><strong>Learn who made it</strong><span>What this app is, where the sources live, and how AI was used.</span></div>
     <div class="card stack">
       <h2>About this app</h2>
-      <p class="lede">EPA SWMM 5.2.4 was carried into Fortran, C#, Python, TypeScript and Java by a translator that reads EPA's C source, and every engine was then judged against EPA itself: the binary .out file byte for byte, and the .rpt report line for line, apart from three lines that print the wall clock. This app shows those results next to Bob Dickinson's C++ and Rust engines, swmm5-cplus and swmm5-rust, run through the same gate. It shows stored results from the runs; it does not run engines in the browser.</p>
+      <p class="lede">EPA SWMM 5.2.4 was carried into Fortran, C#, Python, TypeScript, Java and Go by a translator that reads EPA's C source, and every engine was then judged against EPA itself: the binary .out file byte for byte, and the .rpt report line for line, apart from three lines that print the wall clock. This app shows those results next to Bob Dickinson's C++ and Rust engines, swmm5-cplus and swmm5-rust, run through the same gate. It shows stored results from the runs; it does not run engines in the browser.</p>
       <h3>How to read it</h3>
       <ul class="note">
         <li><strong>Scoreboard</strong>: one line per engine, with its gate count and cost.</li>
@@ -310,7 +310,7 @@ details summary{cursor:pointer;padding:6px 0}
         <li><strong>Graphs</strong>: reference series and each engine's difference, period by period.</li>
         <li><strong>Speed</strong>: an interleaved benchmark with its noise floor.</li>
         <li><strong>Verify</strong>: the parity contract, the controls, the census and the defect register.</li>
-        <li><strong>Doc</strong>: the essay that explains how it was done. The same essay is in the repositories as a Word file, <code>docs/eight-engines.docx</code>.</li>
+        <li><strong>Doc</strong>: the essay that explains how it was done. The same essay is in the repositories as a Word file, <code>docs/nine-engines.docx</code>.</li>
       </ul>
       <h3>AI use</h3>
       <p class="note"><!--__AIUSE__--></p>
@@ -320,8 +320,8 @@ details summary{cursor:pointer;padding:6px 0}
         <li>Corpus: <a href="https://github.com/SWMMBobSWMM6/1729-SWMM5-Models-2030" target="_blank" rel="noopener">SWMMBobSWMM6/1729-SWMM5-Models-2030</a> (six folders: EPA, Hydraulics, Hydrology, LID, OWA_EXTRAN, OWA_ROUTING)</li>
         <li>C++ engine: <a href="https://github.com/SWMMBobSWMM6/swmm5-cplus" target="_blank" rel="noopener">SWMMBobSWMM6/swmm5-cplus</a></li>
         <li>Rust engine: <a href="https://github.com/SWMMBobSWMM6/swmm5-rust" target="_blank" rel="noopener">SWMMBobSWMM6/swmm5-rust</a></li>
-        <li>The five ports: <a href="https://github.com/SWMMBobSWMM6/swmm5-fortran" target="_blank" rel="noopener">SWMMBobSWMM6/swmm5-fortran</a>, <a href="https://github.com/SWMMBobSWMM6/swmm5-csharp" target="_blank" rel="noopener">swmm5-csharp</a>, <a href="https://github.com/SWMMBobSWMM6/swmm5-python" target="_blank" rel="noopener">swmm5-python</a>, <a href="https://github.com/SWMMBobSWMM6/swmm5-typescript" target="_blank" rel="noopener">swmm5-typescript</a>, <a href="https://github.com/SWMMBobSWMM6/swmm5-java" target="_blank" rel="noopener">swmm5-java</a></li>
-        <li>glibc 2.39, release/2.39/master at ce65d944e38a (the math routines the TypeScript and Java ports translate; LGPL-2.1-or-later): <a href="https://sourceware.org/git/?p=glibc.git;a=tree;f=sysdeps/ieee754/dbl-64;hb=ce65d944e38a20cb70af2a48a4b8aa5d8fabe1cc" target="_blank" rel="noopener">sysdeps/ieee754/dbl-64 at glibc-2.39</a></li>
+        <li>The six ports: <a href="https://github.com/SWMMBobSWMM6/swmm5-fortran" target="_blank" rel="noopener">SWMMBobSWMM6/swmm5-fortran</a>, <a href="https://github.com/SWMMBobSWMM6/swmm5-csharp" target="_blank" rel="noopener">swmm5-csharp</a>, <a href="https://github.com/SWMMBobSWMM6/swmm5-python" target="_blank" rel="noopener">swmm5-python</a>, <a href="https://github.com/SWMMBobSWMM6/swmm5-typescript" target="_blank" rel="noopener">swmm5-typescript</a>, <a href="https://github.com/SWMMBobSWMM6/swmm5-java" target="_blank" rel="noopener">swmm5-java</a>, <a href="https://github.com/SWMMBobSWMM6/swmm5-go" target="_blank" rel="noopener">swmm5-go</a></li>
+        <li>glibc 2.39, release/2.39/master at ce65d944e38a (the math routines the TypeScript, Java and Go ports translate; LGPL-2.1-or-later): <a href="https://sourceware.org/git/?p=glibc.git;a=tree;f=sysdeps/ieee754/dbl-64;hb=ce65d944e38a20cb70af2a48a4b8aa5d8fabe1cc" target="_blank" rel="noopener">sysdeps/ieee754/dbl-64 at glibc-2.39</a></li>
       </ul>
       <div class="prov" id="ab-prov"></div>
     </div>
@@ -337,7 +337,7 @@ details summary{cursor:pointer;padding:6px 0}
 <div class="ov" id="welcome" hidden role="dialog" aria-modal="true" aria-labelledby="w-title">
   <div class="modal">
     <h2 id="w-title">How to use this app</h2>
-    <p>EPA SWMM 5.2.4 was carried into Fortran, C#, Python, TypeScript and Java by a translator, and each engine was judged against EPA itself on the same models: the <code>.out</code> file byte for byte, the <code>.rpt</code> line for line. This app shows those stored results; it does not run engines in your browser.</p>
+    <p>EPA SWMM 5.2.4 was carried into Fortran, C#, Python, TypeScript, Java and Go by a translator, and each engine was judged against EPA itself on the same models: the <code>.out</code> file byte for byte, the <code>.rpt</code> line for line. This app shows those stored results; it does not run engines in your browser.</p>
     <ul>
       <li><strong>Scoreboard</strong> has the verdict, <strong>Models</strong> the per-model detail, <strong>Graphs</strong> the curves and each engine's difference from EPA.</li>
       <li><strong>Speed</strong> and <strong>Verify</strong> carry the benchmark, the controls and the limits; <strong>Doc</strong> is the essay.</li>
@@ -361,10 +361,10 @@ const APP = /*__DATA__*/null;
 const CHART_THEME={
   light:{face:'#ffffff',frame:'#dfe5ee',grid:'#eef2f7',tick:'#5f6b7a',axis:'#4f5d6e',ink:'#1b2733',zero:'#4f5d6e',
     ref:'#b45309',ok:'#1d8a4c',bad:'#c2352b',
-    eng:{'EPA 5.2.4 (C)':'#b45309','C++ swmm5-cplus':'#1f6fd1','Rust swmm5-rust':'#c2410c','Fortran':'#6b4fbb','C#':'#1d8a4c','Python':'#0e7490','TypeScript':'#be185d','Java':'#4d7c0f'}},
+    eng:{'EPA 5.2.4 (C)':'#b45309','C++ swmm5-cplus':'#1f6fd1','Rust swmm5-rust':'#c2410c','Fortran':'#6b4fbb','C#':'#1d8a4c','Python':'#0e7490','TypeScript':'#be185d','Java':'#4d7c0f','Go':'#803a71'}},
   dark:{face:'#0f1a2c',frame:'#2a3752',grid:'#1e293b',tick:'#a3b1c6',axis:'#c3cee0',ink:'#e6edf7',zero:'#a3b1c6',
     ref:'#fbbf24',ok:'#4ade80',bad:'#f87171',
-    eng:{'EPA 5.2.4 (C)':'#fbbf24','C++ swmm5-cplus':'#60a5fa','Rust swmm5-rust':'#fb923c','Fortran':'#c084fc','C#':'#4ade80','Python':'#22d3ee','TypeScript':'#f472b6','Java':'#a3e635'}}
+    eng:{'EPA 5.2.4 (C)':'#fbbf24','C++ swmm5-cplus':'#60a5fa','Rust swmm5-rust':'#fb923c','Fortran':'#c084fc','C#':'#4ade80','Python':'#22d3ee','TypeScript':'#f472b6','Java':'#a3e635','Go':'#eeabdd'}}
 };
 let THEME='dark', THEME_PREF='dark';
 function prefersDark(){ try{ return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; }catch(e){ return true; } }
@@ -386,7 +386,7 @@ const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const fmt=n=>Number(n).toLocaleString('en-US');
 const ENG=APP.engines;
-const EKEY={'EPA 5.2.4 (C)':'epa','C++ swmm5-cplus':'cpp','Rust swmm5-rust':'rust','Fortran':'f90','C#':'cs','Python':'py','TypeScript':'ts','Java':'java'};
+const EKEY={'EPA 5.2.4 (C)':'epa','C++ swmm5-cplus':'cpp','Rust swmm5-rust':'rust','Fortran':'f90','C#':'cs','Python':'py','TypeScript':'ts','Java':'java','Go':'go'};
 function pill(st){
   if(st==='PASS') return '<span class="pill ok">identical</span>';
   if(st==='REF') return '<span class="pill ref">reference</span>';
@@ -413,8 +413,8 @@ function scoreboard(){
   const N=APP.models.length, T=APP.totals, B=APP.bench, P=APP.python;
   const pass=e=>(T[e]||{}).PASS||0;
   const diffs=Object.values(T).reduce((a,t)=>a+Object.entries(t).filter(([k])=>!['PASS','NOTRUN','rpt_lines','out_bytes'].includes(k)).reduce((x,[,v])=>x+v,0),0);
-  $('#sb-lede').innerHTML='Five new engines, written in <strong>Fortran</strong>, <strong>C#</strong>, <strong>Python</strong>, <strong>TypeScript</strong> and <strong>Java</strong> by a translator that reads EPA\'s C, produce the same binary results file and the same report as EPA SWMM 5.2.4 on '+(diffs?'all but '+diffs+' of the gate models they ran':'every gate model they ran')+': '+
-    fmt(pass('Fortran'))+' of '+fmt(N)+' for Fortran, '+fmt(pass('C#'))+' for C#, '+fmt(pass('TypeScript'))+' for TypeScript, '+fmt(pass('Java'))+' for Java, and '+fmt(pass('Python'))+' for Python, which ran the '+fmt(P.fast_n)+' fast models and a timed sample of the slow ones. TypeScript and Java carry their own copy of glibc\'s math routines, because their own math functions round differently. The C++ engine, swmm5-cplus, matches on '+fmt(pass('C++ swmm5-cplus'))+' of '+fmt(N)+(pass('Rust swmm5-rust')?', and the safe-Rust engine, swmm5-rust, on '+fmt(pass('Rust swmm5-rust'))+' of '+fmt(N)+'.':'. The Rust engine was not reachable from this session.');
+  $('#sb-lede').innerHTML='Six new engines, written in <strong>Fortran</strong>, <strong>C#</strong>, <strong>Python</strong>, <strong>TypeScript</strong>, <strong>Java</strong> and <strong>Go</strong> by a translator that reads EPA\'s C, produce the same binary results file and the same report as EPA SWMM 5.2.4 on '+(diffs?'all but '+diffs+' of the gate models they ran':'every gate model they ran')+': '+
+    fmt(pass('Fortran'))+' of '+fmt(N)+' for Fortran, '+fmt(pass('C#'))+' for C#, '+fmt(pass('TypeScript'))+' for TypeScript, '+fmt(pass('Java'))+' for Java, '+fmt(pass('Go'))+' for Go, and '+fmt(pass('Python'))+' for Python, which ran the '+fmt(P.fast_n)+' fast models and a timed sample of the slow ones. TypeScript, Java and Go carry their own copy of glibc\'s math routines, because their own math functions round differently. The C++ engine, swmm5-cplus, matches on '+fmt(pass('C++ swmm5-cplus'))+' of '+fmt(N)+(pass('Rust swmm5-rust')?', and the safe-Rust engine, swmm5-rust, on '+fmt(pass('Rust swmm5-rust'))+' of '+fmt(N)+'.':'. The Rust engine was not reachable from this session.');
   const st=[['Gate models',fmt(N),'from six corpus folders'],
     ['.out bytes compared',fmt((T['Fortran']||{}).out_bytes||0),'per fully gated engine'],
     ['.rpt lines compared',fmt((T['Fortran']||{}).rpt_lines||0),'per fully gated engine, timestamps excluded'],
@@ -427,9 +427,10 @@ function scoreboard(){
     'C#':['C# 12 / .NET 8','generated by emit_cs.py + hand runtime','cs'],
     'Python':['Python 3, pure','generated by emit_py.py + hand runtime','py'],
     'TypeScript':['TypeScript 5 / Node 22','generated by emit_ts.py + hand runtime + glibc math translated from GIMPLE','ts'],
-    'Java':['Java 17+ (JDK 21)','generated by emit_java.py + hand runtime + glibc math translated from GIMPLE','java']};
+    'Java':['Java 17+ (JDK 21)','generated by emit_java.py + hand runtime + glibc math translated from GIMPLE','java'],
+    'Go':['Go 1.22+ (built with '+(APP.go_version||'Go')+')','generated by emit_go.py + hand runtime + glibc math translated from GIMPLE','go']};
   const L=APP.lines;
-  const loc={'EPA 5.2.4 (C)':L.c,'Rust swmm5-rust':(APP.rust||{}).lines,'Fortran':L.f90_gen,'C#':L.cs_gen,'Python':L.py_gen,'TypeScript':L.ts_gen,'Java':L.java_gen};
+  const loc={'EPA 5.2.4 (C)':L.c,'Rust swmm5-rust':(APP.rust||{}).lines,'Fortran':L.f90_gen,'C#':L.cs_gen,'Python':L.py_gen,'TypeScript':L.ts_gen,'Java':L.java_gen,'Go':L.go_gen};
   let h='<thead><tr><th>Engine</th><th>Language</th><th>How it was made</th><th class="num">Lines</th><th>Gate</th><th class="num">CPU vs EPA</th></tr></thead><tbody>';
   ENG.forEach(e=>{
     const t=T[e]||{}; let g;
@@ -441,7 +442,7 @@ function scoreboard(){
     h+='<tr><td><span class="swatch" style="background:var(--f-'+EKEY[e]+')"></span>'+esc(e)+'</td><td>'+esc(how[e][0])+'</td><td>'+esc(how[e][1])+'</td><td class="num">'+(loc[e]?fmt(loc[e]):'-')+'</td><td>'+g+'</td><td class="num">'+r+'</td></tr>';
   });
   $('#sb-table').innerHTML=h+'</tbody>';
-  $('#sb-note').textContent='Lines count the engine itself (EPA: the C solver; Rust: its engine crate; ports: the generated files, not counting the TypeScript and Java math routines). CPU vs EPA is the median over the benchmark models, from the Speed tab (Rust, and TypeScript with Java, from their own interleaved runs against EPA).';
+  $('#sb-note').textContent='Lines count the engine itself (EPA: the C solver; Rust: its engine crate; ports: the generated files, not counting the TypeScript, Java and Go math routines). CPU vs EPA is the median over the benchmark models, from the Speed tab (Rust, TypeScript with Java, and Go, from their own interleaved runs against EPA).';
   $('#sb-matrix').innerHTML=APP.figs.matrix;
   const prov=['Reference: EPA 5.2.4, v5.2.4 tag, gcc 13.3 -O2, glibc 2.39, x86-64 Linux','Corpus: '+fmt(N)+' models','Built: '+APP.built,'AI use: see About'];
   $('#sb-prov').innerHTML=prov.map(esc).map(s=>'<span>'+s+'</span>').join('');
@@ -538,7 +539,7 @@ function drawGraph(){
 function speed(){
   const B=APP.bench;
   if(!B){ $('#sp-method').textContent='The benchmark has not been run yet.'; return; }
-  $('#sp-method').textContent='Method: '+B.n_models+' models chosen to span EPA run times from '+B.epa_min.toFixed(2)+' to '+B.epa_max.toFixed(2)+' s; '+B.reps+' repetitions; in each, every engine ran every model in a fresh random order, and EPA ran twice so the spread of EPA against itself sets the noise floor ('+B.noise[0].toFixed(2)+' to '+B.noise[1].toFixed(2)+'x across models). CPU time is user plus system time of the engine process, measured '+B.when+'.'+(B.rust_noise?' The Rust row comes from a separate run made later on a different machine ('+B.rust_reps+' repetitions of EPA, EPA again and Rust, measured '+B.rust_when+'); its ratios are against EPA in that run, where EPA against itself spread '+B.rust_noise[0].toFixed(2)+' to '+B.rust_noise[1].toFixed(2)+'x.':'')+(B.tsj_noise?' The TypeScript and Java rows come from their own run ('+B.tsj_reps+' repetitions of EPA, EPA again, TypeScript and Java, measured '+B.tsj_when+'), against EPA in that run, where EPA against itself spread '+B.tsj_noise[0].toFixed(2)+' to '+B.tsj_noise[1].toFixed(2)+'x.':'');
+  $('#sp-method').textContent='Method: '+B.n_models+' models chosen to span EPA run times from '+B.epa_min.toFixed(2)+' to '+B.epa_max.toFixed(2)+' s; '+B.reps+' repetitions; in each, every engine ran every model in a fresh random order, and EPA ran twice so the spread of EPA against itself sets the noise floor ('+B.noise[0].toFixed(2)+' to '+B.noise[1].toFixed(2)+'x across models). CPU time is user plus system time of the engine process, measured '+B.when+'.'+(B.rust_noise?' The Rust row comes from a separate run made later on a different machine ('+B.rust_reps+' repetitions of EPA, EPA again and Rust, measured '+B.rust_when+'); its ratios are against EPA in that run, where EPA against itself spread '+B.rust_noise[0].toFixed(2)+' to '+B.rust_noise[1].toFixed(2)+'x.':'')+(B.tsj_noise?' The TypeScript and Java rows come from their own run ('+B.tsj_reps+' repetitions of EPA, EPA again, TypeScript and Java, measured '+B.tsj_when+'), against EPA in that run, where EPA against itself spread '+B.tsj_noise[0].toFixed(2)+' to '+B.tsj_noise[1].toFixed(2)+'x.':'')+(B.go_noise?' The Go row comes from its own run ('+B.go_reps+' repetitions of EPA, EPA again and Go, measured '+B.go_when+'), against EPA in that run, where EPA against itself spread '+B.go_noise[0].toFixed(2)+' to '+B.go_noise[1].toFixed(2)+'x.':'');
   $('#sp-fig').innerHTML=APP.figs.speed;
   let h='<thead><tr><th>Engine</th><th class="num">Median CPU vs EPA</th><th class="num">Fastest model</th><th class="num">Slowest model</th><th class="num">Start-up, s (--version)</th></tr></thead><tbody>';
   B.engines.forEach(e=>{ const v=B.per_model[e]; h+='<tr><td>'+esc(e)+'</td><td class="num">'+B.median[e].toFixed(2)+'x</td><td class="num">'+Math.min(...v).toFixed(2)+'x</td><td class="num">'+Math.max(...v).toFixed(2)+'x</td><td class="num">'+(B.startup[e]!=null?B.startup[e].toFixed(3):'-')+'</td></tr>'; });
@@ -548,17 +549,17 @@ function speed(){
 /* ------------------------------------------------------------------ verify */
 function verify(){
   const C=APP.controls, cen=APP.census;
-  $('#vf-contract').innerHTML='Each engine runs every model in the model\'s own folder, as EPA\'s command line does. It passes only if its <code>.out</code> is byte-identical to EPA 5.2.4\'s and its <code>.rpt</code> is identical line for line after removing the three wall-clock lines (<code>Analysis begun on</code>, <code>Analysis ended on</code>, <code>Total elapsed time</code>). The reference is EPA 5.2.4 from the USEPA v5.2.4 tag, built with gcc 13.3 at -O2 with _FORTIFY_SOURCE off, run on x86-64 Linux with glibc 2.39. When an input error stops EPA before it writes results, the engine must not write a results file either ('+(cen.error_decks-cen.error_decks_with_out)+' models; this rule was made explicit after the runs, and every engine\'s stored outputs pass it). The Fortran build adds -fwrapv and -ffp-contract=off, and no engine fuses SWMM\'s own arithmetic. The only fused multiply-adds are inside glibc\'s math routines, which this processor runs in their FMA versions; the TypeScript and Java engines carry translations of exactly those, fusions included.';
+  $('#vf-contract').innerHTML='Each engine runs every model in the model\'s own folder, as EPA\'s command line does. It passes only if its <code>.out</code> is byte-identical to EPA 5.2.4\'s and its <code>.rpt</code> is identical line for line after removing the three wall-clock lines (<code>Analysis begun on</code>, <code>Analysis ended on</code>, <code>Total elapsed time</code>). The reference is EPA 5.2.4 from the USEPA v5.2.4 tag, built with gcc 13.3 at -O2 with _FORTIFY_SOURCE off, run on x86-64 Linux with glibc 2.39. When an input error stops EPA before it writes results, the engine must not write a results file either ('+(cen.error_decks-cen.error_decks_with_out)+' models; this rule was made explicit after the runs, and every engine\'s stored outputs pass it). The Fortran build adds -fwrapv and -ffp-contract=off, and no engine fuses SWMM\'s own arithmetic. The only fused multiply-adds are inside glibc\'s math routines, which this processor runs in their FMA versions; the TypeScript, Java and Go engines carry translations of exactly those, fusions included. The Go engine writes every floating-point operation as <code>float64(...)</code>, the explicit conversion the Go specification says a compiler may not fuse across, and its binary holds fused instructions only inside the translated glibc routines'+(C.go_fma?' ('+fmt(C.go_fma.total)+' in '+C.go_fma.funcs+' functions, '+C.go_fma.outside+' anywhere else; gate/check_go_fma.sh)':'')+'.';
   $('#vf-controls').innerHTML=APP.figs.controls;
   $('#vf-controls-note').textContent='Null control: EPA run a second time on the '+C.epa_rerun_n+'-model control set gave '+C.epa_rerun_same+' of '+C.epa_rerun_n+' identical files. Positive control: the Fortran engine rebuilt with -ffp-contract=fast -mfma in place of -ffp-contract=off (gate/build_fma_control.sh; '+C.fma_instr+' fused instructions in that build, none in the shipped one) differed from EPA on '+(C.fma_all_n-C.fma_all_same)+' of '+C.fma_all_n+' models. Those are the models sensitive enough to notice one rounding step.';
   let h='<thead><tr><th>Model that noticed the change</th><th>Verdict</th><th>First report line that differs (EPA, then the FMA build)</th></tr></thead><tbody>';
   (C.fma_all_diff||[]).forEach(r=>{ const f=r.first||[]; h+='<tr><td>'+esc(r.path)+'</td><td><span class="pill bad">'+esc(r.status)+'</span></td><td class="mono">'+(f.length?esc(f[1])+'<br>'+esc(f[2]):'(.out only)')+'</td></tr>'; });
   $('#vf-fma').innerHTML=h+'</tbody>';
   $('#vf-fma-sum').textContent='The '+(C.fma_all_diff||[]).length+' models that noticed the change, with the first report line that differs';
-  $('#vf-fmt').textContent='crt_format.f90 (pure Fortran) was compared with glibc 2.39 byte for byte: '+fmt(C.fmt_printf)+' printf cases, '+fmt(C.fmt_sscanf)+' sscanf cases and '+fmt(C.fmt_strtod)+' strtod cases, '+fmt(C.fmt_mismatch)+' mismatches (f90/runtime/tests/run_tests.sh).';
+  $('#vf-fmt').textContent='crt_format.f90 (pure Fortran) was compared with glibc 2.39 byte for byte: '+fmt(C.fmt_printf)+' printf cases, '+fmt(C.fmt_sscanf)+' sscanf cases and '+fmt(C.fmt_strtod)+' strtod cases, '+fmt(C.fmt_mismatch)+' mismatches (f90/runtime/tests/run_tests.sh).'+(C.go_fmt?' The Go runtime (go/crt) was compared with glibc the same way: '+fmt(C.go_fmt.printf[0])+' printf cases, '+fmt(C.go_fmt.strtod[0])+' strtod cases and '+fmt(C.go_fmt.sscanf[0])+' sscanf cases, '+fmt(C.go_fmt.printf[1]+C.go_fmt.strtod[1]+C.go_fmt.sscanf[1])+' mismatch'+((C.go_fmt.printf[1]+C.go_fmt.strtod[1]+C.go_fmt.sscanf[1])===1?'':'es')+(C.go_fmt.note?' ('+C.go_fmt.note+')':'')+' (tools/crt/test/mkfmt.c, go/internal/crtcheck; gate/results/go_crt_check.txt).':'');
   const LM=APP.libm||{}; const tests=LM.tests||{};
-  $('#vf-libm-note').textContent='Left: every libm call EPA made on the '+fmt(APP.models.length)+' gate models, counted by an LD_PRELOAD interposer (tools/libm/census.c). Right: the TypeScript and Java translations of glibc 2.39\'s FMA routines against the system libm, argument by argument (random arguments over SWMM\'s ranges, the census samples and edge cases; tools/libm/test/run_tests.sh)'+(LM.powdiff?'; TypeScript\'s pow fast path was also compared with its full translation on '+fmt(LM.powdiff[0])+' further arguments: '+fmt(LM.powdiff[1])+' differences':'')+'. EPA itself, run on glibc\'s generic routines, changed '+(LM.generic_n-LM.generic_same)+' of '+LM.generic_n+' models.'
-    +Object.entries(LM.native_ctl||{}).map(([l,c])=>' '+l+' with its own Math in place of the translations (gate/run_'+(l==='Java'?'java':'ts')+'_native_control.sh) differed from EPA on '+(c.n-c.same)+' of '+c.n+' control models'+(((LM.native_ctl_all||{})[l])?' ('+((LM.native_ctl_all[l].n-LM.native_ctl_all[l].same))+' of all '+LM.native_ctl_all[l].n+')':'')+'.').join('');
+  $('#vf-libm-note').textContent='Left: every libm call EPA made on the '+fmt(APP.models.length)+' gate models, counted by an LD_PRELOAD interposer (tools/libm/census.c). Right: the TypeScript, Java and Go translations of glibc 2.39\'s FMA routines against the system libm, argument by argument (random arguments over SWMM\'s ranges, the census samples and edge cases; tools/libm/test/run_tests.sh)'+(LM.powdiff?'; TypeScript\'s pow fast path was also compared with its full translation on '+fmt(LM.powdiff[0])+' further arguments: '+fmt(LM.powdiff[1])+' differences':'')+'. EPA itself, run on glibc\'s generic routines, changed '+(LM.generic_n-LM.generic_same)+' of '+LM.generic_n+' models.'
+    +Object.entries(LM.native_ctl||{}).map(([l,c])=>' '+l+' with its own '+(l==='Go'?'math package':'Math')+' in place of the translations (gate/run_'+({Java:'java',TypeScript:'ts',Go:'go'}[l])+'_native_control.sh) differed from EPA on '+(c.n-c.same)+' of '+c.n+' control models'+(((LM.native_ctl_all||{})[l])?' ('+((LM.native_ctl_all[l].n-LM.native_ctl_all[l].same))+' of all '+LM.native_ctl_all[l].n+')':'')+'.').join('');
   $('#vf-libm-census').innerHTML='<thead><tr><th>Function</th><th class="num">Calls</th><th class="num">Models</th></tr></thead><tbody>'+(LM.census||[]).map(c=>'<tr><td class="mono">'+esc(c.fn)+'</td><td class="num">'+fmt(c.calls)+'</td><td class="num">'+c.models+'</td></tr>').join('')+'</tbody>';
   const fns=[...new Set(Object.values(tests).flatMap(t=>Object.keys(t)))];
   const langs=Object.keys(tests).sort();
@@ -574,7 +575,7 @@ function verify(){
   const P=APP.python;
   const lim=['Identical to EPA means EPA\'s answers, right or wrong. No observed flow enters anywhere.',
     'One platform: x86-64 Linux, glibc 2.39, gcc 13.3. Elsewhere the math library differs, and a port matches EPA built there only if its math library matches too.',
-    'One kind of processor: EPA itself changes '+((APP.libm||{}).generic_n-(APP.libm||{}).generic_same)+' models when glibc picks its generic math routines, as on a processor without FMA and AVX2. The ports that call the system libm should follow EPA there (not tested); TypeScript and Java carry the FMA versions and would not.',
+    'One kind of processor: EPA itself changes '+((APP.libm||{}).generic_n-(APP.libm||{}).generic_same)+' models when glibc picks its generic math routines, as on a processor without FMA and AVX2. The ports that call the system libm should follow EPA there (not tested); TypeScript, Java and Go carry the FMA versions and would not.',
     APP.corpus_note,
     cen.error_decks+' of the '+fmt(APP.models.length)+' stop on an input error. For '+(cen.error_decks-cen.error_decks_with_out)+' of them EPA writes no results file and the report is the whole comparison; the other '+cen.error_decks_with_out+' write a short one, which is compared.',
     'Only '+(C.fma_all_n-C.fma_all_same)+' of the '+C.fma_all_n+' models noticed the one-rounding-step change made in the positive control; the bit-level evidence rests mostly on them.',
@@ -588,7 +589,7 @@ function verify(){
 
 /* ------------------------------------------------------------------ welcome, tour */
 const TOUR=[
-  {view:'scoreboard',title:'Read the verdict',body:'One row per engine. C++, Rust, Fortran, C#, TypeScript and Java match EPA 5.2.4 on every gate model; Python on every model it ran.'},
+  {view:'scoreboard',title:'Read the verdict',body:'One row per engine. C++, Rust, Fortran, C#, TypeScript, Java and Go match EPA 5.2.4 on every gate model; Python on every model it ran.'},
   {view:'models',title:'Find a model',body:'Filter, sort, and open a row to see each engine\'s output fingerprint next to EPA\'s.'},
   {view:'graphs',title:'Compare the curves',body:'The reference series on top; under it, each engine minus EPA at every reporting period.'},
   {view:'speed',title:'Weigh the cost',body:'CPU time against EPA, with EPA against itself as the noise floor.'},

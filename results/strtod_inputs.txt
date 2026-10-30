@@ -1,0 +1,1 @@
+480 gate models; 0 contain a hexadecimal float or a NaN payload outside comments

@@ -1,0 +1,109 @@
+ctl_go_native_all: 480 models  PASS 372, RPTDIFF+OUTDIFF 45, RPTDIFF 38, OUTDIFF 25
+  OUTDIFF          EPA/10000FootSurchargeDepth.inp  
+  RPTDIFF+OUTDIFF  EPA/221_H&H_SI_Units_Elements(2).inp  (466, '05/25/2010: 08:44:31 Link U435_Psan_1_et_2_et_3 setting changed to   0.00 by Control U435_R1', '05/25/2010: 08:45:52 Link U435_Psan_1_et_2_et_3 setting changed to   0.00 by Control U435_R1')
+  RPTDIFF+OUTDIFF  EPA/380_nodes.inp  (415, 'Dry Weather Inflow .......        21.183         6.903', 'Dry Weather Inflow .......        21.179         6.901')
+  RPTDIFF+OUTDIFF  EPA/429_H&H_Elements.inp  (1642, 'External Outflow .........       480.545       156.593', 'External Outflow .........       480.537       156.590')
+  RPTDIFF+OUTDIFF  EPA/5_H&H_Elements (1).inp  (58, 'Continuity Error (%) .....        -0.170', 'Continuity Error (%) .....        -0.171')
+  OUTDIFF          EPA/72_H&H_Elements(2).inp  
+  RPTDIFF+OUTDIFF  EPA/Allow_Ponding_High_CE.inp  (358, 'P-STMH-000014        JUNCTION      0.00   112.76     0  07:35           0        7.39      -1.219', 'P-STMH-000014        JUNCTION      0.00   112.76     0  07:30           0        7.39      -1.219')
+  RPTDIFF+OUTDIFF  EPA/Clocktime_Pump_Rules.inp  (1139, '01/01/1988: 01:46:57 Link L1_1 setting changed to   0.00 by Control 1', '01/01/1988: 01:46:58 Link L1_1 setting changed to   0.00 by Control 1')
+  RPTDIFF+OUTDIFF  EPA/Cycling_pumps.inp  (1706, 'OR1@82309D-82308D    ORIFICE      4.90     0  04:46                      1.00', 'OR1@82309D-82308D    ORIFICE      4.91     0  04:46                      1.00')
+  RPTDIFF+OUTDIFF  EPA/Duty_Point_Pump.inp  (81, 'Node 10208 (16.78%)', 'Node 10208 (16.87%)')
+  RPTDIFF+OUTDIFF  EPA/HRSDtest_cim_7.inp  (185, 'External Outflow .........       166.099        54.126', 'External Outflow .........       166.500        54.256')
+  OUTDIFF          EPA/High_Low_Flow.inp  
+  OUTDIFF          EPA/InflowOrificeRule.inp  
+  OUTDIFF          EPA/InfoSewer_ICM.inp  
+  RPTDIFF+OUTDIFF  EPA/Master_Extran_Orifice_Control.inp  (83, 'Link 8040d (19)', 'Link 1600 (19)')
+  RPTDIFF+OUTDIFF  EPA/Master_Extran_RTC.inp  (76, 'Node 10208 (72.02%)', 'Node 10208 (72.03%)')
+  RPTDIFF+OUTDIFF  EPA/Mater_Extran_Vnotch.inp  (258, 'External Outflow .........       132.305        43.113', 'External Outflow .........       132.303        43.113')
+  OUTDIFF          EPA/One_Sub_Pump_Model.inp  
+  OUTDIFF          EPA/PID extran_master_swmm34_example_SW5.inp  
+  RPTDIFF+OUTDIFF  EPA/airBreak_model.inp  (144, 'N3                   JUNCTION       22.91          4.612        0.000', 'N3                   JUNCTION       22.91          4.611        0.000')
+  RPTDIFF+OUTDIFF  EPA/air_release_valve.inp  (44, 'External Outflow .........        29.196         9.514', 'External Outflow .........        29.164         9.504')
+  OUTDIFF          EPA/attenuation_DW_High_CE.inp  
+  OUTDIFF          EPA/attenuation_KW_High_CE.inp  
+  RPTDIFF          EPA/double_fm.inp  (127, '903                  JUNCTION     0.17     0.38   281.58     0  13:51        0.38', '903                  JUNCTION     0.17     0.38   281.58     0  13:56        0.38')
+  RPTDIFF+OUTDIFF  EPA/extran1_KW_Divider.inp  (34, 'External Outflow .........        14.922         4.863', 'External Outflow .........        14.930         4.865')
+  RPTDIFF          EPA/extran1_gothic.inp  (126, 'Link 1630 (3)', 'Link 1630 (2)')
+  RPTDIFF          EPA/extran1_horseshoe.inp  (128, '', 'Link 8100 (1)')
+  RPTDIFF          EPA/extran1_rect_triangular.inp  (211, 'Link 1570 (1)', 'Link 8130 (1)')
+  RPTDIFF          EPA/extran1_semi_circular.inp  (121, '', 'Link 8130 (1)')
+  RPTDIFF          EPA/extran1_triangular.inp  (62, 'Link 1630 (1)', 'Link 8130 (1)')
+  RPTDIFF          EPA/extran1_vertical_ellipse.inp  (122, 'Link 8130 (2)', 'Link 1570 (2)')
+  RPTDIFF+OUTDIFF  EPA/manifold_pumps.inp  (44, 'Continuity Error (%) .....         1.833', 'Continuity Error (%) .....         1.854')
+  RPTDIFF+OUTDIFF  EPA/master_extran_with_storage.inp  (263, 'External Outflow .........       182.967        59.622', 'External Outflow .........       182.965        59.622')
+  RPTDIFF          EPA/pressure_net.inp  (258, '903                     2.68      0.67      0  00:12       0.048     0.000', '903                     2.68      0.67      0  00:13       0.048     0.000')
+  RPTDIFF          EPA/pumps_activated_sludge.inp  (91, 'RawWater             JUNCTION     0.10     0.10    11.10     0  00:46        0.10', 'RawWater             JUNCTION     0.10     0.10    11.10     0  00:45        0.10')
+  OUTDIFF          EPA/siphon_larger_SW5.inp  
+  RPTDIFF+OUTDIFF  EPA/small_linear_si_unit_model.inp  (33, 'External Outflow .........         0.915         9.153', 'External Outflow .........         0.915         9.152')
+  RPTDIFF          EPA/small_wwf_dwf.inp  (391, 'DC-2                 JUNCTION     0.04     0.13   485.00     2  00:45        0.13', 'DC-2                 JUNCTION     0.04     0.13   485.00     2  06:38        0.13')
+  OUTDIFF          EPA/transect_example.inp  
+  RPTDIFF          EPA/transect_glass_wall.inp  (252, '1                    JUNCTION     1.11     1.11    11.11     0  00:08        1.11', '1                    JUNCTION     1.11     1.11    11.11     0  00:07        1.11')
+  RPTDIFF+OUTDIFF  Hydraulics/221_H&H_SI_Units_Elements.inp  (466, '05/25/2010: 08:44:31 Link U435_Psan_1_et_2_et_3 setting changed to   0.00 by Control U435_R1', '05/25/2010: 08:45:52 Link U435_Psan_1_et_2_et_3 setting changed to   0.00 by Control U435_R1')
+  RPTDIFF+OUTDIFF  Hydraulics/4687079-extran_pid_3_master.inp  (246, 'External Outflow .........       182.425        59.446', 'External Outflow .........       182.419        59.444')
+  RPTDIFF+OUTDIFF  Hydraulics/Allow_Ponding_Low_CE.inp  (164, '22717                JUNCTION     -nan  307165302811275407894254142485078452511792199405625146587452', '22717                JUNCTION     -nan  307165302811273967346624054632736366888747116689457519429131')
+  RPTDIFF+OUTDIFF  Hydraulics/Clocktime_Pump_Rules.inp  (3189, '01/01/1988: 03:39:36 Link L1_1 setting changed to   0.00 by Control 1', '01/01/1988: 03:39:41 Link L1_1 setting changed to   0.00 by Control 1')
+  RPTDIFF+OUTDIFF  Hydraulics/Cycling_pumps.inp  (1706, 'OR1@82309D-82308D    ORIFICE      4.90     0  04:46                      1.00', 'OR1@82309D-82308D    ORIFICE      4.91     0  04:46                      1.00')
+  RPTDIFF          Hydraulics/FM_Example2.inp  (127, '10309                JUNCTION      0.00    30.95     0  02:04           0        2.85      -0.010', '10309                JUNCTION      0.00    30.95     0  01:43           0        2.85      -0.010')
+  RPTDIFF+OUTDIFF  Hydraulics/HRSDtest_cim_7.inp  (185, 'External Outflow .........       166.099        54.126', 'External Outflow .........       166.500        54.256')
+  OUTDIFF          Hydraulics/InfoSewer_ICM.inp  
+  OUTDIFF          Hydraulics/One_Pump_FM.inp  
+  OUTDIFF          Hydraulics/PID extran_master_swmm34_example_SW5.inp  
+  RPTDIFF+OUTDIFF  Hydraulics/air_release_valve.inp  (44, 'External Outflow .........        29.196         9.514', 'External Outflow .........        29.164         9.504')
+  RPTDIFF+OUTDIFF  Hydraulics/diversion_weir_network.inp  (52, 'Continuity Error (%) .....        -0.012', 'Continuity Error (%) .....        -0.011')
+  RPTDIFF          Hydraulics/extran1_gothic.inp  (126, 'Link 1630 (3)', 'Link 1630 (2)')
+  RPTDIFF          Hydraulics/extran1_horseshoe.inp  (128, '', 'Link 8100 (1)')
+  RPTDIFF          Hydraulics/extran1_modified_baskethandle.inp  (127, 'Link 8060 (1)', 'Link 1602 (1)')
+  RPTDIFF          Hydraulics/extran1_semi_circular.inp  (121, '', 'Link 8130 (1)')
+  RPTDIFF          Hydraulics/extran1_triangular.inp  (62, 'Link 1630 (1)', 'Link 8130 (1)')
+  RPTDIFF          Hydraulics/high_elevation_model.inp  (160, '15009                JUNCTION     0.72     0.91  11150.91     1  10:15        0.91', '15009                JUNCTION     0.72     0.91  11150.91     0  10:15        0.91')
+  RPTDIFF          Hydraulics/joseph_pang_example.inp  (170, 'mid4                 JUNCTION     0.63     0.77   101.77     0  01:42        0.77', 'mid4                 JUNCTION     0.63     0.77   101.77     0  01:55        0.77')
+  RPTDIFF+OUTDIFF  Hydraulics/linear_vsp_pump.inp  (250, 'External Outflow .........       179.953        58.640', 'External Outflow .........       179.950        58.639')
+  OUTDIFF          Hydraulics/looped_example_1.inp  
+  RPTDIFF          Hydraulics/orifice_rectangular_box_comparison.inp  (133, '2                    JUNCTION     0.25     0.25   101.25     0  00:22        0.25', '2                    JUNCTION     0.25     0.25   101.25     0  00:29        0.25')
+  RPTDIFF+OUTDIFF  Hydraulics/pump_speed_ratio.inp  (255, 'External Outflow .........       132.321        43.119', 'External Outflow .........       132.319        43.118')
+  RPTDIFF+OUTDIFF  Hydraulics/small_pump_fm_model.inp  (107, '20                   JUNCTION     0.15     0.15   405.89     0  02:01        0.15', '20                   JUNCTION     0.15     0.15   405.89     0  02:05        0.15')
+  RPTDIFF+OUTDIFF  Hydraulics/vsp_pump_si_units.inp  (98, 'External Outflow .........         0.091         0.905', 'External Outflow .........         0.094         0.935')
+  OUTDIFF          Hydrology/10_Subs_Continuous.inp  
+  RPTDIFF+OUTDIFF  Hydrology/17_Sub_90_Link_USA_Units.inp  (60, 'External Outflow .........        52.087        16.973', 'External Outflow .........        52.088        16.974')
+  RPTDIFF+OUTDIFF  Hydrology/27_Nodes_5_Subs.inp  (58, 'Continuity Error (%) .....        -0.093', 'Continuity Error (%) .....        -0.095')
+  OUTDIFF          Hydrology/27_Subs_Horton.inp  
+  RPTDIFF+OUTDIFF  Hydrology/28_Sub_266_Link_USA_Units.inp  (1966, 'External Outflow .........       234.631        76.458', 'External Outflow .........       234.635        76.459')
+  RPTDIFF+OUTDIFF  Hydrology/292_Storage_Nodes_200_Subs.inp  (73, 'Surface Runoff ...........     23244.535         3.448', 'Surface Runoff ...........     23244.556         3.448')
+  RPTDIFF          Hydrology/31_Subs.inp  (178, '3060                 JUNCTION     3.13     3.22    -1.86     1  00:00        3.22', '3060                 JUNCTION     3.13     3.22    -1.86     0  16:59        3.22')
+  RPTDIFF+OUTDIFF  Hydrology/9_Subs.inp  (64, 'Wet Weather Inflow .......        22.677         7.389', 'Wet Weather Inflow .......        22.676         7.389')
+  RPTDIFF+OUTDIFF  Hydrology/CN_Horton.inp  (50, 'Dry Weather Inflow .......         3.931        39.310', 'Dry Weather Inflow .......         3.931        39.309')
+  RPTDIFF+OUTDIFF  Hydrology/Ejemplo EPA.inp  (62, 'External Outflow .........         1.459         0.475', 'External Outflow .........         1.461         0.476')
+  RPTDIFF+OUTDIFF  Hydrology/GW_mod_horton_seepage_swmm5.inp  (215, 'P009                 JUNCTION     13.33    17.00     0  09:05      0.0611       0.216     540.650', 'P009                 JUNCTION     13.33    17.00     0  09:05      0.0611       0.216     540.590')
+  RPTDIFF          Hydrology/RUNOFF39_SW5.inp  (390, '1080                 CONDUIT     0.188     0  00:22      2.49    1.00    1.00', '1080                 CONDUIT     0.188     0  00:20      2.49    1.00    1.00')
+  RPTDIFF+OUTDIFF  Hydrology/SCANLON.inp  (1019, 'External Outflow .........       318.026       103.633', 'External Outflow .........       318.519       103.794')
+  OUTDIFF          Hydrology/SI_GW_Model.inp  
+  OUTDIFF          Hydrology/SWMM_5Model_With_LID.inp  
+  OUTDIFF          Hydrology/Simple_4_Sub_H&H (2).inp  
+  RPTDIFF          Hydrology/feng_scs_test_model_v13.inp  (296, 'E                    JUNCTION      0.00     0.34     0  02:02           0       0.107       0.129', 'E                    JUNCTION      0.00     0.34     0  02:01           0       0.107       0.129')
+  RPTDIFF+OUTDIFF  Hydrology/greenroofs.inp  (62, 'External Outflow .........       116.309      1163.102', 'External Outflow .........       116.309      1163.097')
+  RPTDIFF          Hydrology/hydrology_100L.inp  (504, 'C4                   CONDUIT     1.836     0  16:08      2.62    1.00    1.00', 'C4                   CONDUIT     1.836     0  16:10      2.62    1.00    1.00')
+  RPTDIFF+OUTDIFF  Hydrology/sewer_rdii_problem.inp  (180, 'SMH1795W02           JUNCTION     0.08     0.09    94.87     1  13:00        0.09', 'SMH1795W02           JUNCTION     0.08     0.09    94.87     0  12:59        0.09')
+  OUTDIFF          Hydrology/user5_sub_patterns.inp  
+  RPTDIFF          OWA_EXTRAN/EDSYPHON.inp  (193, '213                  JUNCTION     0.000   26.000     0  00:36           0        70.3       0.504', '213                  JUNCTION     0.000   26.000     0  00:59           0        70.3       0.504')
+  OUTDIFF          OWA_EXTRAN/EXAM2_with_numerical_problem_SW5.inp  
+  RPTDIFF+OUTDIFF  OWA_EXTRAN/EXAM60_SW5.INP  (74, 'Node 13 (9.55%)', 'Node 13 (9.54%)')
+  OUTDIFF          OWA_EXTRAN/emc_exam1.inp  
+  RPTDIFF          OWA_EXTRAN/extran1_circular.inp  (61, 'Link 8130 (6)', 'Link 8130 (7)')
+  RPTDIFF          OWA_EXTRAN/extran1_rectangular.inp  (103, '10208                OUTFALL      1.22     2.59    92.49     0  01:34        2.59', '10208                OUTFALL      1.22     2.59    92.49     0  01:33        2.59')
+  RPTDIFF          OWA_EXTRAN/extran3_RTC_Rule.inp  (280, '8060                 CONDUIT    38.432     0  01:03      3.50    1.41    0.82', '8060                 CONDUIT    38.432     0  01:05      3.50    1.41    0.82')
+  RPTDIFF          OWA_EXTRAN/extran3_dummy_links.inp  (158, '10309                JUNCTION     0.27     0.71   102.31     0  02:06        0.71', '10309                JUNCTION     0.27     0.71   102.31     0  01:56        0.71')
+  RPTDIFF+OUTDIFF  OWA_EXTRAN/extran7_type3_high_pump_rate.inp  (99, '10309                JUNCTION     2.85     3.09   104.69     0  07:56        3.09', '10309                JUNCTION     2.85     3.09   104.69     0  04:30        3.09')
+  RPTDIFF          OWA_EXTRAN/very_simple_cfs_flow_import_ICM_SWMM.inp  (80, '80408                JUNCTION     1.59     1.83   126.43     0  01:16        1.83', '80408                JUNCTION     1.59     1.83   126.43     0  01:19        1.83')
+  RPTDIFF          OWA_ROUTING/routing_combo_all_links.inp  (98, 'S1                   STORAGE      5.09     9.84    19.84     0  00:55        9.84', 'S1                   STORAGE      5.09     9.84    19.84     0  00:56        9.84')
+  RPTDIFF          OWA_ROUTING/routing_inertial_full.inp  (64, 'Link 2 (2)', 'Link 4 (2)')
+  RPTDIFF          OWA_ROUTING/routing_init_depth.inp  (64, 'Link 2 (2)', 'Link 4 (2)')
+  RPTDIFF          OWA_ROUTING/routing_init_flow.inp  (62, 'All links are stable.', 'Link 3 (2)')
+  RPTDIFF+OUTDIFF  OWA_ROUTING/routing_kinwave.inp  (36, 'External Outflow .........         1.454         0.474', 'External Outflow .........         1.455         0.474')
+  RPTDIFF          OWA_ROUTING/routing_multi_barrels.inp  (91, '0                    JUNCTION     2.25     3.47    13.47     0  03:00        3.47', '0                    JUNCTION     2.25     3.47    13.47     0  02:46        3.47')
+  OUTDIFF          OWA_ROUTING/routing_multi_inflows.inp  
+  OUTDIFF          OWA_ROUTING/routing_outfall_timeseries.inp  
+  RPTDIFF+OUTDIFF  OWA_ROUTING/routing_surcharge_slot.inp  (50, 'External Outflow .........        18.772         6.117', 'External Outflow .........        18.734         6.105')
+  RPTDIFF          OWA_ROUTING/routing_trapezoidal.inp  (104, '9                    JUNCTION     1.28     2.01    12.01     0  01:14        2.01', '9                    JUNCTION     1.28     2.01    12.01     0  01:15        2.01')
+  RPTDIFF          OWA_ROUTING/routing_variable_step.inp  (75, 'Link 4 (1)', 'Link 2 (1)')
+  RPTDIFF          OWA_ROUTING/test5.inp  (90, '9                    JUNCTION     3.60     4.11    14.11     0  08:18        4.11', '9                    JUNCTION     3.60     4.11    14.11     0  08:20        4.11')

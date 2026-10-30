@@ -1,0 +1,7 @@
+# go/internal/crtcheck against glibc 2.39 (tools/crt/test/mkfmt.c, gcc 13.3 -O2): printf conversions, strtod and sscanf
+  f %#g arg=412e847f00000000  glibc="1.e+06"  go="1.00000e+06"
+f %#g        1 of 20039 differ
+printf: 1194187 cases, 1 differ
+strtod: 200052 cases, 0 differ
+sscanf: 13 cases, 0 differ
+1 of 1394252 cases differ (93 formats)

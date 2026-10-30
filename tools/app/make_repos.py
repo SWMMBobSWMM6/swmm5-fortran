@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Lay out the five repositories (swmm5-fortran, swmm5-csharp, swmm5-python, swmm5-typescript, swmm5-java).
+"""Lay out the six repositories (swmm5-fortran, swmm5-csharp, swmm5-python, swmm5-typescript, swmm5-java, swmm5-go).
 
   make_repos.py OUTDIR
 
@@ -63,6 +63,16 @@ LANG = {
                            'Java has no pointers to numbers, so a C `double *` parameter becomes a `DRef` (get/set): a box for a local whose address is taken, an element reference for `&a[i]`, a field reference built from lambdas for `&s->x`.',
                            'unsigned int is a `long` masked to 32 bits; every double-to-int conversion goes through `R.D2I`, because Java\'s cast saturates where x86 gives INT_MIN; printf rounds with BigDecimal and HALF_EVEN, which is glibc\'s rule.',
                            'The math functions are not Java\'s: `Glibm.java` is glibc 2.39\'s FMA build of exp, log, log10, pow, sin, cos, tan, asin, acos and atan, translated from GCC\'s GIMPLE by `tools/libm/gim2x.py` (fused multiply-adds as `Math.fma`) and checked bit for bit against the system libm.']),
+    'swmm5-go': dict(name='Go', label='Go', dir='go', run='go_final', emitter='emit_go.py',
+                     gen='go/swmm5/f_*.go', build='go/build.sh', exe='go/bin/runswmm',
+                     need='Go 1.22 or newer (tested with Go 1.24.7); no modules to download',
+                     lang_notes=[
+                         'Package `main` in `go/swmm5`: one generated file `f_<file>.go` per C file, SWMM\'s structs and function types in `types.go`, constants and string literals in `consts.go`; `overrides.go` and `main.go` are hand-written. The C runtime is package `go/crt` (imported as `R`), glibc\'s math is package `go/glibm` (imported as `M`).',
+                         'Go has real pointers, so a C `TNode*` is a `*TNode` and `&x` is `&x`; with no pointer arithmetic, an indexed pointer is a slice, `&a[i]` handed to code that indexes it is `a[i:]`, and `&x` handed to such code is a one-element slice over `x` itself (`R.One`). C strings are `R.CPtr` (a byte slice and an offset); a struct\'s char array is a `[N]byte` seen through `R.CP`.',
+                         'Go converts nothing implicitly, so every C conversion is written out; every double-to-int conversion goes through `R.D2I` (x86\'s rule). Every floating-point operation is wrapped in `float64(...)`, which the Go specification says a compiler may not fuse into an FMA (Go 1.24 does fuse the unwrapped form on arm64: `gate/check_go_fma_arm64.sh`), and every float literal is typed, because Go evaluates untyped constant expressions exactly where C rounds each step (`go/internal/constcheck`).',
+                         'C\'s `?:` becomes if/else, `R.If` or a function literal; assignments and `++` used as values become `R.Set` and `R.PostInc`; `do`/`while` becomes `for first := true; first || cond; first = false`; switch fall-through becomes `fallthrough`; locals are declared at the top of each function, as Go rejects unused variables.',
+                         'printf rounds with `strconv` (exact, ties to even on the binary value), checked against glibc 2.39 by `tools/crt/test/mkfmt.c` and `go/internal/crtcheck` (`results/go_crt_check.txt`).',
+                         'The math functions are not Go\'s: `go/glibm/glibm.go` is glibc 2.39\'s FMA build of exp, log, log10, pow, sin, cos, tan, asin, acos and atan, translated from GCC\'s GIMPLE by `tools/libm/gim2x.py` (fused multiply-adds as `math.FMA`) and checked bit for bit against the system libm.']),
 }
 
 
@@ -82,22 +92,22 @@ def readme(repo, S):
     speed = ''
     if B and e in B['median']:
         lo, hi = B['range'][e]
-        own = e in ('TypeScript', 'Java') and B.get('tsj_noise')        # timed in a run of their own
-        reps, noise = (B['tsj_reps'], B['tsj_noise']) if own else (B['reps'], B['noise'])
+        own = (e in ('TypeScript', 'Java') and B.get('tsj_noise')) or (e == 'Go' and B.get('go_noise'))   # timed in a run of their own
+        reps, noise = ((B['go_reps'], B['go_noise']) if e == 'Go' else (B['tsj_reps'], B['tsj_noise'])) if own else (B['reps'], B['noise'])
         speed = ('Median CPU time %.2f times EPA\'s (%.2f to %.2f over %d models, %d interleaved repetitions%s; EPA against '
                  'itself spans %.2f to %.2f in that run).' % (B['median'][e], lo, hi, B['n_models'], reps,
-                                                               ' in a run of their own' if own else '', noise[0], noise[1]))
+                                                               (' in a run of its own' if e == 'Go' else ' in a run of their own') if own else '', noise[0], noise[1]))
     lines = S['lines']
     rust_ok = bool((S.get('rust') or {}).get('commit')) and bool(T.get('Rust swmm5-rust', {}).get('PASS'))
     rust_desc = ('swmm5-rust (safe Rust, built from its repository at %s and gated here)' % S['rust']['commit'][:7]
                  if rust_ok else 'the Rust engine (not run here)')
     gl = {'swmm5-fortran': lines['f90_gen'], 'swmm5-csharp': lines['cs_gen'], 'swmm5-python': lines['py_gen'],
-          'swmm5-typescript': lines['ts_gen'], 'swmm5-java': lines['java_gen']}[repo]
+          'swmm5-typescript': lines['ts_gen'], 'swmm5-java': lines['java_gen'], 'swmm5-go': lines['go_gen']}[repo]
     rl = {'swmm5-fortran': lines['f90_rt'], 'swmm5-csharp': lines['cs_rt'], 'swmm5-python': lines['py_rt'],
-          'swmm5-typescript': lines['ts_rt'], 'swmm5-java': lines['java_rt']}[repo]
+          'swmm5-typescript': lines['ts_rt'], 'swmm5-java': lines['java_rt'], 'swmm5-go': lines['go_rt']}[repo]
     LM = S.get('libm') or {}
     libm_sec = ''
-    if repo in ('swmm5-typescript', 'swmm5-java'):
+    if repo in ('swmm5-typescript', 'swmm5-java', 'swmm5-go'):
         lang = L['name']
         t = (LM.get('tests') or {}).get(lang, {})
         nargs, nbad = sum(v[0] for v in t.values()), sum(v[1] + v[2] for v in t.values())
@@ -105,10 +115,10 @@ def readme(repo, S):
         ca = (LM.get('native_ctl_all') or {}).get(lang)
         ctl_line = ''
         if c:
-            script = 'gate/run_%s_native_control.sh' % ('java' if lang == 'Java' else 'ts')
-            ctl_line = ('\nPositive control (`%s`): the same engine with %s\'s own `Math` in place of the translations '
+            script = 'gate/run_%s_native_control.sh' % {'Java': 'java', 'TypeScript': 'ts', 'Go': 'go'}[lang]
+            ctl_line = ('\nPositive control (`%s`): the same engine with %s\'s own %s in place of the translations '
                         'differs from EPA on %d of the 40 control models%s.\n'
-                        % (script, 'JavaScript' if lang == 'TypeScript' else 'Java', c['n'] - c['same'],
+                        % (script, 'JavaScript' if lang == 'TypeScript' else lang, '`math` package' if lang == 'Go' else '`Math`', c['n'] - c['same'],
                            (' and on %d of all %d' % (ca['n'] - ca['same'], ca['n'])) if ca else ''))
         libm_sec = f"""
 ## The math library
@@ -128,8 +138,9 @@ an older processor), changes {LM.get('generic_n', 0) - LM.get('generic_same', 0)
                                          else ('%s identical (%s fast models, then a %s-model sample of the %s slow ones)' % (n(v.get('PASS', 0)), n(P['fast_n']), n(P['slow_run']), n(P['slow_n'])) if k == 'Python' and v.get('PASS') else 'not run here'))
                        for k, v in T.items())
     lgpl = ''
-    if repo in ('swmm5-typescript', 'swmm5-java'):
-        f1, f2 = (('ts/src/glibm.ts', 'ts/src/glibm_rt.ts') if repo == 'swmm5-typescript' else ('java/src/swmm5/Glibm.java', 'java/src/swmm5/GlibmRt.java'))
+    if repo in ('swmm5-typescript', 'swmm5-java', 'swmm5-go'):
+        f1, f2 = {'swmm5-typescript': ('ts/src/glibm.ts', 'ts/src/glibm_rt.ts'), 'swmm5-java': ('java/src/swmm5/Glibm.java', 'java/src/swmm5/GlibmRt.java'),
+                  'swmm5-go': ('go/glibm/glibm.go', 'go/glibm/glibm_rt.go')}[repo]
         lgpl = (f' The math routines `{f1}` and `{f2}` (and their sources in `tools/libm/`) are translations of glibc 2.39 '
                 'code and remain under glibc\'s licence, the GNU Lesser General Public License 2.1 or later '
                 '(`LICENSES/LGPL-2.1.txt`).')
@@ -186,7 +197,7 @@ runtime, never into the generated file.
 
 """ + '\n'.join('- ' + x for x in L['lang_notes']) + f"""
 
-To regenerate: `python3 tools/c2x/{L['emitter']}{ {'swmm5-csharp': ' cs/gen', 'swmm5-python': ' py/swmm5', 'swmm5-typescript': ' ts/src', 'swmm5-java': ' java/src/swmm5'}.get(repo, '')}` from the repository root (needs `pip install libclang==18.1.1`
+To regenerate: `python3 tools/c2x/{L['emitter']}{ {'swmm5-csharp': ' cs/gen', 'swmm5-python': ' py/swmm5', 'swmm5-typescript': ' ts/src', 'swmm5-java': ' java/src/swmm5', 'swmm5-go': ' go/swmm5'}.get(repo, '')}`{' and then `gofmt -w go/swmm5`' if repo == 'swmm5-go' else ''} from the repository root (needs `pip install libclang==18.1.1`
 and the clang 18 headers at `/usr/lib/llvm-18/lib/clang/18/include`).
 {libm_sec}
 ## Re-running the gate
@@ -194,27 +205,27 @@ and the clang 18 headers at `/usr/lib/llvm-18/lib/clang/18/include`).
 ```sh
 make -C ref                                   # EPA 5.2.4 reference build
 SWMM_CORPUS=/path/to/1729-SWMM5-Models-2030 gate/make_ref.sh       # reference outputs (about 1.2 GB)
-SWMM_CORPUS=/path/to/1729-SWMM5-Models-2030 python3 gate/gate.py mine "{L['exe'].replace('f90/', '$PWD/f90/').replace('cs/', '$PWD/cs/').replace('py/', '$PWD/py/').replace('ts/', '$PWD/ts/').replace('java/', '$PWD/java/')}"
+SWMM_CORPUS=/path/to/1729-SWMM5-Models-2030 python3 gate/gate.py mine "{L['exe'].replace('f90/', '$PWD/f90/').replace('cs/', '$PWD/cs/').replace('py/', '$PWD/py/').replace('ts/', '$PWD/ts/').replace('java/', '$PWD/java/').replace('go/', '$PWD/go/')}"
 ```
 
 `gate/gate.py` prints a summary and writes `gate/results/mine.json`; the stored runs behind the numbers above
 are in `results/`.
 
-## The eight-engine app and the essay
+## The nine-engine app and the essay
 
-`app/eight-engines.html` compares EPA 5.2.4, swmm5-cplus, {rust_desc}, and the Fortran, C#, Python,
-TypeScript and Java ports on the stored corpus runs: gate results per model, report statistics, graphs with each
+`app/nine-engines.html` compares EPA 5.2.4, swmm5-cplus, {rust_desc}, and the Fortran, C#, Python,
+TypeScript, Java and Go ports on the stored corpus runs: gate results per model, report statistics, graphs with each
 engine's difference from EPA, the benchmark, the controls, the math-library census and checks, and the defect
-register. Its Doc tab is the essay *{S.get('essay_title', 'Eight Engines, One Answer')}*, also in
-`docs/eight-engines.docx`. Rebuild both with
-`python3 tools/app/build_aux_data.py && python3 tools/app/build_data.py && python3 tools/app/build_app.py` and `node tools/app/doc/build_docx.js docs/eight-engines.docx`.
+register. Its Doc tab is the essay *{S.get('essay_title', 'Nine Engines, One Answer')}*, also in
+`docs/nine-engines.docx`. Rebuild both with
+`python3 tools/app/build_aux_data.py && python3 tools/app/build_data.py && python3 tools/app/build_app.py` and `node tools/app/doc/build_docx.js docs/nine-engines.docx`.
 
 ## What this does not show
 
 - That SWMM is right: identical to EPA means EPA's answers, good or bad. No observed data enter anywhere.
 - Other platforms: the math library differs on Windows and macOS, and a port matches EPA built there only if its
   math library matches too. On x86-64 Linux, EPA itself changes {LM.get('generic_n', 0) - LM.get('generic_same', 0)} of {LM.get('generic_n', 0)} models when glibc picks its generic (non-FMA) math
-  routines; the ports that call the system libm should follow EPA there (not tested), the TypeScript and Java ports would not.
+  routines; the ports that call the system libm should follow EPA there (not tested), the TypeScript, Java and Go ports would not.
 - Paths no gate model exercises (counting only models that ran without an input error):
   {', '.join(S['census']['not_exercised'])}. Street and inlet hydraulics appear in one deck, which stops on
   input errors; snowmelt runs in {S['census']['snow']}.
@@ -241,21 +252,26 @@ def ai_use(repo, S=None):
                  'only built and gated here.' if (S.get('rust') or {}).get('commit') else
                  'The Rust engine shown in the app was not run in this session.')
     libm = (' the translation of glibc\'s math routines and its tools and tests (`tools/libm/`),'
-            if repo in ('swmm5-typescript', 'swmm5-java') else '')
+            if repo in ('swmm5-typescript', 'swmm5-java', 'swmm5-go') else '')
     extra = (' A Claude subagent wrote `f90/runtime/crt_format.f90` (printf, sscanf and strtod in pure Fortran) and '
              'its glibc test suite; the main session reran that suite before using the module.') if repo == 'swmm5-fortran' else ''
     libmcheck = (', and for the math routines a bit-for-bit comparison with the system libm'
-                 if repo in ('swmm5-typescript', 'swmm5-java') else '')
+                 if repo in ('swmm5-typescript', 'swmm5-java', 'swmm5-go') else '')
+    if repo == 'swmm5-go':
+        extra += (' For Go, Claude also wrote the printf/strtod/sscanf comparison with glibc (`tools/crt/test/mkfmt.c`, '
+                  '`go/internal/crtcheck`) and the checks for fused multiply-adds in the compiled engine '
+                  '(`gate/check_go_fma.sh`, `gate/check_go_fma_arm64.sh`).')
     return f"""# AI use
 
 This repository was made with Claude, Anthropic's AI model (Claude Opus 5.5), in Claude Code sessions on
 28 and 29 October 2026, under the direction of Robert (Bob) Dickinson. He asked for Fortran, C# and Python
-engines and then TypeScript and Java ones, chose byte-identical ports over bindings, chose one repository per
+engines, then TypeScript and Java ones, and then Go after a survey of the languages in his Code Rosetta
+Stone app; he chose byte-identical ports over bindings, chose one repository per
 language and the engines app, and supplied the model corpus. Responsibility for publishing the work is his.
 
 **What Claude did.** It wrote the translator (`tools/c2x/`: the libclang front end and the {L['name']} back end),
 the hand-written runtime and overrides,{libm} the gate, benchmark and data scripts, ran every test and control,
-diagnosed and fixed every mismatch, built the eight-engine app, and wrote the essay, this README and the
+diagnosed and fixed every mismatch, built the nine-engine app, and wrote the essay, this README and the
 lessons.{extra}
 
 **How the results were checked.** The checks are mechanical: byte comparison of every `.out` and `.rpt` with EPA
@@ -285,9 +301,12 @@ def main():
             copytree(os.path.join(ROOT, 'py'), os.path.join(d, 'py'))
         elif L['dir'] == 'ts':
             copytree(os.path.join(ROOT, 'ts'), os.path.join(d, 'ts'), ignore=('node_modules', 'dist'))
-        else:
+        elif L['dir'] == 'java':
             copytree(os.path.join(ROOT, 'java'), os.path.join(d, 'java'), ignore=('classes', 'swmm5.jar'))
-        if L['dir'] in ('ts', 'java'):
+        else:
+            copytree(os.path.join(ROOT, 'go'), os.path.join(d, 'go'), ignore=('bin',))
+            copytree(os.path.join(ROOT, 'tools/crt'), os.path.join(d, 'tools/crt'))
+        if L['dir'] in ('ts', 'java', 'go'):
             copytree(os.path.join(ROOT, 'tools/libm'), os.path.join(d, 'tools/libm'), ignore=('census.so',))
             os.makedirs(os.path.join(d, 'LICENSES'), exist_ok=True)
             shutil.copy(os.path.join(ROOT, 'ref/LGPL-2.1.txt'), os.path.join(d, 'LICENSES/LGPL-2.1.txt'))
@@ -304,9 +323,13 @@ def main():
                   'run_libm_generic_control.sh', 'ctl_libm_generic.txt', 'ids_half_a.txt', 'ids_half_b.txt',
                   'ids_quarter_1.txt', 'ids_quarter_2.txt', 'ids_quarter_3.txt', 'ids_quarter_4.txt',
                   'run_ts_native_control.sh', 'run_java_native_control.sh', 'ids_all.txt', 'rdii_memory.py',
-                  'measure_env.sh', 'RUNS.md', 'java_final1_run_b.txt'):
+                  'measure_env.sh', 'RUNS.md', 'java_final1_run_b.txt', 'run_go_native_control.sh', 'check_go_fma.sh',
+                  'check_go_fma_arm64.sh', 'scan_strtod_inputs.py', 'go_final_run.txt', 'go_disc1_run.txt',
+                  'ctl_go_native.txt', 'ctl_go_native_all.txt', 'profile_go.sh', 'go_powtime.sh', 'go_final1_run.txt',
+                  'lang_survey.sh'):
             if os.path.exists(os.path.join(ROOT, 'gate', f)):
                 shutil.copy(os.path.join(ROOT, 'gate', f), os.path.join(d, 'gate', f))
+        copytree(os.path.join(ROOT, 'gate/lang_survey'), os.path.join(d, 'gate/lang_survey'))
         with open(os.path.join(ROOT, 'gate/models_all.tsv')) as fi, open(os.path.join(d, 'gate/models_all.tsv'), 'w') as fo:
             for line in fi:
                 fo.write(line.replace(CORPUS_PREFIX, ''))
@@ -314,16 +337,20 @@ def main():
         runs = {'swmm5-fortran': ['fortran3'], 'swmm5-csharp': ['csharp3'], 'swmm5-python': ['py_final', 'py_final_slow'],
                 'swmm5-typescript': ['ts_final_q1', 'ts_final_q2', 'ts_final_q3', 'ts_final_q4', 'ts1',
                                      'ts_final1_q1', 'ts_final1_q2', 'ts_final1_q3', 'ts_final1_q4'],
-                'swmm5-java': ['java_final_a', 'java_final_b', 'java_a', 'java_b', 'java_final1_a', 'java_final1_b']}[repo]
+                'swmm5-java': ['java_final_a', 'java_final_b', 'java_a', 'java_b', 'java_final1_a', 'java_final1_b'],
+                'swmm5-go': ['go_final', 'go_final1', 'go_disc1', 'go_smoke']}[repo]
         # python.json / python_slow.json: the first Python runs, which the defect register and lesson 08 cite
         for r in runs + ['cplus', 'ctl_epa_rerun', 'ctl_fma2', 'ctl_fma_all2', 'bench', 'fma_control_build',
                          'python', 'python_slow', 'rust', 'bench_rust', 'bench_tsjava', 'ctl_libm_generic',
-                         'ctl_ts_native', 'ctl_java_native', 'ctl_ts_native_all', 'ctl_java_native_all', 'bench_math']:
+                         'ctl_ts_native', 'ctl_java_native', 'ctl_ts_native_all', 'ctl_java_native_all', 'bench_math',
+                         'bench_go', 'bench_math_go', 'ctl_go_native', 'ctl_go_native_all']:
             p = os.path.join(ROOT, 'gate/results', r + '.json')
             if os.path.exists(p):
                 shutil.copy(p, os.path.join(d, 'results', r + '.json'))
         for f in ('fortran_gprof.txt', 'libm_census.txt', 'libm_tests.txt', 'libm_native.txt', 'js_nan_bits.txt', 'rdii_memory.txt',
-                  'checkint_evidence.txt', 'toolchain.txt', 'peak_memory.txt'):
+                  'checkint_evidence.txt', 'toolchain.txt', 'peak_memory.txt', 'go_crt_check.txt', 'go_fma_check.txt',
+                  'go_fma_arm64.txt', 'go_constants.txt', 'strtod_inputs.txt', 'go_powtime.txt', 'go_pprof.txt',
+                  'go_pprof_loop.txt', 'lang_survey.txt'):
             gp = os.path.join(ROOT, 'gate/results', f)
             if os.path.exists(gp):
                 shutil.copy(gp, os.path.join(d, 'results', f))
@@ -332,11 +359,11 @@ def main():
             shutil.copy(fr, os.path.join(d, 'results', 'crt_format_tests.txt'))
         shutil.copy(os.path.join(HERE, 'data', 'summary.json'), os.path.join(d, 'results', 'summary.json'))
         os.makedirs(os.path.join(d, 'app'), exist_ok=True)
-        shutil.copy(os.path.join(ROOT, 'app/eight-engines.html'), os.path.join(d, 'app/eight-engines.html'))
+        shutil.copy(os.path.join(ROOT, 'app/nine-engines.html'), os.path.join(d, 'app/nine-engines.html'))
         os.makedirs(os.path.join(d, 'docs'), exist_ok=True)
-        dx = os.path.join(ROOT, 'docs/eight-engines.docx')
+        dx = os.path.join(ROOT, 'docs/nine-engines.docx')
         if os.path.exists(dx):
-            shutil.copy(dx, os.path.join(d, 'docs/eight-engines.docx'))
+            shutil.copy(dx, os.path.join(d, 'docs/nine-engines.docx'))
         open(os.path.join(d, 'README.md'), 'w').write(readme(repo, S))
         open(os.path.join(d, 'AI-USE.md'), 'w').write(ai_use(repo, S))
         open(os.path.join(d, '.gitignore'), 'w').write('gate/ref_outputs/\ngate/results/\n*/bin/\n*/obj/\n__pycache__/\n*.pyc\nref/runswmm\nf90/runtime/tests/work/\nts/node_modules/\nts/dist/\njava/classes/\njava/swmm5.jar\nbuild/\n')
