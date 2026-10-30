@@ -296,7 +296,7 @@ def main():
         if L['dir'] == 'f90':
             copytree(os.path.join(ROOT, 'f90'), os.path.join(d, 'f90'), ignore=('bin', 'obj', 'work'))
         elif L['dir'] == 'cs':
-            copytree(os.path.join(ROOT, 'cs'), os.path.join(d, 'cs'), ignore=('bin', 'obj'))
+            copytree(os.path.join(ROOT, 'cs'), os.path.join(d, 'cs'), ignore=('bin', 'obj', '*.dll', '*.runtimeconfig.json', 'scan'))
         elif L['dir'] == 'py':
             copytree(os.path.join(ROOT, 'py'), os.path.join(d, 'py'))
         elif L['dir'] == 'ts':
@@ -366,6 +366,9 @@ def main():
             shutil.copy(dx, os.path.join(d, 'docs/nine-engines.docx'))
         open(os.path.join(d, 'README.md'), 'w').write(readme(repo, S))
         open(os.path.join(d, 'AI-USE.md'), 'w').write(ai_use(repo, S))
+        # GitHub's language bar: EPA's C source is the reference, not this repository's code, and the app page is built
+        open(os.path.join(d, '.gitattributes'), 'w').write('ref/epa524/** linguist-vendored\napp/*.html linguist-generated\n'
+                                                          'docs/** linguist-documentation\n')
         open(os.path.join(d, '.gitignore'), 'w').write('gate/ref_outputs/\ngate/results/\n*/bin/\n*/obj/\n__pycache__/\n*.pyc\nref/runswmm\nf90/runtime/tests/work/\nts/node_modules/\nts/dist/\njava/classes/\njava/swmm5.jar\nbuild/\n')
         print('laid out', d)
 
