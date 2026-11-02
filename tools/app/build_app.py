@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Assemble the engines app (one HTML file) and the essay sources for the .docx.
 
-  build_app.py            -> app/nine-engines.html, doc/essay.docx.json, doc/fig/*.svg
+  build_app.py            -> app/swmm-engines.html, doc/essay.docx.json, doc/fig/*.svg
 
 Reads tools/app/data/models.json (from build_data.py) and the gate's control, benchmark and
 formatter results; every number shown is computed here from those files.
@@ -622,7 +622,7 @@ def main():
     page = tpl.replace('/*__DATA__*/null', json.dumps(app, separators=(',', ':'))).replace('<!--__DOC__-->', doc_html)
     page = page.replace('<!--__AIUSE__-->', html.escape(AI_USE))
     os.makedirs(os.path.join(ROOT, 'app'), exist_ok=True)
-    open(os.path.join(ROOT, 'app', 'nine-engines.html'), 'w').write(page)
+    open(os.path.join(ROOT, 'app', 'swmm-engines.html'), 'w').write(page)
     summary = dict(n_models=len(models), totals=totals, controls={k: v for k, v in controls.items() if k != 'fma_all_diff'},
                    python={k: v for k, v in py.items() if k != 'slow_rows'}, python_slow_rows=py['slow_rows'],
                    bench=None if not B else dict(median=B['median'], range={e: [min(v), max(v)] for e, v in B['per_model'].items()},
@@ -632,7 +632,7 @@ def main():
                    census=census, lines=L, front=front, defects=DEFECTS, built=app['built'], corpus_note=D['corpus_note'], rust=D['rust'], libm=D['libm'],
                    essay_title=blocks[0][1])
     json.dump(summary, open(os.path.join(HERE, 'data', 'summary.json'), 'w'), indent=1)
-    print('app/nine-engines.html', len(page) // 1024, 'KB;', len(blocks), 'essay blocks;', len(G), 'graph models')
+    print('app/swmm-engines.html', len(page) // 1024, 'KB;', len(blocks), 'essay blocks;', len(G), 'graph models')
     for k in ('epa_rerun_same', 'epa_rerun_n', 'fma40_same', 'fma40_n', 'fma_all_same', 'fma_all_n'):
         print(' ', k, controls[k])
     print('  python', {k: v for k, v in py.items() if k != 'slow_rows'})

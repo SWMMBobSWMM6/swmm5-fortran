@@ -45,7 +45,7 @@ def essay(D):
     go_ran = 'Go' in ran
     rust_ran = any(e.startswith('Rust') for e in ran)
     RU = D.get('rust') or {}
-    A(('h1', '%s Engines, One Answer' % word))
+    A(('h1', 'SWMM Engines, Byte for Byte'))
     A(('sub', 'How EPA SWMM 5.2.4 was carried into Fortran, C#, Python, TypeScript, Java and Go without changing one bit of what it computes'))
 
     # ------------------------------------------------------------------ 1
@@ -88,7 +88,7 @@ def essay(D):
                 % (RU.get('commit', '?')[:7], n(D['n_models']))))
     else:
         A(('p', 'The Rust engine\'s repository was not reachable from this session, so its row is marked as not run '
-                'rather than guessed at. %s engines ran; hence the title.' % word))
+                'rather than guessed at. %s engines ran.' % word))
 
     # ------------------------------------------------------------------ 3
     A(('h2', 'translator', 'Don\'t translate by hand'))

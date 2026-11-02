@@ -458,7 +458,7 @@
    "what": "size is nrows*ncols (project.c:401), a count of doubles, but memset counts bytes, so seven eighths of the matrix keeps malloc's contents. Only USE INFLOWS reaches it, and no gate model does. There is nothing defined to copy, so the ports zero the whole matrix."
   }
  ],
- "built": "2026-10-29 20:44",
+ "built": "2026-11-02 15:46",
  "corpus_note": "The gate set is 480 of the 518 distinct models (distinct by content) in six folders of the corpus, which holds 4,540 .inp files. The other 38 were left out by an early timing survey with a 12-second limit, whose records were not kept. The cut is rough. Re-timed for this essay on a busy machine, 13 of the 38 ran past a 30-second limit and the rest took 5.8 to 29.6 seconds, 4 of them within 12; and 3 gate models took longer than 12 seconds in the reference run (attenuation_KW_High_CE.inp, 13 s, SCANLON.inp, 35 s, 72_H&H_Elements(2).inp, 39 s).",
  "rust": {
   "commit": "de9fbf1edaa0a1c9ee644744a381f535330bac41",
@@ -1254,5 +1254,5 @@
    }
   }
  },
- "essay_title": "Nine Engines, One Answer"
+ "essay_title": "SWMM Engines, Byte for Byte"
 }

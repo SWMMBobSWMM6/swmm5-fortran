@@ -8,7 +8,7 @@ language and the engines app, and supplied the model corpus. Responsibility for 
 
 **What Claude did.** It wrote the translator (`tools/c2x/`: the libclang front end and the Fortran back end),
 the hand-written runtime and overrides, the gate, benchmark and data scripts, ran every test and control,
-diagnosed and fixed every mismatch, built the nine-engine app, and wrote the essay, this README and the
+diagnosed and fixed every mismatch, built the engines app, and wrote the essay, this README and the
 lessons. A Claude subagent wrote `f90/runtime/crt_format.f90` (printf, sscanf and strtod in pure Fortran) and its glibc test suite; the main session reran that suite before using the module.
 
 **How the results were checked.** The checks are mechanical: byte comparison of every `.out` and `.rpt` with EPA

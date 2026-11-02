@@ -211,14 +211,14 @@ SWMM_CORPUS=/path/to/1729-SWMM5-Models-2030 python3 gate/gate.py mine "{L['exe']
 `gate/gate.py` prints a summary and writes `gate/results/mine.json`; the stored runs behind the numbers above
 are in `results/`.
 
-## The nine-engine app and the essay
+## The app and the essay
 
-`app/nine-engines.html` compares EPA 5.2.4, swmm5-cplus, {rust_desc}, and the Fortran, C#, Python,
+`app/swmm-engines.html` (*SWMM Engines, Byte for Byte*) compares EPA 5.2.4, swmm5-cplus, {rust_desc}, and the Fortran, C#, Python,
 TypeScript, Java and Go ports on the stored corpus runs: gate results per model, report statistics, graphs with each
 engine's difference from EPA, the benchmark, the controls, the math-library census and checks, and the defect
-register. Its Doc tab is the essay *{S.get('essay_title', 'Nine Engines, One Answer')}*, also in
-`docs/nine-engines.docx`. Rebuild both with
-`python3 tools/app/build_aux_data.py && python3 tools/app/build_data.py && python3 tools/app/build_app.py` and `node tools/app/doc/build_docx.js docs/nine-engines.docx`.
+register. Its Doc tab is the essay *{S.get('essay_title', 'SWMM Engines, Byte for Byte')}*, also in
+`docs/swmm-engines-byte-for-byte.docx`. Rebuild both with
+`python3 tools/app/build_aux_data.py && python3 tools/app/build_data.py && python3 tools/app/build_app.py` and `node tools/app/doc/build_docx.js docs/swmm-engines-byte-for-byte.docx`.
 
 ## What this does not show
 
@@ -271,7 +271,7 @@ language and the engines app, and supplied the model corpus. Responsibility for 
 
 **What Claude did.** It wrote the translator (`tools/c2x/`: the libclang front end and the {L['name']} back end),
 the hand-written runtime and overrides,{libm} the gate, benchmark and data scripts, ran every test and control,
-diagnosed and fixed every mismatch, built the nine-engine app, and wrote the essay, this README and the
+diagnosed and fixed every mismatch, built the engines app, and wrote the essay, this README and the
 lessons.{extra}
 
 **How the results were checked.** The checks are mechanical: byte comparison of every `.out` and `.rpt` with EPA
@@ -359,11 +359,11 @@ def main():
             shutil.copy(fr, os.path.join(d, 'results', 'crt_format_tests.txt'))
         shutil.copy(os.path.join(HERE, 'data', 'summary.json'), os.path.join(d, 'results', 'summary.json'))
         os.makedirs(os.path.join(d, 'app'), exist_ok=True)
-        shutil.copy(os.path.join(ROOT, 'app/nine-engines.html'), os.path.join(d, 'app/nine-engines.html'))
+        shutil.copy(os.path.join(ROOT, 'app/swmm-engines.html'), os.path.join(d, 'app/swmm-engines.html'))
         os.makedirs(os.path.join(d, 'docs'), exist_ok=True)
-        dx = os.path.join(ROOT, 'docs/nine-engines.docx')
+        dx = os.path.join(ROOT, 'docs/swmm-engines-byte-for-byte.docx')
         if os.path.exists(dx):
-            shutil.copy(dx, os.path.join(d, 'docs/nine-engines.docx'))
+            shutil.copy(dx, os.path.join(d, 'docs/swmm-engines-byte-for-byte.docx'))
         open(os.path.join(d, 'README.md'), 'w').write(readme(repo, S))
         open(os.path.join(d, 'AI-USE.md'), 'w').write(ai_use(repo, S))
         # GitHub's language bar: EPA's C source is the reference, not this repository's code, and the app page is built

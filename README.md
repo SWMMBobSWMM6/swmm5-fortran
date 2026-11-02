@@ -76,14 +76,14 @@ SWMM_CORPUS=/path/to/1729-SWMM5-Models-2030 python3 gate/gate.py mine "$PWD/f90/
 `gate/gate.py` prints a summary and writes `gate/results/mine.json`; the stored runs behind the numbers above
 are in `results/`.
 
-## The nine-engine app and the essay
+## The app and the essay
 
-`app/nine-engines.html` compares EPA 5.2.4, swmm5-cplus, swmm5-rust (safe Rust, built from its repository at de9fbf1 and gated here), and the Fortran, C#, Python,
+`app/swmm-engines.html` (*SWMM Engines, Byte for Byte*) compares EPA 5.2.4, swmm5-cplus, swmm5-rust (safe Rust, built from its repository at de9fbf1 and gated here), and the Fortran, C#, Python,
 TypeScript, Java and Go ports on the stored corpus runs: gate results per model, report statistics, graphs with each
 engine's difference from EPA, the benchmark, the controls, the math-library census and checks, and the defect
-register. Its Doc tab is the essay *Nine Engines, One Answer*, also in
-`docs/nine-engines.docx`. Rebuild both with
-`python3 tools/app/build_aux_data.py && python3 tools/app/build_data.py && python3 tools/app/build_app.py` and `node tools/app/doc/build_docx.js docs/nine-engines.docx`.
+register. Its Doc tab is the essay *SWMM Engines, Byte for Byte*, also in
+`docs/swmm-engines-byte-for-byte.docx`. Rebuild both with
+`python3 tools/app/build_aux_data.py && python3 tools/app/build_data.py && python3 tools/app/build_app.py` and `node tools/app/doc/build_docx.js docs/swmm-engines-byte-for-byte.docx`.
 
 ## What this does not show
 
